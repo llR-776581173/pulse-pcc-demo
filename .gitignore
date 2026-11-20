@@ -3,6 +3,9 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# 验收脚本运行时自动重建的临时数据副本（非交付材料）
+_scratch_lc/
+
 # 本地实跑时新生成的规则版本快照（已验收的 v1_0 文件保留在仓库中）
 audit/pulse_decision_snapshot_v1_[1-9]*.csv
 audit/rule_config.json

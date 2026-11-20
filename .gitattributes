@@ -1,0 +1,16 @@
+* text=auto
+
+# 一键启动脚本必须保持对应平台的行尾，否则 Linux 下 shebang 会失效
+*.sh   text eol=lf
+*.bat  text eol=crlf
+
+# 源码与数据统一 LF，避免跨平台 diff 噪声
+*.py    text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.json  text eol=lf
+*.csv   text eol=lf
+*.svg   text eol=lf
+
+# 二进制/大文件不做文本转换
+*.png  binary
