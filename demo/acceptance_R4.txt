@@ -1,0 +1,62 @@
+==============================================================================
+Pulse 演示版 · 独立质量验收  |  2026-11-20 22:33:18  |  基准：docs/00~05
+==============================================================================
+
+[BASELINE]
+  [PASS] B01  selftest.py 18/18 回归基线                     exit=0 | 18/18 checks passed
+  [PASS] B02  demo_probe.py 5/5 可复跑验证                    exit=0 | 5/5
+  [PASS] B03  基准规格 00 未被改动（需求锁定）                         sha256=2bf1a6465aa3bfe3
+  [PASS] B04  selftest.py 文件未被修改（18 项不增不减）               sha256=9dd163d47843ea29
+  [PASS] B05  新增断言独立文件 selftest_lifecycle.py 已建          present
+
+[PAGE]
+  [PASS] P01  存在独立干净商用演示页（不动答辩材料）                        candidates=['static\\demo_workspace.html']
+  [PASS] P02  演示页无任何待校准/假设提示文字                           hits=NONE
+  [PASS] P03  旧答辩材料 static/index.html 原样保留（允许含提示）        legacy wording=['未接入', '不是预测模型']（按 00 §5 保留，不作演示入口）
+  [PASS] P04  根路由 / 指向演示外壳而非旧答辩页                         root route = other
+  [PASS] P05  前端存在阈值/预算面板并触发全链路重算                        demo shell UI wiring=present
+
+[LOGIC]
+  [PASS] X00  核心模块可导入并运行                                 OK
+  [PASS] L01  六状态定义完整                                    ['NEW_UNPURCHASED', 'FIRST_PURCHASE', 'ACTIVE', 'AT_RISK', 'DEEP_DORMANT', 'CHURNED']
+  [PASS] L02  转移矩阵含两条回流边且 CHURNED 不直接复活                  {'NEW_UNPURCHASED': ['FIRST_PURCHASE'], 'FIRST_PURCHASE': ['ACTIVE'], 'ACTIVE': ['AT_RISK'], 'AT_RISK': ['ACTIVE', 'DEEP_DORMANT'], 'DEEP_DORMANT': ['ACTIVE', 'CHURNED'], 'CHURNED': ['FIRST_PURCHASE']}
+  [PASS] L03  转移合法性不被硬编码绕过（禁止跳级）                         bypass='or st == ACTIVE'=False
+  [PASS] L04  时间轴按天演进，转移日志含风险状态转移                        ACTIVE->AT_RISK=26742, AT_RISK->DEEP_DORMANT=687, recall=22
+  [PASS] L05  三窗口 T/[T-W,T]/[T,T+H] 与预警提前天数可算            window/lead keys=['window', 'warn_lead_days']
+  [PASS] L06  状态机数据层持久化（快照表 + append-only 转移表）           snapshot=True transition=True | audit=['audit_messages.csv', 'budget_floor.json', 'customer_state_snapshot_v1_0.csv', 'customer_state_transition_v1_0.csv', 'pulse_decision_log.csv', 'pulse_decision_snapshot_v1_0.csv', 'store_diagnosis.json', 'store_suppression.json']
+  [PASS] L07  每客户每天恰好一行快照（按 as_of_date 分区）               snapshot=True transition=True | as_of_date in source=True
+  [PASS] L08  rule_version 贯穿 lifecycle / timeline / 转移记录 / 导出 lifecycle.rule_version=v1.0 | timeline has=True | transition has=True
+  [PASS] L09  数据层 provisional / calibrated 机器可读标记        config keys=['fields', 'log', 'meta', 'note', 'version']
+  [PASS] L10  配置字段标签中性（无待校准字样）                           bad labels=[]
+  [PASS] L11  decision_log 含 state_at_decision 外联        SNAP=['cut', 'rule_version', 'customer_id', 'store_id'] | LOG=['message_id', 'decision', 'customer_id', 'store_id']
+  [PASS] L12  旧 rule_version 快照保留、不覆盖                    overwrite-on-version-change=False
+  [PASS] L13  只读 ≤ cut，无前视泄漏                             pre-cut filter=True
+  [PASS] L14  状态定义不掺 value_tier / risk_score             _state_for(silence_days, median_days, n_gaps, H, dev_thr, max_sil, min_gaps)
+  [PASS] L15  六个决策出口定义不变                                 groups=['C', 'high', 'low', 'medium', 'no_consent', 'normal']
+  [PASS] L16  改阈值后状态机全链路重算（状态真变）                         C01441: default=DEEP_DORMANT -> max_sil=120:CHURNED
+  [PASS] L17  params 全链路接线（含 H / 兑换率 / 毛利率）              keys=['ALERT_FIXED', 'BASELINE_REGULAR_CAP', 'DEV_THRESHOLD', 'FACE_BUDGET', 'FACE_HIGH', 'FACE_MED', 'FLAG_MAX_SILENCE', 'FLAG_MIN_GAPS', 'GROSS_MARGIN', 'MIN_WEEKS', 'REDEMPTION', 'TRAILING_DAYS', 'WARN_DAYS_H']
+  [PASS] L18  六状态分布完整（注册未消费会员纳入状态机）                      distribution={'NEW_UNPURCHASED': 284, 'FIRST_PURCHASE': 733, 'ACTIVE': 3284, 'AT_RISK': 1320, 'DEEP_DORMANT': 295, 'CHURNED': 84}
+  [PASS] L19  批准 ≠ 发送：审批记录 sent_at 留空                    approval keeps sent_at empty=True
+
+[CASE]
+  [PASS] C01  预置案例不注入合成事件                                _demo_events_for=False hardcoded-slices=False
+  [PASS] C02  A/B/C 三组预置案例可走通时间轴                         A/C05326:ACTIVE(2) A/C01255:ACTIVE(2) A/C02151:ACTIVE(2) B/C01441:DEEP_DORMANT(2) B/C03110:DEEP_DORMANT(2) B/C01387:DEEP_DORMANT(2) C/C00437:ACTIVE(3) C/C01475:ACTIVE(2)
+  [PASS] C03  改阈值后预置案例状态真实变化（非硬编码动画）                     3/3 B-group cases changed state
+  [PASS] C04  A 组回流弧线在 cut 内完成、零数据改动                     A ids in <=cut history=True | txn=118365
+
+[D05]
+  [PASS] D01  [05 P0-1] 干净商用演示页已落地                       shells=['demo_workspace.html']
+  [PASS] D02  [05 P0-2] 预置案例改为从合成数据筛出                    _demo_events_for=False
+  [PASS] D03  [05 P1-3] rule_config 中性标签                 bad=[]
+  [PASS] D04  [05 P1-4] provisional / calibrated 元数据     keys=['fields', 'log', 'meta', 'note', 'version']
+  [PASS] D05  [05 P1-5] /api/send 与『发送未接入』口径统一           writes sent_at timestamp=False
+  [PASS] D06  [05 P2-6] selftest_lifecycle.py 独立断言文件     present=True
+
+[ENV]
+  [PASS] E01  运行中服务已加载当前磁盘代码（需重启）                        GET http://127.0.0.1:8100/api/lifecycle -> 200
+
+==============================================================================
+代码验收: 40 PASS / 0 FAIL / 0 SKIP  -> ALL GREEN
+环境项  : [PASS] 运行中服务已加载当前磁盘代码（需重启） — GET http://127.0.0.1:8100/api/lifecycle -> 200
+==============================================================================
+结构化留痕: D:\DSH\DSH工作区域\pulse_app\demo\acceptance_last.json

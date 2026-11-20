@@ -1,0 +1,26 @@
+store_id,district,zone,store_type
+PCC001,Central,HK Island,cbd
+PCC002,Central,HK Island,mtr
+PCC003,Admiralty,HK Island,cbd
+PCC004,Admiralty,HK Island,mtr
+PCC005,Wan Chai,HK Island,cbd
+PCC006,Wan Chai,HK Island,mtr
+PCC007,Causeway Bay,HK Island,mall
+PCC008,Causeway Bay,HK Island,mtr
+PCC009,Quarry Bay,HK Island,cbd
+PCC010,Tsim Sha Tsui,Kowloon,mall
+PCC011,Tsim Sha Tsui,Kowloon,mtr
+PCC012,Mong Kok,Kowloon,mall
+PCC013,Mong Kok,Kowloon,mtr
+PCC014,Kwun Tong,Kowloon,cbd
+PCC015,Kwun Tong,Kowloon,mtr
+PCC016,Kowloon Bay,Kowloon,cbd
+PCC017,Sha Tin,NT,mall
+PCC018,Sha Tin,NT,mtr
+PCC019,Tsuen Wan,NT,mall
+PCC020,Tsuen Wan,NT,mtr
+PCC021,Tuen Mun,NT,residential
+PCC022,Yuen Long,NT,residential
+PCC023,Tai Po,NT,residential
+PCC024,Tseung Kwan O,NT,residential
+PCC025,Tseung Kwan O,NT,campus

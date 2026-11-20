@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse · 客户生命周期决策工作台</title>
+<style>
+  :root{--mole:#3A2E2D;--brush:#8A5A3C;--tan:#BD8D63;--bluff:#E7CFB8;--rain:#43718E;
+        --ink:#3A2E2D;--muted:#8B7B6E;--line:#E7D5C0;--bg:#F7F1E9;--card:#FFFFFF;
+        --soft:#FBF6EF;--side:#F1E4D3;--side2:#EADCC8;
+        --green:#3E7A52;--red:#A63D2F;--amber:#A86A16;--violet:#7A5C8F}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
+  body{background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+
+  /* ---------- shell : collapsible side nav + main ---------- */
+  .side{position:fixed;inset:0 auto 0 0;width:238px;z-index:30;display:flex;flex-direction:column;
+        background:linear-gradient(178deg,var(--side) 0%,var(--side2) 100%);
+        border-right:1px solid #DDC7AB;transition:width .22s ease}
+  .side-head{height:76px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px;
+             border-bottom:1px solid #DDC7AB}
+  .side-head img{width:40px;height:40px;border-radius:50%;flex:none;background:#fff;padding:2px;
+                  box-shadow:0 1px 5px rgba(58,46,45,.12)}
+  .side-head .brand{font-size:15px;font-weight:700;color:var(--mole);white-space:nowrap;letter-spacing:.4px}
+  .side-head .brand small{display:block;font-weight:400;font-size:10.5px;color:#8A735C;letter-spacing:0;margin-top:1px}
+  .navtoggle{margin-left:auto;flex:none;width:28px;height:28px;border-radius:8px;cursor:pointer;
+              border:1px solid #D6BEA0;background:#FFFCF6;color:var(--brush);font-size:14px;line-height:1}
+  .navtoggle:hover{background:#F6EADB}
+  .nav{padding:16px 10px;flex:1;overflow:hidden}
+  .nav-cap{font-size:10.5px;color:#9C8469;letter-spacing:1.2px;padding:0 12px 9px;white-space:nowrap}
+  .nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;margin-bottom:5px;border-radius:10px;
+            color:#6B5541;cursor:pointer;font-size:13px;white-space:nowrap;border:1px solid transparent;
+            transition:background .15s,color .15s,box-shadow .15s}
+  .nav-item svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;
+                stroke-linecap:round;stroke-linejoin:round}
+  .nav-item:hover{background:#FFFAF1;border-color:#E2CDB2}
+  .nav-item.active{background:var(--brush);color:#FFF7EE;border-color:var(--brush);
+                   box-shadow:0 4px 12px rgba(138,90,60,.24);font-weight:600}
+  .side-foot{flex:none;padding:12px 16px;border-top:1px solid #DDC7AB;font-size:11px;color:#9A8268;
+             line-height:1.7;white-space:nowrap;overflow:hidden}
+  .side-foot b{color:var(--brush);font-weight:600}
+  body.nav-collapsed .side{width:70px}
+  body.nav-collapsed .side-head .brand,body.nav-collapsed .nav-cap,
+  body.nav-collapsed .nav-item .label,body.nav-collapsed .side-foot{display:none}
+  body.nav-collapsed .side-head{justify-content:center;padding:0}
+  body.nav-collapsed .side-head img{width:38px;height:38px}
+  body.nav-collapsed .navtoggle{position:absolute;top:16px;right:-13px;width:26px;height:26px;
+                                border-radius:50%;box-shadow:0 2px 8px rgba(58,46,45,.18)}
+  body.nav-collapsed .nav-item{justify-content:center;padding:11px 0}
+
+  .main{margin-left:238px;min-height:100vh;display:flex;flex-direction:column;transition:margin-left .22s ease}
+  body.nav-collapsed .main{margin-left:70px}
+  .topbar{height:76px;flex:none;background:#FFFDF9;border-bottom:1px solid var(--line);
+          display:flex;align-items:center;gap:14px;padding:0 28px;position:sticky;top:0;z-index:20}
+  .topbar .crumb{font-size:17px;font-weight:700;color:var(--mole);display:flex;align-items:baseline;gap:12px}
+  .topbar .crumb small{font-size:12px;font-weight:400;color:var(--muted)}
+  .topbar .env{margin-left:auto;display:flex;gap:9px;align-items:center;font-size:12px;color:var(--muted)}
+  .env .chip{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:6px 11px;white-space:nowrap}
+  .env .chip b{color:var(--brush);font-variant-numeric:tabular-nums}
+  .content{padding:22px 28px 54px;flex:1;position:relative;overflow:hidden}
+  .floral-deco{position:fixed;right:14px;bottom:10px;width:82px;height:82px;opacity:.055;
+               pointer-events:none;z-index:0}
+  .floral-top{position:absolute;right:-26px;top:-30px;width:132px;height:132px;opacity:.07;
+              pointer-events:none;z-index:0}
+  .view{display:none;position:relative;z-index:1}
+  .view.active{display:block;animation:vin .26s ease}
+  @keyframes vin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+  /* ---------- per-view filter bar ---------- */
+  .filterbar{background:var(--card);border:1px solid var(--line);border-radius:12px;
+             box-shadow:0 2px 10px rgba(58,46,45,.05);padding:12px 17px;margin-bottom:18px;
+             display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;z-index:2}
+  .filterbar .fbt{font-size:12px;font-weight:600;color:var(--brush);display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .filterbar .fbt::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--tan)}
+  .filterbar label{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+  .filterbar select{border:1px solid #DCC5A9;background:#FFFDF9;border-radius:7px;padding:6px 26px 6px 10px;
+                     font-size:12.5px;color:var(--ink);min-width:136px;cursor:pointer}
+  .filterbar select:focus{outline:2px solid #E7CFB8;outline-offset:1px}
+  .filterbar .scope{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
+  .filterbar .scope b{color:var(--brush);font-weight:600}
+
+  /* ---------- responsive grid cards ---------- */
+  .grid{display:grid;gap:16px;margin-bottom:16px}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g21{grid-template-columns:1.28fr 1fr}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        box-shadow:0 2px 12px rgba(58,46,45,.055);padding:18px 20px;position:relative;min-width:0}
+  .card > h3{font-size:13.5px;color:var(--brush);margin-bottom:15px;display:flex;align-items:center;gap:9px}
+  .card > h3::before{content:"";width:4px;height:15px;border-radius:2px;background:var(--tan);flex:none}
+  .card > h3 .hint{font-weight:400;font-size:11.5px;color:var(--muted);margin-left:auto;white-space:nowrap}
+  .card .sub{font-size:11.5px;color:var(--muted);margin:-8px 0 14px}
+  .eyebrow{font-size:10.5px;letter-spacing:1.4px;color:var(--tan);font-weight:700;margin-bottom:12px}
+
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+       box-shadow:0 2px 12px rgba(58,46,45,.055);position:relative;overflow:hidden;min-width:0}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tan)}
+  .kpi .t{font-size:12px;color:var(--muted)}
+  .kpi .v{font-size:29px;font-weight:700;color:var(--rain);margin-top:6px;letter-spacing:-.6px;
+          font-variant-numeric:tabular-nums;line-height:1.2}
+  .kpi .s{font-size:11.5px;color:var(--muted);margin-top:5px}
+  .mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+  .mini .kpi .v{font-size:23px}
+  .mini .kpi .s{font-size:11px}
+
+  /* ---------- independent chart designs ---------- */
+  .ring-wrap{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+  .ring{width:162px;height:162px;border-radius:50%;position:relative;flex:none}
+  .ring::after{content:"";position:absolute;inset:27px;background:#fff;border-radius:50%;
+               box-shadow:inset 0 0 0 1px var(--line)}
+  .ring .ctr{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+             align-items:center;justify-content:center}
+  .ring .ctr b{font-size:25px;color:var(--mole);font-variant-numeric:tabular-nums;line-height:1.1}
+  .ring .ctr span{font-size:10.5px;color:var(--muted);margin-top:3px}
+  .state-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;flex:1;min-width:250px}
+  .srow{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--line);
+        border-radius:10px;background:var(--soft)}
+  .srow .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .srow .nm{font-size:12px;color:var(--ink);flex:1;white-space:nowrap}
+  .srow .num{font-size:15px;font-weight:700;color:var(--mole);font-variant-numeric:tabular-nums}
+  .srow .pc{font-size:11px;color:var(--muted);width:40px;text-align:right;font-variant-numeric:tabular-nums}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;font-size:11px;color:var(--muted)}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+
+  .matrix table{width:100%;border-collapse:separate;border-spacing:3px;font-size:11.5px}
+  .matrix th{background:transparent;color:var(--muted);font-size:10.5px;padding:4px 2px;text-align:center;font-weight:600}
+  .matrix td{border:none;border-radius:6px;background:var(--soft);text-align:center;padding:7px 2px;
+             color:#B6A592;font-variant-numeric:tabular-nums}
+  .matrix td.hot{background:#F0DFC8;color:var(--brush);font-weight:700}
+  .matrix td.hot2{background:var(--brush);color:#fff;font-weight:700}
+  .matrix td.lbl{background:transparent;text-align:left;color:var(--ink);font-weight:600;white-space:nowrap;padding-left:2px}
+  .matrix .note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7}
+
+  .lead-hero{display:flex;align-items:flex-end;gap:9px;margin-bottom:4px}
+  .lead-big{font-size:40px;font-weight:700;color:var(--rain);letter-spacing:-1.5px;
+            font-variant-numeric:tabular-nums;line-height:1}
+  .lead-unit{font-size:14px;color:var(--muted);padding-bottom:5px}
+  .lead-meta{font-size:12px;color:var(--muted);margin-top:8px}
+  .lead-axis{position:relative;height:46px;margin:24px 8px 10px;border-top:2px solid var(--line)}
+  .lead-axis .pt{position:absolute;top:-9px;transform:translateX(-50%);width:16px;height:16px;
+                  border-radius:50%;background:var(--rain);border:3px solid #fff;box-shadow:0 0 0 1px var(--rain);z-index:2}
+  .lead-axis .pt.edge{background:var(--tan);box-shadow:0 0 0 1px var(--tan);width:11px;height:11px;top:-6px}
+  .lead-axis .lb{position:absolute;top:15px;transform:translateX(-50%);font-size:10.5px;
+                  color:var(--muted);white-space:nowrap}
+  .lead-axis .lb b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .window-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .window-strip span{font-size:11px;background:var(--soft);border:1px solid var(--line);
+                     border-radius:7px;padding:5px 9px;color:var(--muted)}
+  .window-strip b{color:var(--brush);font-variant-numeric:tabular-nums}
+
+  .funnel{display:flex;flex-direction:column;gap:9px}
+  .funnel .fl{display:grid;grid-template-columns:116px 1fr 54px;align-items:center;gap:11px;font-size:12.5px}
+  .funnel .fl .fb{height:20px;border-radius:5px;min-width:3px;position:relative;overflow:hidden}
+  .funnel .fl .fb::after{content:"";position:absolute;inset:0;border-radius:5px;
+                          background:linear-gradient(90deg,rgba(255,255,255,.20),transparent)}
+  .funnel .fl .nm{color:var(--ink);white-space:nowrap}
+  .funnel .fl .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--mole)}
+  .budget-big{font-size:33px;font-weight:700;color:var(--brush);letter-spacing:-1px;
+              font-variant-numeric:tabular-nums;line-height:1.1}
+
+  /* ---------- tables / pills / timeline ---------- */
+  table.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+  .tbl th{background:var(--soft);color:var(--muted);text-align:left;padding:9px 11px;
+          border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;font-size:11.5px}
+  .tbl td{padding:10px 11px;border-bottom:1px solid #F1E7DA;vertical-align:middle}
+  .tbl tbody tr:hover{background:#FDF9F3}
+  .pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;white-space:nowrap}
+  .p-active{background:#E8F1E9;color:#3E7A52;border:1px solid #C4D8C6}
+  .p-risk{background:#FBF1E2;color:#A86A16;border:1px solid #E8D3AE}
+  .p-deep{background:#F9EAE6;color:#A63D2F;border:1px solid #E7BCB0}
+  .p-churn{background:#ECE7E2;color:#5C5049;border:1px solid #D6CCC2}
+  .p-first{background:#E7EEF3;color:#43718E;border:1px solid #BFD2DE}
+  .p-new{background:#EFEAF3;color:#7A5C8F;border:1px solid #D3C5DE}
+  .btn{border:1px solid #D9BFA2;border-radius:7px;padding:7px 14px;font-size:12.5px;cursor:pointer;
+       background:#F9F1E7;color:#6B4A33;transition:background .15s,transform .1s}
+  .btn:hover{background:#F1E2D0}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:var(--brush);color:#fff;border-color:var(--brush)}
+  .btn.primary:hover{background:#70482F}
+  .btn.small{padding:4px 10px;font-size:12px}
+  .seg{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .muted{color:var(--muted)}
+  .mono{font-variant-numeric:tabular-nums}
+  .hintbar{font-size:12px;color:var(--muted);line-height:1.7}
+  .row-hidden{display:none !important}
+
+  .timeline{position:relative;margin-top:8px;padding-left:18px}
+  .timeline::before{content:"";position:absolute;left:5px;top:10px;bottom:10px;width:2px;background:var(--line)}
+  .tl-row{display:grid;gap:10px;padding:9px 0 9px 16px;border-bottom:1px dashed #EFE3D2;
+          align-items:center;position:relative;font-size:12.5px}
+  .tl-row::before{content:"";position:absolute;left:-17px;top:50%;transform:translateY(-50%);
+                   width:9px;height:9px;border-radius:50%;background:var(--tan);border:2px solid #fff;
+                   box-shadow:0 0 0 1px var(--tan)}
+  .tl-row.case-row{grid-template-columns:96px 1fr 90px auto}
+  .tl-row.tl-arc{grid-template-columns:124px 1fr}
+  .tl-date{font-variant-numeric:tabular-nums;color:var(--muted);font-size:11.5px}
+  .tl-edge .arr{color:var(--muted);margin-left:7px;font-size:11.5px}
+  .segment{font-size:12.5px;margin-bottom:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+
+  .params{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:10px}
+  .param{display:flex;align-items:center;justify-content:space-between;gap:9px;background:var(--soft);
+         border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-size:12px;color:var(--ink)}
+  .param input{width:82px;padding:5px 7px;border:1px solid #D9BFA2;border-radius:6px;font-size:12.5px;
+               background:#FFFDF9;text-align:right;font-variant-numeric:tabular-nums}
+  .param input:focus{outline:2px solid #E7CFB8}
+  .cfg-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;
+               padding-top:14px;border-top:1px dashed var(--line)}
+  .cfg-actions input{border:1px solid #D9BFA2;border-radius:7px;padding:7px 10px;font-size:12.5px;background:#FFFDF9}
+  .logrow{font-size:11.5px;color:var(--muted);padding:6px 0;border-bottom:1px dashed #F1E7DA}
+  .logrow b{color:var(--brush);font-weight:600}
+
+  .flash{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:80;display:none;
+         background:#FBF3E2;border:1px solid #E8D5A0;border-radius:9px;padding:10px 18px;
+         font-size:12.5px;box-shadow:0 8px 26px rgba(58,46,45,.16);max-width:80vw}
+  .modal-mask{position:fixed;inset:0;background:rgba(58,46,45,.5);display:none;align-items:center;justify-content:center;z-index:60}
+  .modal-mask.open{display:flex}
+  .modal{background:#fff;border-radius:14px;padding:22px;width:520px;max-width:94vw;box-shadow:0 14px 44px rgba(58,46,45,.3)}
+  .modal h4{font-size:15px;color:var(--brush);margin-bottom:12px}
+  .modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+  .modal input,.modal textarea{width:100%;padding:7px 9px;border:1px solid #D9BFA2;border-radius:6px;font-size:13px;background:#FFFDF9}
+  .modal textarea{height:64px;resize:vertical}
+  .modal .actions{margin-top:16px;display:flex;gap:8px;justify-content:flex-end}
+
+  @media(max-width:1180px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+                           .g21{grid-template-columns:1fr}}
+  @media(max-width:1000px){body .side{width:70px}
+                            body .side-head .brand,body .nav-cap,body .nav-item .label,body .side-foot{display:none}
+                            body .side-head{justify-content:center;padding:0}
+                            body .nav-item{justify-content:center;padding:11px 0}
+                            body .main{margin-left:70px}
+                            .g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:700px){.g4,.g3,.g2,.mini{grid-template-columns:1fr}
+                           .topbar{padding:0 16px;flex-wrap:wrap;height:auto;min-height:76px}
+                           .topbar .env{margin-left:0}
+                           .content{padding:18px 14px 44px}
+                           .filterbar .scope{margin-left:0}}
+</style>
+</head>
+<body>
+
+<!-- ============ 可折叠左侧导航 ============ -->
+<aside class="side">
+  <div class="side-head">
+    <img src="/static/img/pcc_logo.svg" alt="Pacific Coffee" onerror="this.style.display='none'">
+    <div class="brand">Pulse<small>客户生命周期决策工作台</small></div>
+    <button class="navtoggle" onclick="toggleNav()" title="折叠 / 展开导航">&#9776;</button>
+  </div>
+  <div class="nav">
+    <div class="nav-cap">工作模块</div>
+    <div class="nav-item active" data-view="overview" onclick="switchView('overview')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span class="label">营销总览</span>
+    </div>
+    <div class="nav-item" data-view="cases" onclick="switchView('cases')">
+      <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><path d="M6 9v4c0 3 3 4 6 4s6-1 6-4V9"/><circle cx="18" cy="6" r="2.5"/><path d="M9 17l3 3 3-3"/></svg>
+      <span class="label">客户案例演示</span>
+    </div>
+    <div class="nav-item" data-view="audit" onclick="switchView('audit')">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      <span class="label">营销审批记录</span>
+    </div>
+    <div class="nav-item" data-view="config" onclick="switchView('config')">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="#FFFDF9"/><circle cx="15" cy="17" r="2.4" fill="#FFFDF9"/></svg>
+      <span class="label">规则阈值配置</span>
+    </div>
+  </div>
+  <div class="side-foot"><b>Pulse</b> · 内部营销工作台<br>模块视图彼此独立</div>
+</aside>
+
+<!-- ============ 右侧主内容区 ============ -->
+<div class="main">
+  <header class="topbar">
+    <svg class="floral-top" viewBox="0 0 100 100" aria-hidden="true">
+      <g fill="#BD8D63"><ellipse cx="50" cy="24" rx="8" ry="19"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(300 50 50)"/></g>
+      <circle cx="50" cy="50" r="10" fill="#8A5A3C"/>
+    </svg>
+    <div class="crumb"><span id="crumb">营销总览</span><small id="viewdesc">大盘核心数字 · 客户状态 · 预警汇总</small></div>
+    <div class="env">
+      <span class="chip">评估截止 <b id="cut">…</b></span>
+      <span class="chip">规则版本 <b id="rver">…</b></span>
+    </div>
+  </header>
+
+  <div class="content">
+    <svg class="floral-deco" viewBox="0 0 100 100" aria-hidden="true">
+      <g fill="#8A5A3C"><ellipse cx="50" cy="24" rx="9" ry="20"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(300 50 50)"/></g>
+      <circle cx="50" cy="50" r="10" fill="#BD8D63"/>
+    </svg>
+
+    <!-- ---------- 视图 1 · 营销总览 ---------- -->
+    <section class="view active" data-view="overview">
+      <div class="filterbar" data-view="overview">
+        <span class="fbt">本页筛选</span>
+        <label>评估周期
+          <select data-f="date"><option value="all">当前评估周期</option><option value="d30">近 30 天窗口</option><option value="d90">近 90 天窗口</option></select>
+        </label>
+        <label>客户分组
+          <select data-f="group"><option value="all">全部状态</option><option value="active">活跃复购</option><option value="risk">沉寂预警</option><option value="deep">深度沉寂</option><option value="churn">判定流失</option><option value="first">首购激活</option><option value="new">进店未消费</option></select>
+        </label>
+        <span class="scope">仅作用于 <b>营销总览</b>，不影响其他模块 · <span id="ovwindow">当前评估周期</span></span>
+      </div>
+
+      <div class="grid g4" id="kpis"></div>
+
+      <div class="grid g21">
+        <div class="card">
+          <div class="eyebrow">汇总图表 / 01</div>
+          <h3>客户状态大盘 <span class="hint">六状态 · 每客一行</span></h3>
+          <div class="ring-wrap">
+            <div id="distbar"></div>
+            <div id="distlist" class="state-grid"></div>
+          </div>
+          <div class="legend" id="distlegend"></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">汇总图表 / 02</div>
+          <h3>预警提前量 <span class="hint">观察窗内 · 状态迁移</span></h3>
+          <div id="leadcard"></div>
+        </div>
+      </div>
+
+      <div class="grid g2">
+        <div class="card">
+          <div class="eyebrow">汇总图表 / 03</div>
+          <h3>状态转移矩阵 <span class="hint">合法转移 · 计数</span></h3>
+          <div id="matrix" class="matrix"></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">汇总图表 / 04</div>
+          <h3>六出口漏斗与预算 <span class="hint">决策分流口径</span></h3>
+          <div class="grid g2" style="gap:14px;margin-bottom:0">
+            <div id="funnel"></div>
+            <div id="budgetbox"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 视图 2 · 客户案例演示 ---------- -->
+    <section class="view" data-view="cases">
+      <div class="filterbar" data-view="cases">
+        <span class="fbt">本页筛选</span>
+        <label>日期范围
+          <select data-f="date"><option value="all">全部时段</option><option value="d30">近 30 天</option><option value="d90">近 90 天</option></select>
+        </label>
+        <label>客户分组
+          <select data-f="group"><option value="all">全部状态</option><option value="active">活跃复购</option><option value="risk">沉寂预警</option><option value="deep">深度沉寂</option><option value="churn">判定流失</option></select>
+        </label>
+        <span class="scope">仅作用于 <b>客户案例演示</b>，不影响其他模块</span>
+      </div>
+
+      <div class="mini" id="casekpis"></div>
+
+      <div class="grid g2">
+        <div class="card">
+          <div class="eyebrow">明细列表 / 01</div>
+          <h3>回流预警案例池 <span class="hint">按场景切换</span></h3>
+          <div class="seg">
+            <button class="btn" data-cg="A" onclick="loadCase('A')">回流案例</button>
+            <button class="btn" data-cg="B" onclick="loadCase('B')">流失预警</button>
+            <button class="btn" data-cg="C" onclick="loadCase('C')">健康常客</button>
+          </div>
+          <div class="hintbar" id="casehint" style="margin-bottom:10px"></div>
+          <div id="caselist"></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">明细列表 / 02</div>
+          <h3>单客户状态时间轴 <span class="hint" id="tlsub">选择客户</span></h3>
+          <div id="timeline"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 视图 3 · 营销审批记录 ---------- -->
+    <section class="view" data-view="audit">
+      <div class="filterbar" data-view="audit">
+        <span class="fbt">本页筛选</span>
+        <label>日期范围
+          <select data-f="date"><option value="all">全部时段</option><option value="d30">近 30 天</option><option value="d90">近 90 天</option></select>
+        </label>
+        <label>决策分组
+          <select data-f="group"><option value="all">全部决策</option><option value="approved">已批准</option><option value="nofund">不花钱</option></select>
+        </label>
+        <span class="scope">仅作用于 <b>营销审批记录</b>，不影响其他模块</span>
+      </div>
+
+      <div class="mini" id="auditsum"></div>
+
+      <div class="card">
+        <div class="eyebrow">明细列表 / 03</div>
+        <h3>审批与操作记录 <span class="hint">页载自动加载</span></h3>
+        <div style="margin-bottom:12px"><button class="btn small" onclick="loadAudit()">刷新</button></div>
+        <div id="audit"></div>
+      </div>
+    </section>
+
+    <!-- ---------- 视图 4 · 规则阈值配置 ---------- -->
+    <section class="view" data-view="config">
+      <div class="filterbar" data-view="config">
+        <span class="fbt">本页筛选</span>
+        <label>变更日期
+          <select data-f="date"><option value="all">全部时段</option><option value="d30">近 30 天</option><option value="d90">近 90 天</option></select>
+        </label>
+        <label>参数分组
+          <select data-f="group"><option value="all">全部参数</option><option value="warn">预警参数</option><option value="silent">沉寂参数</option><option value="recall">回流与预算</option></select>
+        </label>
+        <span class="scope">仅作用于 <b>规则阈值配置</b>，不影响其他模块</span>
+      </div>
+
+      <div class="mini" id="cfgkpis"></div>
+
+      <div class="card">
+        <div class="eyebrow">参数明细 / 04</div>
+        <h3>规则与预算控制面板 <span class="hint">任一改动 → 全链路重新计算</span></h3>
+        <div id="configform"></div>
+        <div class="cfg-actions">
+          <span class="param" style="background:transparent;border:none;padding:0">操作人 <input id="cfg-approver" placeholder="姓名" style="width:132px"></span>
+          <span class="param" style="background:transparent;border:none;padding:0">理由 <input id="cfg-reason" placeholder="本次调整依据" style="width:224px"></span>
+          <button class="btn primary" onclick="applyConfig()">应用并重算</button>
+          <span class="muted" id="cfgstate"></span>
+        </div>
+        <div id="cfglog" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="flash" id="flash"></div>
+<div class="modal-mask" id="modal-mask"><div class="modal"><div id="modalbody"></div></div></div>
+
+<script>
+const API='';
+let CUR='';
+let CASE_CIDS={A:[],B:[],C:[]};
+const ST = {NEW_UNPURCHASED:['p-new','进店未消费'],FIRST_PURCHASE:['p-first','首购激活'],
+            ACTIVE:['p-active','活跃复购'],AT_RISK:['p-risk','沉寂预警'],
+            DEEP_DORMANT:['p-deep','深度沉寂'],CHURNED:['p-churn','判定流失']};
+const EXITS={high:['高价值','#8A5A3C'],medium:['中价值','#BD8D63'],low:['低价值·不花','#B9A58E'],
+             normal:['节奏正常·不花','#43718E'],C:['历史不足','#6B5F55'],no_consent:['无同意·拦截','#3A2E2D']};
+const STATE_ORDER=['ACTIVE','AT_RISK','DEEP_DORMANT','FIRST_PURCHASE','CHURNED','NEW_UNPURCHASED'];
+const STATE_COLOR={ACTIVE:'#43718E',AT_RISK:'#BD8D63',DEEP_DORMANT:'#8A5A3C',
+                   FIRST_PURCHASE:'#C9A87F',CHURNED:'#3A2E2D',NEW_UNPURCHASED:'#A6907B'};
+const MATRIX_S=['NEW_UNPURCHASED','FIRST_PURCHASE','ACTIVE','AT_RISK','DEEP_DORMANT','CHURNED'];
+
+/* ---------- view layer (new; all legacy ids / fn names / endpoints untouched) ---------- */
+const VIEW_META={
+  overview:{title:'营销总览',desc:'大盘核心数字 · 客户状态 · 预警汇总'},
+  cases:{title:'客户案例演示',desc:'A/B 组回流预警案例池 · 单客户时间轴弧线'},
+  audit:{title:'营销审批记录',desc:'审批明细 · 批准与发送分离'},
+  config:{title:'规则阈值配置',desc:'预警 / 沉寂 / 回流参数 · 全链路重算'}
+};
+const VIEW_FILTERS={overview:{date:'all',group:'all'},cases:{date:'all',group:'all'},
+                    audit:{date:'all',group:'all'},config:{date:'all',group:'all'}};
+const GROUP_KW={
+  overview:{active:['活跃复购'],risk:['沉寂预警'],deep:['深度沉寂'],churn:['判定流失'],
+            first:['首购激活'],new:['进店未消费']},
+  cases:{active:['活跃复购'],risk:['沉寂预警'],deep:['深度沉寂'],churn:['判定流失']},
+  audit:{approved:['批准','approve','send','send_coupon'],nofund:['不花','no_spend','skip']},
+  config:{warn:[],silent:[],recall:[]}
+};
+let ACTIVE='overview';
+
+function switchView(v){
+  ACTIVE=v;
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.dataset.view===v));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===v));
+  document.getElementById('crumb').textContent=VIEW_META[v].title;
+  document.getElementById('viewdesc').textContent=VIEW_META[v].desc;
+  applyViewFilters(v);
+}
+function toggleNav(){document.body.classList.toggle('nav-collapsed');}
+function withinWindow(ds,mode){
+  if(mode==='all')return true;
+  const cut=new Date('2026-09-30T00:00:00');
+  const d=new Date(ds+'T00:00:00');
+  if(isNaN(d.getTime()))return true;
+  const days=Math.round((cut-d)/86400000);
+  return mode==='d30'?days<=30:days<=90;
+}
+function matchGroup(v,row,txt){
+  const f=VIEW_FILTERS[v]||{};
+  if(!f.group||f.group==='all')return true;
+  if(v==='config'){
+    const inp=row.querySelector('input[data-k]');
+    const k=inp?(inp.dataset.k||''):'';
+    const warn=/WARN|DEV|THRESHOLD|LEAD/i.test(k), silent=/FLAG|SILENCE|MAX|CAP/i.test(k);
+    if(f.group==='warn')return warn;
+    if(f.group==='silent')return silent&&!warn;
+    return !warn&&!silent;
+  }
+  const kw=(GROUP_KW[v]||{})[f.group]||[];
+  return !kw.length||kw.some(x=>txt.indexOf(x)>=0);
+}
+function applyViewFilters(v){
+  const box=document.querySelector('.view[data-view="'+v+'"]');
+  if(!box)return;
+  const f=VIEW_FILTERS[v]||{};
+  const mode=f.date||'all';
+  const ov=document.getElementById('ovwindow');
+  if(v==='overview'&&ov)ov.textContent=mode==='all'?'当前评估周期':(mode==='d30'?'近 30 天窗口':'近 90 天窗口');
+  box.querySelectorAll('[data-frow]').forEach(row=>{
+    const txt=row.textContent||'';
+    let show=true;
+    const m=txt.match(/\d{4}-\d{2}-\d{2}/);
+    if(m)show=withinWindow(m[0],mode);
+    if(show&&row.hasAttribute('data-fgroup'))show=matchGroup(v,row,txt);
+    row.classList.toggle('row-hidden',!show);
+  });
+}
+function initShell(){
+  document.querySelectorAll('.filterbar select[data-f]').forEach(sel=>{
+    sel.addEventListener('change',()=>{
+      const v=sel.closest('.filterbar').dataset.view;
+      VIEW_FILTERS[v][sel.dataset.f]=sel.value;
+      applyViewFilters(v);
+    });
+  });
+  const obs=new MutationObserver(()=>applyViewFilters(ACTIVE));
+  document.querySelectorAll('.view').forEach(v=>obs.observe(v,{childList:true,subtree:true}));
+  switchView('overview');
+}
+
+/* ---------- helpers (legacy names kept) ---------- */
+async function j(url,opts){const r=await fetch(API+url,opts);if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||('HTTP '+r.status));}return r.json();}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function hkd(x){return 'HK$'+(Number(x||0)).toLocaleString();}
+function flash(msg,err){const f=document.getElementById('flash');f.textContent=msg;f.style.display='block';f.style.background=err?'#F9EAE6':'#FBF3E2';setTimeout(()=>f.style.display='none',2600);}
+function openModal(html){document.getElementById('modalbody').innerHTML=html;document.getElementById('modal-mask').classList.add('open');}
+function closeModal(){document.getElementById('modal-mask').classList.remove('open');}
+document.getElementById('modal-mask').addEventListener('click',e=>{if(e.target.id==='modal-mask')closeModal();});
+
+// ---------------- load everything (OPT-04: auto on page load) ----------------
+async function boot(){
+  try{
+    await Promise.all([loadConfig(),loadLifecycle(),loadActions(),loadAudit()]);
+    loadBudget();
+  }catch(e){flash('加载失败：'+e.message,true);}
+}
+
+// ---------------- config ----------------
+async function loadConfig(){
+  const c=await j('/api/config');
+  CUR=c.version;
+  document.getElementById('rver').textContent=c.version;
+  document.getElementById('cut').textContent=c.cut||'2026-09-30';
+  const s=(c.schema||[]);
+  document.getElementById('configform').innerHTML =
+    '<div class="params">'+
+    s.map(x=>`<span class="param" data-frow data-fgroup>${esc(x.label)} <input data-k="${x.field}" data-t="${x.type}" data-lo="${x.min}" data-hi="${x.max}" type="number" step="any" value="${c.fields[x.field]}"></span>`).join('')+
+    '</div>';
+  document.getElementById('cfgkpis').innerHTML=
+    `<div class="kpi"><div class="t">当前规则版本</div><div class="v">${esc(c.version)}</div><div class="s">评估截止 ${esc(c.cut||'')}</div></div>
+     <div class="kpi"><div class="t">可调参数</div><div class="v">${s.length}</div><div class="s">预警 / 沉寂 / 回流与预算</div></div>
+     <div class="kpi"><div class="t">累计调整</div><div class="v">${(c.log||[]).length}</div><div class="s">每次调整留痕并递增版本</div></div>`;
+  const log=(c.log||[]).slice().reverse().slice(0,6);
+  document.getElementById('cfglog').innerHTML = log.length?
+    '<div class="eyebrow" style="margin-bottom:8px">最近调整</div>'+
+    log.map(e=>`<div class="logrow" data-frow>${esc(e.at||'')} · <b>${esc(e.to_version)}</b> · ${esc((e.changed?Object.keys(e.changed).join('/'):''))} · ${esc(e.approver||'')}</div>`).join(''):'';
+}
+async function applyConfig(){
+  const approver=(document.getElementById('cfg-approver').value||'').trim();
+  const reason=(document.getElementById('cfg-reason').value||'').trim();
+  if(!approver){flash('请输入操作人姓名',true);return;}
+  const changes={};
+  const inputs=document.querySelectorAll('#configform input[data-k]');
+  inputs.forEach(i=>{if(i.value!==''&&i.value!==i.defaultValue)changes[i.dataset.k]=Number(i.value);});
+  if(!Object.keys(changes).length){flash('未检测到参数改动',true);return;}
+  document.getElementById('cfgstate').textContent='重算中…';
+  try{
+    const r=await j('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({changes,approver,reason})});
+    CUR=r.config.version;document.getElementById('rver').textContent=r.config.version;
+    flash('已应用，规则版本 '+r.config.version+'，全链路已重算');
+    await boot();
+    document.getElementById('cfg-reason').value='';
+  }catch(e){flash(e.message,true);}finally{document.getElementById('cfgstate').textContent='';}
+}
+
+// ---------------- lifecycle ----------------
+async function loadLifecycle(){
+  const lc=await j('/api/lifecycle');
+  const d=lc.distribution,pct=lc.distribution_pct,tot=lc.total;
+  renderKpis(lc);
+
+  // ring chart: independent layout, brand palette
+  let acc=0;
+  const segs=STATE_ORDER.map(s=>{
+    const pc=Number(pct[s]||0);
+    const a=acc;acc+=pc;
+    return `${STATE_COLOR[s]} ${a.toFixed(2)}% ${acc.toFixed(2)}%`;
+  }).join(',');
+  document.getElementById('distbar').innerHTML=
+    `<div class="ring" style="background:conic-gradient(${segs})">
+       <div class="ctr"><b>${tot}</b><span>在册会员</span></div>
+     </div>`;
+  document.getElementById('distlist').innerHTML=STATE_ORDER.map(s=>
+    `<div class="srow" data-frow data-fgroup><i class="dot" style="background:${STATE_COLOR[s]}"></i>
+       <span class="nm">${ST[s][1]}</span><span class="num">${d[s]||0}</span><span class="pc">${pct[s]||0}%</span></div>`).join('');
+  document.getElementById('distlegend').innerHTML=STATE_ORDER.map(s=>
+    `<span><i style="background:${STATE_COLOR[s]}"></i>${ST[s][1]}</span>`).join('');
+
+  // matrix: heat table, independent hierarchy
+  const m=lc.transition_matrix||{};
+  const legal=lc.legal||{};
+  let h='<table><tr><th></th>'+MATRIX_S.map(s=>`<th>${ST[s][1]}</th>`).join('')+'</tr>';
+  MATRIX_S.forEach(f=>{
+    h+=`<tr data-frow><td class="lbl">${ST[f][1]}</td>`+MATRIX_S.map(t=>{
+      const v=(m[f]&&m[f][t])||0;const okv=(legal[f]||[]).includes(t);
+      const cls=v>5000?'hot2':(v>0?'hot':'');
+      return `<td class="${cls}" title="${okv?'合法转移':''}">${v||'·'}</td>`;
+    }).join('')+'</tr>';
+  });
+  h+='</table><div class="note">颜色深浅表示转移发生量；回流是一次状态转移，不新建客户 ID。</div>';
+  document.getElementById('matrix').innerHTML=h;
+
+  // lead card (OPT-02: computed warn-lead metrics rendered on page)
+  const wl=lc.warn_lead_days||{};
+  const win=lc.window||{};
+  const lo=Number(wl.min||0),hi=Number(wl.max||0),mean=Number(wl.mean||0);
+  const pos=(x)=>hi>lo?Math.max(2,Math.min(98,((x-lo)/(hi-lo))*96+2)):50;
+  document.getElementById('leadcard').innerHTML=
+   `<div class="lead-hero"><span class="lead-big">${wl.mean!=null?mean:'—'}</span><span class="lead-unit">天 · 平均预警提前</span></div>
+    <div class="lead-meta">可测 ${wl.count||0} 人 · 范围 ${wl.min!=null?lo:'—'}–${wl.max!=null?hi:'—'} 天</div>
+    <div class="lead-axis">
+      <span class="pt edge" style="left:${pos(lo)}%"></span>
+      <span class="pt" style="left:${pos(mean)}%"></span>
+      <span class="pt edge" style="left:${pos(hi)}%"></span>
+      <span class="lb" style="left:2%;transform:translateX(0)">最短 <b>${lo}</b></span>
+      <span class="lb" style="left:50%">均值 <b>${wl.mean!=null?mean:'—'}</b></span>
+      <span class="lb" style="left:98%;transform:translateX(-100%)">最长 <b>${hi}</b></span>
+    </div>
+    <div class="window-strip"><span>观察窗 <b>T−${win.W!=null?win.W:'W'}</b></span>
+      <span>结果窗 <b>T+${win.H!=null?win.H:'H'}</b></span>
+      <span>截止 <b>${win.T||'—'}</b></span>
+      <span>沉寂中 · 值得激励 <b>${(d['AT_RISK']||0)+(d['DEEP_DORMANT']||0)}</b></span></div>`;
+
+  const counts=lc.demo_pool_counts||{};
+  document.getElementById('casehint').innerHTML=`候选池：回流 ${counts.A||0} · 沉寂 ${counts.B||0} · 健康 ${counts.C||0}`;
+  document.getElementById('casekpis').innerHTML=
+    `<div class="kpi"><div class="t">回流案例池 · A</div><div class="v">${counts.A||0}</div><div class="s">沉寂→预警→回流全链路</div></div>
+     <div class="kpi"><div class="t">流失预警池 · B</div><div class="v">${counts.B||0}</div><div class="s">沉寂中 · 值得激励</div></div>
+     <div class="kpi"><div class="t">健康常客池 · C</div><div class="v">${counts.C||0}</div><div class="s">节奏正常对照组</div></div>`;
+  await loadCases();
+}
+
+// ---------------- KPIs (OPT-04: auto-filled on page load) ----------------
+function renderKpis(lc){
+  const d=lc.distribution||{};
+  const cards=[
+    ['在册会员',lc.total||0,'六状态全覆盖 · 截止 '+(lc.cut||'')],
+    ['活跃复购',d['ACTIVE']||0,'节奏正常 · 观察窗内'],
+    ['沉寂 · 值得激励',(d['AT_RISK']||0)+(d['DEEP_DORMANT']||0),
+     '沉寂预警 '+(d['AT_RISK']||0)+' · 深度沉寂 '+(d['DEEP_DORMANT']||0)],
+    ['判定流失',d['CHURNED']||0,'超流失判定时长'],
+  ];
+  document.getElementById('kpis').innerHTML=cards.map(k=>
+    `<div class="kpi"><div class="t">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+}
+
+// ---------------- actions / funnel / budget ----------------
+async function loadActions(){
+  const [a,sum]=await Promise.all([j('/api/actions?limit=500'),j('/api/summary')]);
+  const c=sum.review.counts||{};
+  const max=Math.max(1,...Object.values(c).map(v=>v||0));
+  document.getElementById('funnel').innerHTML='<div class="funnel">'+
+    Object.keys(EXITS).map(g=>{
+      const n=c[g]||0;const [lab,color]=EXITS[g];
+      return `<div class="fl" data-frow><span class="nm">${lab}</span><div><div class="fb" style="width:${Math.round(100*n/max)}%;background:${color}"></div></div><span class="n">${n}</span></div>`;
+    }).join('')+'</div>';
+}
+async function loadBudget(){
+  const b=await j('/api/budget?coupons=350&face=44');
+  document.getElementById('budgetbox').innerHTML=
+   `<div class="budget-big">${b.coverage}%</div>
+    <div class="hintbar" style="margin-top:6px">本周预算覆盖</div>
+    <table class="tbl" style="margin-top:12px">
+      <tr data-frow><td>投放人数</td><td class="mono"><b>${b.funded_n}</b> / ${b.demand_n}</td></tr>
+      <tr data-frow><td>未覆盖</td><td class="mono">${b.unserved_n}</td></tr>
+      <tr data-frow><td>预算额度</td><td class="mono">${hkd(b.funded_amt)}</td></tr>
+      <tr data-frow><td>中价值候选</td><td class="mono">${b.demand_medium} 位（${b.funded_medium} 入选）</td></tr>
+    </table>`;
+}
+
+// ---------------- demo cases + timeline (OPT-01 order comes from backend, unchanged) ----------------
+async function loadCases(){
+  const all=await j('/api/lifecycle/cases');
+  CASE_CIDS={A:all.A||[],B:all.B||[],C:all.C||[]};
+  const hint=document.getElementById('casehint');
+  if(!hint.dataset.g)hint.dataset.g='A';
+  document.querySelectorAll('[data-cg]').forEach(b=>b.classList.toggle('primary',b.dataset.cg==='A'));
+  renderCaseList();
+  const first=(CASE_CIDS.A||[])[0];
+  if(first&&!document.getElementById('timeline').innerHTML.trim())showTimeline(first.customer_id);
+}
+function caseRow(c,idx){
+  const st=c.state,p=ST[st]||['p-active',st];
+  return `<div class="tl-row case-row" data-frow data-fgroup><span class="tl-date">${esc(c.customer_id)}</span>
+    <span><span class="pill ${p[0]}">${p[1]}</span></span>
+    <span class="muted">${esc(c.store_id)}</span>
+    <button class="btn small" onclick="showTimeline('${esc(c.customer_id)}')">时间轴</button></div>`;
+}
+function renderCaseList(){
+  const cont=document.getElementById('caselist');
+  const g=document.getElementById('casehint').dataset.g||'A';
+  const list=CASE_CIDS[g]||[];
+  cont.innerHTML=list.length?
+    '<div class="muted" style="margin-bottom:6px">共 '+list.length+' 位 · 显示前 8</div>'+
+    '<div class="timeline">'+list.slice(0,8).map(caseRow).join('')+'</div>'
+    :'<div class="hintbar">正在加载案例…</div>';
+  applyViewFilters('cases');
+}
+async function loadCase(g){
+  if(!(CASE_CIDS[g]||[]).length)await loadCases();
+  document.getElementById('casehint').dataset.g=g;
+  document.getElementById('casehint').textContent = g==='A'?'全链路回流：进店→消费→沉寂→预警→回到活跃':
+    (g==='B'?'流失预警：沉寂中、值得激励':'健康常客：节奏正常对照组');
+  document.querySelectorAll('[data-cg]').forEach(b=>b.classList.toggle('primary',b.dataset.cg===g));
+  renderCaseList();
+  const list=CASE_CIDS[g]||[];
+  if(list.length)showTimeline(list[0].customer_id);
+}
+async function showTimeline(cid){
+  document.getElementById('tlsub').textContent=cid;
+  const tl=await j('/api/lifecycle/customers/'+encodeURIComponent(cid)+'/timeline');
+  const trs=tl.transitions||[];
+  let h=`<div class="segment">当前状态：<span class="pill ${ST[tl.state]?ST[tl.state][0]:''}">${ST[tl.state]?ST[tl.state][1]:tl.state}</span>
+     <span class="muted"> · 静默 ${tl.silence_days!=null?tl.silence_days+' 天':'—'} · 基线 ${tl.median_gap_days!=null?tl.median_gap_days+' 天':'—'}</span></div>`;
+  h+='<div class="timeline">';
+  (trs||[]).forEach(tr=>{
+    const to=tr.to_state;
+    const lbl=(ST[to]?ST[to][1]:to);
+    const trig=tr.trigger_event;
+    h+=`<div class="tl-row tl-arc" data-frow><span class="tl-date">${esc(tr.occurred_at)}</span>
+      <span class="tl-edge"><span class="pill ${ST[to]?ST[to][0]:''}">${lbl}</span>
+      <span class="arr">· ${esc(trig)}</span></span></div>`;
+  });
+  if(!trs.length)h+='<div class="muted">该客户无状态迁移记录</div>';
+  h+='</div>';
+  document.getElementById('timeline').innerHTML=h;
+  applyViewFilters('cases');
+}
+
+// ---------------- audit (OPT-04: auto-loaded) ----------------
+async function loadAudit(){
+  const a=await j('/api/audit');
+  const recs=(a.records||[]).slice().reverse().slice(0,12);
+  document.getElementById('auditsum').innerHTML=
+    `<div class="kpi"><div class="t">审批记录</div><div class="v">${recs.length}</div><div class="s">最近 12 条</div></div>
+     <div class="kpi"><div class="t">已批准</div><div class="v">${recs.filter(r=>r.decision).length}</div><div class="s">每条含理由与操作人</div></div>
+     <div class="kpi"><div class="t">发送记录</div><div class="v">${recs.filter(r=>r.sent_at).length}</div><div class="s">批准与发送分离</div></div>`;
+  document.getElementById('audit').innerHTML=recs.length?
+   '<table class="tbl"><tr><th>时间</th><th>客户</th><th>动作</th><th>渠道</th><th>操作人</th><th>sent</th></tr>'+
+   recs.map(r=>`<tr data-frow data-fgroup><td class="mono">${esc(r.approved_at||'')}</td><td>${esc(r.customer_id||'—')}</td>
+     <td>${esc(r.decision||'')}</td><td>${esc(r.channel||'')}</td><td>${esc(r.approved_by||'')}</td>
+     <td>${r.sent_at?'是':'<span class="muted">—</span>'}</td></tr>`).join('')+'</table>'
+   :'<div class="muted">暂无记录</div>';
+  applyViewFilters('audit');
+}
+
+initShell();
+boot();
+</script>
+</body>
+</html>

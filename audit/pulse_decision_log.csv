@@ -1,0 +1,6 @@
+﻿"message_id","decision","customer_id","store_id","group","cap","net_gain","cut","week","consent_basis","consent_check","reason","approved_by","approved_at","rule_version"
+"M-PULSE-C1D3DF73","suppressed","","PCC007","store_suppression","0","","2026-09-30","13","n/a - store-level decision","n/a","[结构性:装修/施工] 商场围挡施工，确认外部原因，本周不投","Ms. Chan","2026-11-19 19:15:32","v1.0"
+"M-PULSE-82322F9A","released","","PCC007","store_release","0","","2026-09-30","13","n/a - store-level decision","n/a","施工已结束，恢复投放","Ms. Chan","2026-11-19 19:15:35","v1.0"
+"M-PULSE-6667C651","suppressed","","PCC007","store_suppression","0","","2026-09-30","13","n/a - store-level decision","n/a","[结构性:装修/施工] 商场围挡施工至 12 月，确认外部原因，本周不投（演示签字）","Ms. Chan","2026-11-19 19:17:07","v1.0"
+"M-PULSE-CF2391BB","diagnosed","","PCC007","store_diagnosis","0","","2026-09-30","13","n/a - store-level diagnosis","n/a","[确认为结构性，建议停本周投放（需另行签字）|装修/施工] B1 整层围挡，已约店长周一复盘；本周先记录，暂不停投","Mr. Wong","2026-11-19 19:34:20","v1.0"
+"M-PULSE-26C0E7BC","released","","PCC007","store_release","0","","2026-09-30","13","n/a - store-level decision","n/a","改为诊断视图：只记录结论，本周不停投","Mr. Wong","2026-11-19 19:34:25","v1.0"

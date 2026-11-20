@@ -1,0 +1,44 @@
+[
+  {
+    "store_id": "PCC007",
+    "week": 13,
+    "status": "released",
+    "structural": "装修/施工",
+    "reason": "商场围挡施工，确认外部原因，本周不投",
+    "approver": "Ms. Chan",
+    "approved_at": "2026-11-19 19:15:32",
+    "coupons": 350,
+    "face": 44.0,
+    "price": {
+      "gain_delta": -6103,
+      "gain_delta_pct": -0.86,
+      "swapped_n": 9,
+      "deferred_n": 9,
+      "deferred_amt": 450
+    },
+    "released_by": "Ms. Chan",
+    "released_at": "2026-11-19 19:15:35",
+    "release_reason": "施工已结束，恢复投放"
+  },
+  {
+    "store_id": "PCC007",
+    "week": 13,
+    "status": "released",
+    "structural": "装修/施工",
+    "reason": "商场围挡施工至 12 月，确认外部原因，本周不投（演示签字）",
+    "approver": "Ms. Chan",
+    "approved_at": "2026-11-19 19:17:07",
+    "coupons": 350,
+    "face": 44.0,
+    "price": {
+      "gain_delta": -6103,
+      "gain_delta_pct": -0.86,
+      "swapped_n": 9,
+      "deferred_n": 9,
+      "deferred_amt": 450
+    },
+    "released_by": "Mr. Wong",
+    "released_at": "2026-11-19 19:34:25",
+    "release_reason": "改为诊断视图：只记录结论，本周不停投"
+  }
+]

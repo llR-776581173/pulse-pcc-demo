@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pulse · Decision Workspace | Pacific Coffee</title>
+<style>
+:root{
+  --ink:#2B2220; --ink2:#6E625C; --ink3:#9A8E87;
+  --bg:#F4F0EB; --card:#FFFFFF; --line:#E4DCD3; --line2:#EFE9E2;
+  --red:#9E1B1B; --red2:#C0392B; --redsoft:#F7E7E4; --redpale:#FCF3F1;
+  --side:#241A18; --side2:#372521; --sidehi:#5A2A22;
+  --ok:#2E7D5B; --okbg:#E9F4EE; --warn:#B8791B; --warnbg:#FFF4E0;
+  --blue:#2F5D8A; --bluebg:#EDF3F9;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:13px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--red);text-decoration:none}
+
+/* ============ 侧栏 ============ */
+aside{position:fixed;left:0;top:0;bottom:0;width:218px;background:linear-gradient(165deg,var(--side) 0%,#1C1311 100%);color:#EFE6E1;z-index:20;display:flex;flex-direction:column;border-right:1px solid #000}
+.brand{padding:22px 18px 16px;border-bottom:1px solid rgba(255,255,255,.09)}
+.logo{display:flex;align-items:center;gap:10px}
+.logomark{width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;letter-spacing:-1px;box-shadow:0 2px 8px rgba(158,27,27,.45)}
+.logo b{font-size:13px;letter-spacing:1.6px;display:block;line-height:1.15}
+.logo small{font-size:9px;letter-spacing:2.6px;color:#B9A8A0;text-transform:uppercase}
+.ws{font-size:16px;font-weight:700;letter-spacing:.4px;margin-top:16px;color:#fff}
+.ws span{display:block;font-size:9px;letter-spacing:2.8px;color:#A9918A;font-weight:500;margin-top:2px;text-transform:uppercase}
+nav{padding:14px 10px;flex:1;overflow-y:auto}
+nav::-webkit-scrollbar{width:4px}nav::-webkit-scrollbar-thumb{background:#5A4540;border-radius:3px}
+.navi{display:flex;align-items:center;gap:10px;padding:9px 11px;margin:2px 0;border-radius:5px;cursor:pointer;font-size:12.5px;color:#C8B8B1;transition:.16s;user-select:none;border-left:3px solid transparent}
+.navi:hover{background:rgba(255,255,255,.06);color:#fff}
+.navi.on{background:var(--sidehi);color:#fff;border-left-color:var(--red2);font-weight:600}
+.navi i{width:16px;text-align:center;font-style:normal;font-size:13px;opacity:.9}
+.navi em{font-style:normal;margin-left:auto;font-size:9px;background:rgba(255,255,255,.11);padding:1px 5px;border-radius:8px;color:#D8C8C1}
+.navi.on em{background:var(--red2);color:#fff}
+.sidefoot{padding:12px 16px 16px;border-top:1px solid rgba(255,255,255,.09);font-size:10px;color:#8E7B74;line-height:1.6}
+.sidefoot b{color:#D6C6BF;font-weight:600}
+
+/* ============ 主区 ============ */
+main{margin-left:218px;min-height:100vh}
+.top{background:#fff;border-bottom:1px solid var(--line);padding:0 26px;position:sticky;top:0;z-index:15;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.toprow{display:flex;align-items:flex-end;justify-content:space-between;padding:16px 0 12px;gap:16px;flex-wrap:wrap}
+.crumb{font-size:10px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;font-weight:600}
+h1{font-size:22px;margin:2px 0 2px;font-weight:700;letter-spacing:-.3px}
+.sub{font-size:12px;color:var(--ink2);max-width:660px}
+.filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filters label{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.8px;font-weight:600;display:block;margin-bottom:2px}
+.filters select,.filters input{border:1px solid var(--line);background:#FBF9F6;border-radius:4px;padding:5px 8px;font-size:12px;color:var(--ink);outline:none;font-family:inherit}
+.filters select:focus,.filters input:focus{border-color:var(--red)}
+.pill{font-size:10px;background:var(--okbg);color:var(--ok);border:1px solid #BFE0CD;border-radius:20px;padding:3px 9px;font-weight:600;white-space:nowrap}
+.pill.amber{background:var(--warnbg);color:var(--warn);border-color:#EBD5A8}
+.diffbar{background:linear-gradient(90deg,#3B211D,#5A2A22);color:#F3E6E1;font-size:11.5px;padding:7px 26px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.diffbar b{color:#FFD9A8}
+.diffbar .tag{background:var(--red2);color:#fff;border-radius:3px;padding:1px 7px;font-size:10px;font-weight:700;letter-spacing:.5px}
+.demobtn{margin-left:auto;background:#fff;color:#7E1414;border:1px solid #fff;padding:4px 11px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.demobtn:hover{background:#FFE9D8;border-color:#FFE9D8;color:#7E1414}
+.wrap{padding:20px 26px 60px;max-width:1500px}
+section{display:none;animation:fade .25s ease}
+section.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ============ 卡片 ============ */
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g21{grid-template-columns:1.55fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:15px 16px;box-shadow:0 1px 2px rgba(60,40,30,.03);min-width:0}
+.card h2{font-size:14px;margin:0 0 3px;font-weight:700;letter-spacing:-.1px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card .cap{font-size:11px;color:var(--ink2);margin:0 0 12px;line-height:1.6}
+.card h2 .hint{font-size:10px;font-weight:500;color:var(--ink3);background:var(--bg);border:1px solid var(--line);padding:2px 7px;border-radius:10px;letter-spacing:0}
+.kpi .lab{font-size:11px;color:var(--ink2);font-weight:600;letter-spacing:.2px}
+.kpi .num{font-size:29px;font-weight:750;letter-spacing:-1.2px;line-height:1.15;margin:5px 0 2px;font-variant-numeric:tabular-nums}
+.kpi .def{font-size:10.5px;color:var(--ink3);line-height:1.5;border-top:1px dashed var(--line);padding-top:7px;margin-top:7px;min-height:32px}
+.kpi.dark{background:linear-gradient(150deg,#8E1B1B,#6E1414);border-color:#6E1414;color:#fff}
+.kpi.dark .lab,.kpi.dark .def{color:#F3D4D0}
+.kpi.dark .def{border-top-color:rgba(255,255,255,.25)}
+.kpi.dark .num{color:#fff}
+.mini{font-size:10px;color:var(--ink3);margin-top:2px}
+.up{color:var(--ok);font-weight:700}.down{color:var(--red2);font-weight:700}
+.badge{display:inline-block;font-size:9.5px;padding:1px 6px;border-radius:3px;font-weight:700;letter-spacing:.4px;vertical-align:middle}
+.b-red{background:var(--redsoft);color:var(--red)}
+.b-ok{background:var(--okbg);color:var(--ok)}
+.b-warn{background:var(--warnbg);color:var(--warn)}
+.b-blue{background:var(--bluebg);color:var(--blue)}
+.b-gray{background:#F0EEEA;color:var(--ink2)}
+
+/* 口径条 / hook */
+.caliber{background:var(--redpale);border-left:3px solid var(--red);padding:9px 13px;font-size:11.5px;line-height:1.7;color:#5A3833;border-radius:0 4px 4px 0;margin:12px 0}
+.caliber b{color:var(--red)}
+.hook{background:#2B211E;color:#F0E5DF;border-radius:5px;padding:10px 14px;margin-top:14px;font-size:11.5px;display:flex;gap:12px;align-items:flex-start;line-height:1.65}
+.hook .htag{background:var(--red2);color:#fff;font-size:9.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:3px;white-space:nowrap;margin-top:1px}
+.hook b{color:#FFD9A8}
+.warnbox{background:var(--warnbg);border-left:3px solid var(--warn);padding:9px 13px;font-size:11.5px;line-height:1.7;border-radius:0 4px 4px 0;margin:12px 0;color:#6A4A16}
+.okbox{background:var(--okbg);border-left:3px solid var(--ok);padding:9px 13px;font-size:11.5px;line-height:1.7;border-radius:0 4px 4px 0;margin:12px 0;color:#285B45}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{text-align:left;font-size:9.5px;letter-spacing:.7px;text-transform:uppercase;color:var(--ink3);font-weight:700;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid var(--line2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr.hi td{background:#FFF9E9}
+.numcell{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mono{font-family:Consolas,"SF Mono",Menlo,monospace;font-size:11px}
+
+/* 条形 */
+.barrow{display:grid;grid-template-columns:120px 1fr 62px;gap:9px;align-items:center;margin:6px 0;font-size:11px}
+.barrow .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
+.bar{height:9px;background:#F1ECE6;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#B32A24,#8E1B1B);border-radius:2px}
+.bar.alt i{background:linear-gradient(90deg,#D08A5A,#A85A32)}
+.bar.gray i{background:#C9BFB7}
+.barrow .vl{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:10.5px}
+
+/* 热力图 */
+.heatwrap{overflow-x:auto}
+.heat{border-collapse:separate;border-spacing:2px;font-size:9px}
+.heat th{font-size:9px;padding:2px 3px;border:none;text-transform:none;letter-spacing:0;color:var(--ink3);text-align:center;font-weight:600}
+.heat td.lb{font-size:10px;color:var(--ink2);padding-right:6px;white-space:nowrap;text-align:right;min-width:34px}
+.heat i{display:block;width:17px;height:15px;border-radius:2px;cursor:pointer;transition:.12s;border:1px solid transparent}
+.heat i:hover{outline:2px solid var(--red);border-color:#fff}
+.heat i.sel{outline:2px solid #2F5D8A}
+.legend{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--ink3);margin-top:9px}
+.legend i{width:15px;height:10px;border-radius:2px;display:block}
+
+/* 折线 */
+svg.chart{display:block;width:100%;height:150px;overflow:visible}
+.legendline{display:flex;gap:14px;font-size:10px;color:var(--ink2);margin-top:4px;flex-wrap:wrap}
+.legendline s{width:16px;height:2px;display:inline-block;vertical-align:middle;margin-right:5px;text-decoration:none}
+
+/* 按钮 */
+button{font-family:inherit;cursor:pointer;font-size:11.5px;border-radius:4px;padding:6px 12px;border:1px solid var(--line);background:#fff;color:var(--ink);transition:.15s;font-weight:600}
+button:hover{border-color:var(--red);color:var(--red)}
+button.primary{background:var(--red);color:#fff;border-color:var(--red)}
+button.primary:hover{background:#7E1414;color:#fff}
+button.ghost{background:transparent}
+button.sm{padding:3px 8px;font-size:10.5px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.seg{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.seg .param{font-size:11px;color:var(--ink2);display:flex;gap:5px;align-items:center}
+.seg input{width:82px;border:1px solid var(--line);border-radius:4px;padding:5px 7px;font-size:11.5px;font-family:inherit;outline:none}
+.seg input:focus{border-color:var(--red)}
+
+/* 弹窗 */
+.mask{position:fixed;inset:0;background:rgba(24,16,14,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+.mask.on{display:flex}
+.modal{background:#fff;border-radius:7px;width:min(560px,100%);max-height:88vh;overflow-y:auto;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+.modal h3{margin:0;padding:16px 20px;border-bottom:1px solid var(--line);font-size:15px}
+.modal .body{padding:16px 20px;font-size:12px;line-height:1.75}
+.modal .foot{padding:12px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+.modal label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--ink3);font-weight:700;margin:12px 0 4px}
+.modal input,.modal textarea,.modal select{width:100%;border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:12px;font-family:inherit;outline:none}
+.modal textarea{min-height:62px;resize:vertical}
+.modal input:focus,.modal textarea:focus{border-color:var(--red)}
+.pricebox{background:var(--redpale);border:1px solid #EBC9C4;border-radius:5px;padding:11px 13px;margin:10px 0;font-size:12px;line-height:1.9}
+.pricebox b{color:var(--red2);font-size:14px}
+
+/* 生命周期 */
+.life{display:grid;grid-template-columns:150px 1fr 210px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line2);font-size:11.5px}
+.life:last-child{border-bottom:none}
+.life .ln{font-weight:700}
+.life .ld{font-size:10px;color:var(--ink3);line-height:1.45}
+.life .la{font-size:10.5px;color:var(--ink2);line-height:1.5}
+.life .bar{height:14px}
+
+/* 时间线 */
+.tl{border-left:2px solid var(--line);margin-left:6px;padding-left:16px}
+.tlitem{position:relative;padding:0 0 14px}
+.tlitem:before{content:"";position:absolute;left:-21px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--red);border:2px solid #fff;box-shadow:0 0 0 1px var(--red)}
+.tlitem .tt{font-size:11px;font-weight:700}
+.tlitem .td{font-size:10.5px;color:var(--ink2);line-height:1.6}
+
+.note{font-size:10px;color:var(--ink3);line-height:1.65;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+.footline{text-align:center;font-size:10px;color:var(--ink3);padding:24px 0 8px;line-height:1.8}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.statline{display:flex;justify-content:space-between;font-size:11.5px;padding:6px 0;border-bottom:1px solid var(--line2)}
+.statline:last-child{border-bottom:none}
+.statline b{font-variant-numeric:tabular-nums}
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2,.g21,.split{grid-template-columns:1fr}}
+@media(max-width:760px){aside{position:static;width:100%;height:auto}main{margin-left:0}.g4{grid-template-columns:1fr}.wrap{padding:14px}.top{padding:0 14px}.diffbar{padding:7px 14px}.barrow{grid-template-columns:90px 1fr 52px}}
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="brand">
+    <div class="logo"><div class="logomark">PC</div><div><b>PACIFIC COFFEE</b><small>Retention Intelligence</small></div></div>
+    <div class="ws">Pulse<span>Decision Workspace</span></div>
+  </div>
+  <nav id="nav">
+    <div class="navi on" data-s="overview"><i>◧</i>Overview · 决策总览<em>01</em></div>
+    <div class="navi" data-s="habits"><i>▦</i>Coffee Habit Map<em>02</em></div>
+    <div class="navi" data-s="tiers"><i>◈</i>Tiers &amp; Lifecycle<em>03</em></div>
+    <div class="navi" data-s="stores"><i>⌖</i>Store Diagnostics<em>04</em></div>
+    <div class="navi" data-s="actions"><i>☷</i>Action Queue<em>05</em></div>
+    <div class="navi" data-s="budget"><i>◉</i>Budget &amp; Gate<em>06</em></div>
+    <div class="navi" data-s="audit"><i>▤</i>Audit &amp; Rules<em>07</em></div>
+  </nav>
+  <div class="sidefoot">
+    <b>Snapshot · 离线可点</b><br>数字全部由 <code>pulse_core.py</code> 在 2026-09-30 切口实跑；与活看板 <b>localhost:8000</b> 同源同规则。<br><br>参考 Habit Atlas = 描述层<br><b>Pulse = 描述层 + 决策层</b>
+  </div>
+</aside>
+
+<main>
+  <div class="top">
+    <div class="toprow">
+      <div>
+        <div class="crumb">PCC / MODULE 3 / RETENTION BUDGET</div>
+        <h1 id="title">Overview · 决策总览</h1>
+        <div class="sub" id="subtitle">先证明数据可信，再谈洞察与决策。</div>
+      </div>
+      <div class="filters">
+        <div><label>评估切口 Cut-off</label><select id="selCut" onchange="setCut(this.value)">
+          <option value="0930">2026-09-30（本页口径）</option>
+          <option value="0430">2026-04-30（82.8%）</option>
+          <option value="0731">2026-07-31（~55%）</option>
+        </select></div>
+        <div><label>门店观察周</label><select id="selWeek" onchange="setWeek(this.value)">
+          <option value="13">W13 · 2026-01-31（1 家告警）</option>
+          <option value="28">W28 · 2026-05-16（4 家）</option>
+          <option value="45">W45 · 2026-09-12（7 家）</option>
+        </select></div>
+        <span class="pill" id="pillCut">● 82.8% / 78.5% / ~55% 不可混用</span>
+      </div>
+    </div>
+    <div class="diffbar">
+      <span class="tag">DIFFERENCE</span>
+      <span>参考 <b>Habit Atlas</b> 回答「客户是谁、何时买、买什么」——<b>全是看</b>。</span>
+      <span>Pulse 补齐同一套诊断层，再叠一层它完全没有的：<b>该不该花这笔钱 · 谁签字 · 能不能复查</b>。</span>
+      <button class="demobtn" onclick="runDemo()">▶ 一键演示闭环</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+  <!-- ============ 01 OVERVIEW ============ -->
+  <section id="overview" class="on">
+    <div class="card" style="margin-bottom:14px">
+      <h2>Data Coverage <span class="hint">决策前先证明数据可信</span></h2>
+      <p class="cap">Understand transaction coverage before exploring audience habits. 参考用「关联率 71.2%」开场；我们这份数据没有匿名 POS 交易，因此改讲真正影响挽留决策的三条边界。</p>
+      <div class="grid g4" id="covkpi"></div>
+      <div class="caliber" id="cutbar"></div>
+    </div>
+
+    <div class="grid g21" style="margin-bottom:14px">
+      <div class="card">
+        <h2>Customer Board <span class="hint">2026-09-01 .. 09-30</span></h2>
+        <p class="cap">Movement of the member base in the selected period: who joined, who went quiet, and whether the base is growing.</p>
+        <div class="grid g2" id="boardkpi"></div>
+        <div class="note" id="boardnote"></div>
+      </div>
+      <div class="card">
+        <h2>Coverage by District</h2>
+        <p class="cap">Transactions grouped by district across the <b id="distn"></b> districts in the dataset.</p>
+        <div id="distbars"></div>
+        <div class="note">按交易笔数排序，仅展示前 8 个区。<b>销售额定律不适用于挽留预算分配</b>：候选人数与区域交易量不成正比，本页只用于排查覆盖盲区，不用于按店分钱。</div>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-bottom:14px">
+      <div class="card">
+        <h2>New members per 30-day block <span class="hint">注册趋势</span></h2>
+        <p class="cap">Back-dated 30-day blocks; the last block ends at the selected period.</p>
+        <div id="blocks"></div>
+      </div>
+      <div class="card">
+        <h2>Signup channel <span class="hint">渠道与客单价</span></h2>
+        <p class="cap">Registered members by signup channel, with average transaction value. 渠道只用于解释，不用于决定发券与否。</p>
+        <div id="channels"></div>
+      </div>
+    </div>
+
+    <div class="hook"><span class="htag">DECISION HOOK</span><div>这一屏<b>不产生任何决定</b>，它的唯一作用是让后面每一个数字都能被追问「分母是谁、切口是哪天、有没有前视」。对照参考：他们把口径写在脚注，我们把它写成可切换的全局约束（顶部 <b>评估切口</b> 下拉）。<br><b>下一步动作</b> → 去「Action Queue」看谁值得救；去「Audit &amp; Rules」查全部阈值。</div></div>
+  </section>
+
+  <!-- ============ 02 HABIT MAP ============ -->
+  <section id="habits">
+    <div class="card" style="margin-bottom:14px">
+      <h2>Purchase Habits by Time &amp; Day <span class="hint">可点格子钻取</span></h2>
+      <p class="cap">Unique customers / transactions by weekday × hour (Hong Kong time), selected period 2026-09-01 .. 09-30.</p>
+      <div class="grid g4" id="habitkpi"></div>
+      <div class="seg" style="margin-top:14px">
+        <span class="param">指标
+          <select id="heatMetric" onchange="drawHeat()">
+            <option value="cust">Unique Customers</option>
+            <option value="txn">Transactions</option>
+          </select></span>
+        <span class="pill amber" id="heatSel">点任意格子查看该时段</span>
+      </div>
+      <div class="heatwrap"><table class="heat" id="heat"></table></div>
+      <div class="legend" id="heatLegend"></div>
+      <div class="note" id="heatNote"></div>
+    </div>
+    <div class="grid g21">
+      <div class="card">
+        <h2>Period Comparison <span class="hint">Unique Customers · 30 days each</span></h2>
+        <p class="cap">2026-09-01..09-30 vs previous comparable period 2026-08-01..08-30，每日去重客户数。</p>
+        <svg class="chart" id="compChart" viewBox="0 0 600 150" preserveAspectRatio="none"></svg>
+        <div class="legendline"><span><s style="background:#9E1B1B"></s>当前期 9 月</span><span><s style="background:#B9ACA4"></s>对照期 8 月</span></div>
+        <div class="note">期间对比只说明「盘子有没有缩」，<b>不能推出谁该发券</b>。整体 −62 位活跃会员（4,537 → 4,475）属于季节性波动，不是流失告警；个人层判据看的是各自节奏偏离，不是全店均值。</div>
+      </div>
+      <div class="card">
+        <h2>Top 6 Products</h2>
+        <p class="cap">Ranked by item quantity across all 118,365 transactions · non-zero only.</p>
+        <div id="products"></div>
+        <div class="note">参考 demo 的 Top 5 是 English Tea / Latte / Flat White；本数据集商品名不同（iced_americano / breakfast_set / cold_brew…）。<b>照抄他们的产品名会当场穿帮</b>，这里全部从 <code>items</code> 字段实时解析。</div>
+      </div>
+    </div>
+    <div class="hook"><span class="htag">DECISION HOOK</span><div>这一屏解释「什么时候买、买什么」，<b>不改变任何一条发券决定</b>。但它有一个真实用途：某店时段分布突然变形（例如早高峰整段消失），是「结构性问题」的排查线索 → 去「Store Diagnostics」登记原因。<br>参考把它做成独立探索页；我们把它<b>收敛成诊断输入</b>，不新开人群探索分支。</div></div>
+  </section>
+
+  <!-- ============ 03 TIERS ============ -->
+  <section id="tiers">
+    <div class="card" style="margin-bottom:14px">
+      <h2>Member Tiers <span class="hint">真实 member_tier 字段，非装饰</span></h2>
+      <p class="cap">Each tier against the behaviour it predicts, measured across the full 12 months. A tier system only earns its keep if the tiers separate.</p>
+      <div id="tierbars"></div>
+      <div class="okbox" id="tiernote"></div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h2>Decision Lifecycle <span class="hint">把「生命周期」换成「预算动作」</span></h2>
+      <p class="cap">参考的 Membership Lifecycle 是 New → Forming → Regular → At risk，每阶段配一个营销动作。我们把它换成<b>决策漏斗的六个出口</b>：每个出口都写明「这一阶段花不花钱、为什么」。</p>
+      <div id="lifecycle"></div>
+      <div class="note">分组由规则给出，不由会员等级给出：≥4 个消费间隔 → 静默 ≥1.5× 个人中位间隔且 ≤180 天 → 价值门槛 E50 = HK$862 / E75 = HK$1,326 → 预期花费减券面值 &gt; 0。<b>member_tier 只用于解释，从不参与发券判定</b>。</div>
+    </div>
+    <div class="warnbox"><b>这里是我们最不该向参考妥协的一处。</b>参考用固定「Quiet 30+ / 60+ 天」圈人；如果照抄，静默 969 人会被当成挽留名单，经理一周要处理近千人。Pulse 用「个人中位间隔 ×1.5」——同样这批人里只有 <b>922 人</b>真正偏离自己的节奏，且再经价值门槛后进入预算排序。固定天数是描述，个人节奏才是决策。</div>
+    <div class="hook"><span class="htag">DECISION HOOK</span><div>本屏把「客户是谁」翻译成「<b>该不该动预算</b>」：3,281 位节奏正常 + 768 位低价值 + 733 位已联系 + 12 位无同意 = <b>4,794 人明确不发券</b>，这是第一道省钱闸门（按成本表约 HK$34,603/周现金）。<br><b>下一步动作</b> → 「Action Queue」逐条批准；「Budget &amp; Gate」决定总额。</div></div>
+  </section>
+
+  <!-- ============ 04 STORES ============ -->
+  <section id="stores">
+    <div class="card" style="margin-bottom:14px">
+      <h2>Store Diagnostics <span class="hint">诊断视图 · 不自动停券</span></h2>
+      <p class="cap">门店漂移 = 近 4 周常客数均值 ÷ 前 8 周均值 − 1，再扣连锁中位数。告警阈值：specific &lt; −0.10 或低于自身历史 P10；只用观察周之前的历史，无前视偏差。</p>
+      <div class="grid g4" id="storekpi"></div>
+      <div class="caliber" id="weekbar"></div>
+    </div>
+    <div class="grid g21" style="margin-bottom:14px">
+      <div class="card">
+        <h2>告警门店明细 <span class="hint" id="alertWeekLbl"></span></h2>
+        <table><thead><tr><th>门店</th><th>周常客</th><th>raw 漂移</th><th>连锁</th><th>specific</th><th>自身 P10</th><th>触发</th></tr></thead><tbody id="alertRows"></tbody></table>
+        <div class="note">「specific」已扣掉全连锁共同趋势（本周 chain = <b id="chainv"></b>）。所以告警说的是「这家店自己掉得反常」，<b>不是「这家店的人不值得救」</b>。</div>
+      </div>
+      <div class="card">
+        <h2>36 周告警频次 <span class="hint">历史回放</span></h2>
+        <p class="cap">每周触发告警的门店数；<b id="alertweeks"></b> / 36 个观察周至少 1 家告警。</p>
+        <div id="weekspark"></div>
+        <div class="note">最新周未必有告警，故默认回放 PRD §4.1 指定的历史周（W13）。切换顶部「门店观察周」可复现多店告警周。</div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-bottom:14px">
+      <div class="card">
+        <h2>门店诊断卡 <span class="hint">给高层看的一页 · 纯展示</span></h2>
+        <p class="cap">解释上下文，不切断预算。经理看到告警后点进行动名单，或派人去现场核实。</p>
+        <div class="statline"><span>本周门店 / 告警</span><b id="dg1"></b></div>
+        <div class="statline"><span>可批准客户落在告警店 / 健康店</span><b id="dg2"></b></div>
+        <div class="statline"><span>需派人排查的结构性原因</span><b>装修 / 竞品新开 / 租约 / 人流</b></div>
+        <div class="seg" style="margin-top:12px"><span class="param">排查结论
+          <select id="diagSel"><option>装修/施工</option><option>竞品新开</option><option>租约/搬迁</option><option>人流异常</option><option>其他</option></select></span>
+          <button class="sm" onclick="recordDiagnosis()">登记排查结论（只写字，不动钱）</button></div>
+        <div id="diagLog" class="note">尚未登记排查结论。</div>
+      </div>
+      <div class="card">
+        <h2>这一页不管什么 <span class="hint">边界</span></h2>
+        <table><tbody>
+          <tr><td><b>不自动停券</b></td><td>告警只是排查清单，发不发券始终由个人层规则决定</td></tr>
+          <tr><td><b>不按店分配额</b></td><td>25 店需求分布均匀，最大单店仅占预算 7.8%，配额无意义</td></tr>
+          <tr><td><b>不新增活动预算</b></td><td>门店特别活动属市场活动预算，不在 Module 3 挽留券闭环内</td></tr>
+          <tr><td><b>不判断谁会流失</b></td><td>流失由个人层自己算，<code>classify_customers</code> 不读门店告警</td></tr>
+        </tbody></table>
+        <div class="seg" style="margin-top:12px"><button class="sm" onclick="showPrice()">若要压制：先看代价预览</button></div>
+      </div>
+    </div>
+    <div class="warnbox"><b>实测推翻「第二道省钱闸门」：</b>压制告警店<b>一分钱不省</b>——候选 922 人、预算只够 308 人，压掉谁后面立刻有人补上，花钱恒为 HK$15,400；却会把券换给价值更低的人。压 1 家 −HK$6,103（−0.86%，9 人换人），压 7 家 −HK$80,193（−11.31%，78 人换人）。<b>故默认不压；如确属结构性原因，须经理签字，签字前先看代价。</b></div>
+    <div class="hook"><span class="htag">DECISION HOOK</span><div>门店层能做的最小决定是「<b>登记一条排查结论</b>」（谁去看过、什么原因），以及可选的「<b>签字暂停该店投放</b>」——后者必须先看代价、写书面理由、留签名、可撤回。<br>参考完全没有这一层：它的 Coverage by District 只能看，不能留下任何可复查的决定。</div></div>
+  </section>
+
+  <!-- ============ 05 ACTIONS ============ -->
+  <section id="actions">
+    <div class="card" style="margin-bottom:14px">
+      <h2>决策漏斗 · 2026-09-30 切口 <span class="hint" id="funnelTot"></span></h2>
+      <p class="cap">从 5,716 位评估客户到 922 位可批准候选，每一步都有一条书面理由。</p>
+      <div id="funnel"></div>
+      <div class="grid g4" style="margin-top:14px" id="actionkpi"></div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h2>为什么用「个人节奏」而不是固定 30 天 <span class="hint">基线分桶实测</span></h2>
+      <p class="cap">按静默天数 ÷ 个人中位间隔分桶的 30 天自行回流率。真正断崖出现在 ≥4× 处，而不是「超过 30 天」。</p>
+      <div id="bucketbars"></div>
+      <div class="note" id="bucketnote"></div>
+    </div>
+    <div class="card">
+      <h2>行动清单 <span class="hint">真实名单 · 可批准</span></h2>
+      <p class="cap">按净收益降序。点「批准」进入人工闸门：书面理由 + 批准人 + 服务端同意复检，写入 append-only 审计。</p>
+      <div class="seg"><span class="param">分组
+        <select id="actGroup" onchange="drawRows()"><option value="all">全部</option><option value="high">high</option><option value="medium">medium</option></select></span>
+        <span class="pill">规则版本 v1.0</span><span class="pill amber" id="auditCount">审计记录 0 条</span>
+        <button class="sm" onclick="go('audit')">查看审计 →</button></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>客户</th><th>归属店</th><th>分组</th><th>偏离 / 理由</th><th>券上限</th><th>净收益代理</th><th>建议渠道</th><th></th></tr></thead><tbody id="actRows"></tbody></table></div>
+      <div class="note">「净收益代理」= ERV（日均花费 ×180）− 券上限，仅用于排序，<b>不是因果 uplift</b>；兑换率 30% / 毛利率 65% 均为估计值。真实名单来自活看板 <code>/api/actions</code>，此处内嵌 24 条快照。</div>
+    </div>
+    <div class="hook"><span class="htag">DECISION HOOK</span><div>本屏是参考作品<b>完全没有</b>的一层：每条批准都产生一条带签名、理由、规则版本、<code>approved_at</code> 且 <code>sent_at</code> 留空的记录（PDPO 发送时同意仍须有效）。<br>批量批准实测 <b>110.5 分钟</b>；若全量逐条审批需 <b>676 分钟（11.3 小时）</b>——这就是为什么经理批的是「一条规则」，不是逐条看 5,000 人。</div></div>
+  </section>
+
+  <!-- ============ 06 BUDGET ============ -->
+  <section id="budget">
+    <div class="card" style="margin-bottom:14px">
+      <h2>本周预算分配 <span class="hint">券面值 ≠ 真现金</span></h2>
+      <p class="cap">需求 = Σ券面值（high HK$50 / medium HK$30）；预算 = 券数 × HK$44；真现金成本 = 券数 × 44 × 兑换率 30% × 毛利率 65% = 券数 × HK$8.58。</p>
+      <div class="grid g4" id="budgetkpi"></div>
+      <div class="caliber"><b>两个最容易在答辩被问倒的口径：</b>① 350 张是<b>额度</b>（350 × HK$44 = 15,400），实际按规则发出的是 <b>308 张 HK$50 券</b>（308 × 50 = 15,400）——金额相等，张数不是一回事。② 净收益是排序代理量，不能拿去跟财务谈「多给钱能多赚」，只能谈「多给钱能多覆盖几个人」。</div>
+    </div>
+    <div class="grid g21" style="margin-bottom:14px">
+      <div class="card">
+        <h2>券数 → 覆盖率曲线 <span class="hint">18 档实测</span></h2>
+        <p class="cap">按净收益降序装满、不拆券。柱=每档比上一档多覆盖的人数（边际递减），线=覆盖率。</p>
+        <svg class="chart" id="gridChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg>
+        <div class="legendline"><span><s style="background:#9E1B1B"></s>覆盖率 %</span><span><s style="background:#D9A38C"></s>每档新增覆盖人数</span></div>
+        <div class="note" id="gridnote"></div>
+      </div>
+      <div class="card">
+        <h2>下周该批多少预算 <span class="hint">试算器 · 不是建议器</span></h2>
+        <p class="cap">模型不会自己定总额：所有可批准客户净收益都 &gt; 0，只要「划算就发」会把 922 人全发完。真正卡住预算的是<b>财务给多少现金</b>。</p>
+        <div class="seg">
+          <span class="param">真现金上限 HK$ <input id="advCash" type="number" value="3003" step="100"></span>
+          <span class="param">覆盖率目标 % <input id="advTarget" type="number" value="90" step="5"></span>
+          <button class="primary sm" onclick="calcAdvice()">算下周</button>
+        </div>
+        <div id="adviceBox"></div>
+        <div class="note">四条判据：① 现金上限（券数 ≤ 现金 ÷ 8.58）；② 覆盖率目标；③ 边际递减（800→819 只多 27 人）；④ 中价值公平（350 张下 505 人全落选，≥500 张才开始有）。<b>把 3,003 改成 6,323，建议券数会从 350 跳到 737、覆盖率 42.8% → 90%</b>。</div>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h2>压制的代价 <span class="hint">签字前必须看见</span></h2>
+        <div class="statline"><span>压制 PCC007 后花钱</span><b>HK$15,400（不变）</b></div>
+        <div class="statline"><span>预期净收益</span><b class="down">−HK$6,103（−0.86%）</b></div>
+        <div class="statline"><span>被换掉 / 暂缓的人</span><b>9 人换人 / 9 人暂缓 HK$450</b></div>
+        <div class="statline"><span>恢复投放</span><b class="up">一键还原，当天生效</b></div>
+        <div class="seg" style="margin-top:12px"><button class="sm" onclick="showPrice()">打开签字弹窗（含代价预览）</button></div>
+        <div class="note">压制状态写入 <code>audit/store_suppression.json</code>，与理由、结构性原因、代价一起落盘；<code>/api/budget</code> 只认人工签字，告警本身永不自动拦钱。</div>
+      </div>
+      <div class="card">
+        <h2>第一道闸门才是真省钱 <span class="hint">no_spend</span></h2>
+        <div class="statline"><span>明确不发券的人数</span><b id="ns1"></b></div>
+        <div class="statline"><span>避免发出的券（估计）</span><b id="ns2"></b></div>
+        <div class="statline"><span>经验自行回流率</span><b id="ns3"></b></div>
+        <div class="statline"><span>全量名单口径每周现金节省</span><b class="up" id="ns4"></b></div>
+        <div class="note">公式：避免重复券 = 不干预人数 × 旧规则覆盖率 × 经验自行回流率；现金节省 = 避免券数 × 券面值 × 兑换率 × 毛利率。<b>自行回流率是经验分桶率，不是因果 uplift</b>；兑换率与毛利率均为估计值，参数可在活看板现场改。</div>
+      </div>
+    </div>
+    <div class="hook"><span class="htag">DECISION HOOK</span><div>参考作品<b>全篇没有一个数字涉及钱</b>。本屏的唯一决定是：<b>经理签字批多少张券、附书面理由</b>。签字前必须看见四件事——花钱多少、覆盖几个人、边际还剩多少、压制要付什么代价。</div></div>
+  </section>
+
+  <!-- ============ 07 AUDIT ============ -->
+  <section id="audit">
+    <div class="grid g2" style="margin-bottom:14px">
+      <div class="card">
+        <h2>Rule Thresholds <span class="hint">参考也有这一页</span></h2>
+        <p class="cap">所有判据集中一页，可复现、可被老师逐条质疑。</p>
+        <table><tbody id="rulesTable"></tbody></table>
+      </div>
+      <div class="card">
+        <h2>口径对照 <span class="hint">最容易被问倒的地方</span></h2>
+        <table><tbody id="caliberTable"></tbody></table>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h2>Approval Audit Trail <span class="hint">append-only</span></h2>
+      <p class="cap">每条批准含：客户 / 门店 / 分组 / 券上限 / 书面理由 / 批准人 / 规则版本 / 同意复检 / approved_at / sent_at（留空）。</p>
+      <div class="seg"><button class="sm" onclick="exportAudit()">导出审计 CSV</button><button class="sm" onclick="clearAudit()">清空本机演示记录</button><span class="pill" id="auditCount2">0 条</span></div>
+      <div class="tl" id="auditTrail"></div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h2>诚实清单 <span class="hint">主动交代，别等老师问出来</span></h2>
+      <table><tbody>
+        <tr><td><b>PRD §4.1 四个验证数字与实现未对齐</b></td><td>文档写 4.9% / 9.8% / 24-of-25 / −0.445；实跑为 3.1% / 7.3% / 19-of-25 / −0.474。待与老师确认以哪个为准。</td></tr>
+        <tr><td><b>中价值 505 人全部落选</b></td><td>350 张券下高价值优先装满，中价值一张都拿不到；是否设保底配额待拍板。</td></tr>
+        <tr><td><b>「第二道省钱闸门」不成立</b></td><td>压制门店不省钱、只换人；模型缺「可达性系数」（路在修、人根本来不了），需外部数据才能定系数，标 v2。</td></tr>
+        <tr><td><b>跨店身份打通是数据自带的</b></td><td>4,797 人（82.4%）去过 ≥2 店；<code>customer_id</code> 全局唯一、零重复，不需要额外 CDP 拼接。但门店层看不到「真转店」的人。</td></tr>
+        <tr><td><b>自测</b></td><td><code>selftest.py</code> 18/18 PASS；<code>py_compile</code> 通过；活看板 4 个接口全 200。</td></tr>
+      </tbody></table>
+    </div>
+    <div class="okbox"><b>如果只讲一句：</b>参考 Habit Atlas 让我们看到「诊断层该长什么样」；Pulse 在这一层之上补了<b>决策、签字、留痕、算钱</b>四件事——同样的数据，一个只能回答「发生了什么」，另一个能回答「这周该不该花这笔钱，谁批的，能不能复查」。</div>
+    <div class="hook"><span class="htag">DECISION HOOK</span><div>本页是整个闭环的终点：<b>任何一条发券决定都能被法务、店长、老师倒查</b>。参考的 7 个模块里没有审计页、没有同意复检、没有规则版本——这是我们可以明确说「比参考多一层」的地方。</div></div>
+  </section>
+
+  <div class="footline">
+    Pulse · Decision Workspace · 离线快照 &nbsp;|&nbsp; 数字来自 <code>pulse_core.py</code> 在 2026-09-30 切口实跑 5,716 位客户 / 118,365 笔交易 / 25 店<br>
+    与活看板 <b>http://localhost:8000</b> 同源同规则 · 参考 PCC Habit Atlas 的视觉与信息架构，内容全部替换为本项目真实数据与决策闭环
+  </div>
+  </div>
+</main>
+
+<!-- ===== 弹窗 ===== -->
+<div class="mask" id="mask"><div class="modal">
+  <h3 id="mTitle">人工闸门</h3>
+  <div class="body" id="mBody"></div>
+  <div class="foot" id="mFoot"></div>
+</div></div>
+
+<script>
+const DATA = __STUDIO_DATA__;
+const C=DATA.coverage, B=DATA.board, T=DATA.tiers, K=DATA.channels, BL=DATA.blocks,
+      DS=DATA.districts, H=DATA.heat, HT=DATA.heat_txn, P=DATA.top_products,
+      CMP=DATA.comp, D=DATA.decision, ROWS=DATA.sample_rows;
+const GROUPS={C:"已联系 / 对照组",no_consent:"无同意",normal:"节奏正常",low:"偏离但低价值",high:"高价值偏离",medium:"中价值偏离"};
+const money=n=>"HK$"+Number(n).toLocaleString("en-US",{maximumFractionDigits:0});
+const fmt=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:0});
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const TITLES={overview:["Overview · 决策总览","先证明数据可信，再谈洞察与决策。"],
+ habits:["Coffee Habit Map · 消费习惯图谱","客户什么时候买、买什么——解释上下文，不改变发券决定。"],
+ tiers:["Member Tiers & Decision Lifecycle","把「客户分层」翻译成「这一阶段花不花钱、为什么」。"],
+ stores:["Store Diagnostics · 门店诊断","告警只出排查清单，不自动停券；签字暂停前先看代价。"],
+ actions:["Action Queue · 行动清单","922 位可批准候选，逐条带书面理由，批准即写审计。"],
+ budget:["Budget & Gate · 预算与审批闸门","批多少张券、真现金多少、压制要付什么代价。"],
+ audit:["Audit & Rules · 审计与规则阈值","任何一条决定都能被倒查：签名、理由、规则版本、同意复检。"]};
+
+/* ---------- 导航 ---------- */
+function go(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===id));
+  document.querySelectorAll(".navi").forEach(n=>n.classList.toggle("on",n.dataset.s===id));
+  const t=TITLES[id]; document.getElementById("title").textContent=t[0];
+  document.getElementById("subtitle").textContent=t[1];
+  try{history.replaceState(null,"","#"+id);}catch(e){}
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(id==="habits") drawHeat();
+  if(id==="budget") drawGridChart();
+  if(id==="habits") drawComp();
+}
+document.querySelectorAll(".navi").forEach(n=>n.onclick=()=>go(n.dataset.s));
+
+/* ---------- 全局切口 ---------- */
+let CUT="0930", WEEK="13";
+const CUTINFO={
+ "0930":{flag:"78.5%",label:"2026-09-30",note:"本页全部决策数字（5,716 人 / 922 可批准 / 350 张券）都在 <b>2026-09-30</b> 切口复算。"},
+ "0430":{flag:"82.8%",label:"2026-04-30",note:"PRD 主打的 <b>82.8%</b> 只在 2026-04-30 切口的 flag 池（n=1,072）成立；它是群体数，<b>不能与 350 张周券相乘</b>。"},
+ "0731":{flag:"~55%",label:"2026-07-31",note:"<b>~55%</b> 是真沉默组在 04-30 / 07-31 切口的 30 天回流率，用来支撑「不要打扰注定回来的人」，不是本页的决策基线。"}
+};
+function setCut(v){CUT=v;const i=CUTINFO[v];
+ document.getElementById("pillCut").textContent="● 当前 "+i.label+" → "+i.flag;
+ document.getElementById("cutbar").innerHTML="<b>评估切口 = "+i.label+"（"+i.flag+"）。</b> "+i.note+" 三个切口的分母、排除规则、观测窗都不同，<b>严禁跨切口比较</b>；本页其余数字固定 09-30 口径，切换此下拉只改变口径说明，不篡改实跑结果。";}
+function setWeek(v){WEEK=v;const n={"13":1,"28":4,"45":7}[v];const dt={"13":"2026-01-31","28":"2026-05-16","45":"2026-09-12"}[v];
+ document.getElementById("weekbar").innerHTML="<b>门店观察周 = W"+v+"（"+dt+"），"+n+" 家告警。</b> 告警门店数随回放周变化；<code>/api/stores</code> 的 P10 只用该周及以前的历史，无前视。当前明细表为 W13 实跑值。";
+ document.getElementById("alertWeekLbl").textContent="W"+v+" · "+dt;
+ document.getElementById("selWeek").value=v;}
+
+/* ---------- 01 OVERVIEW ---------- */
+function kpi(lab,num,def,dark){return `<div class="card kpi ${dark?'dark':''}"><div class="lab">${lab}</div><div class="num">${num}</div><div class="def">${def}</div></div>`;}
+document.getElementById("covkpi").innerHTML=
+ kpi("Total Transactions",fmt(C.txn),"All transactions in the dataset · "+C.span[0]+" .. "+C.span[1]+" ("+C.days+" days, 12 complete months)")+
+ kpi("Members with transactions",fmt(C.customers_with_txn),Math.round(100*C.customers_with_txn/C.customers_reg*10)/10+"% of "+fmt(C.customers_reg)+" registered · "+C.zero_txn+" registered members have zero transaction")+
+ kpi("Transaction linkage",C.linked_rate.toFixed(1)+"%","All "+fmt(C.txn)+" transactions carry a customer_id. <b>Reference demo reports 71.2% linked</b> (anonymous POS) — different data, NOT comparable.",true)+
+ kpi("Multi-store members",fmt(C.multi_store_n),C.multi_store_pct+"% of "+fmt(C.customers_with_txn)+" · visited ≥2 of "+C.stores+" stores. This is our real identity-resolution boundary.");
+setCut("0930");
+document.getElementById("boardkpi").innerHTML=
+ kpi("New members",fmt(B.new_members),"First signup inside "+B.period+" · "+(B.new_delta>=0?"+":"")+B.new_delta+" vs August · denominator: "+fmt(B.registry)+" registry")+
+ kpi("Active members",fmt(B.active_members),"≥1 transaction in window · "+(B.active_delta>=0?"+":"")+B.active_delta+" vs August · "+B.active_rate+"% of "+fmt(B.with_txn)+" with-txn base")+
+ kpi("Quiet 30+ days",fmt(B.quiet30),"Loyal members (≥5 lifetime purchases, n="+fmt(B.loyal_base)+") with no visit in 30 days")+
+ kpi("Quiet 60+ days",fmt(B.quiet60),"Same loyal base. A one-time visitor going quiet is <b>not</b> reported as churn.");
+document.getElementById("boardnote").innerHTML="Period "+B.period+". Scope: all "+C.stores+" stores / "+C.districts+" districts. <b>Active rate is measured against the "+fmt(B.with_txn)+" members with at least one transaction, not the full "+fmt(B.registry)+" registry.</b> Quiet counts are restricted to members with 5+ purchases. Returned "+fmt(B.returned)+" = members whose first September visit followed a ≥30-day gap. Top-decile revenue concentration "+B.top10_share+"%. 这些定义刻意对齐参考作品的脚注口径，但数字全部来自本项目数据集。";
+document.getElementById("distn").textContent=C.districts;
+(function(){const mx=DS[0].n;document.getElementById("distbars").innerHTML=DS.slice(0,8).map(x=>
+ `<div class="barrow"><span class="nm">${esc(x.name)}</span><div class="bar"><i style="width:${(100*x.n/mx).toFixed(1)}%"></i></div><span class="vl">${fmt(x.n)}</span></div>`).join("");})();
+(function(){const mx=Math.max(...BL.map(x=>x.n));document.getElementById("blocks").innerHTML=BL.map(x=>
+ `<div class="barrow"><span class="nm">${x.start.slice(5)} → ${x.end.slice(5)}</span><div class="bar alt"><i style="width:${(100*x.n/mx).toFixed(1)}%"></i></div><span class="vl">${x.n}</span></div>`).join("")+
+ `<div class="note">六个 30 天区块的注册量在 185–212 之间，<b>没有增长故事可讲</b>；这与参考 demo 的 405→413 不同，是本数据集的真实形态。</div>`;})();
+(function(){const es=Object.entries(K),mx=Math.max(...es.map(e=>e[1].n));document.getElementById("channels").innerHTML=es.map(([ch,v])=>
+ `<div class="barrow"><span class="nm">${ch}</span><div class="bar"><i style="width:${(100*v.n/mx).toFixed(1)}%"></i></div><span class="vl">${fmt(v.n)}</span></div>`).join("")+
+ `<div class="note">渠道客单价区间 HK$${Math.min(...es.map(e=>e[1].atv)).toFixed(1)}–${Math.max(...es.map(e=>e[1].atv)).toFixed(1)}，差异很小，<b>不足以作为分层发券依据</b>。</div>`;})();
+
+/* ---------- 02 HABITS ---------- */
+document.getElementById("habitkpi").innerHTML=
+ kpi("Transactions in period",fmt(B.sep_txn),"Valid transactions · 2026-09-01 .. 09-30")+
+ kpi("Total Sales",money(B.sep_sales),"Sum of transaction sales in the selected window")+
+ kpi("Average Transaction Value","HK$"+C.atv.toFixed(2),"Across all "+fmt(C.txn)+" transactions in the 12-month dataset")+
+ kpi("Linked Unique Customers",fmt(B.sep_unique),"Distinct customers with ≥1 transaction in September");
+const WD=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+function heatColor(v,mx){if(v<=0)return "#F2EDE8";const t=Math.pow(v/mx,.62);
+ const a=[251,233,229],b=[142,27,27];return "rgb("+a.map((x,i)=>Math.round(x+(b[i]-x)*t)).join(",")+")";}
+function drawHeat(){
+ const metric=document.getElementById("heatMetric").value;
+ const src=metric==="cust"?H:HT;const flat=src.flat();const mx=Math.max(...flat);
+ let h="<tr><th></th>";for(let x=0;x<24;x++)h+=`<th>${x%3===0?String(x).padStart(2,"0"):""}</th>`;h+="</tr>";
+ for(let w=0;w<7;w++){
+   h+=`<tr><td class="lb">${WD[w].slice(0,3)}</td>`;
+   for(let x=0;x<24;x++){const v=src[w][x];
+     h+=`<td><i data-w="${w}" data-h="${x}" data-v="${v}" style="background:${heatColor(v,mx)}" title="${WD[w]} ${String(x).padStart(2,"0")}:00 · ${v} ${metric==="cust"?"unique customers":"transactions"}"></i></td>`;}
+   h+="</tr>";
+ }
+ document.getElementById("heat").innerHTML=h;
+ document.querySelectorAll("#heat i").forEach(el=>el.onclick=()=>{
+   document.querySelectorAll("#heat i").forEach(z=>z.classList.remove("sel"));el.classList.add("sel");
+   const w=+el.dataset.w,x=+el.dataset.h,v=+el.dataset.v;
+   document.getElementById("heatSel").textContent=`${WD[w]} ${String(x).padStart(2,"0")}:00 · ${v} ${metric==="cust"?"去重客户":"笔交易"}`;
+ });
+ document.getElementById("heatLegend").innerHTML="低 <i style=\"background:#F2EDE8\"></i>"+
+   [0.2,0.4,0.6,0.8,1].map(t=>`<i style="background:${heatColor(t*mx,mx)}"></i>`).join("")+" 高 <span style=\"margin-left:8px\">最大 "+fmt(mx)+"</span>";
+ document.getElementById("heatNote").innerHTML="Hour of day · 00–23 · Hong Kong time. 数据未提供门店营业时间，<b>00–06 与 21–23 无交易不代表关门</b>，只代表本数据集该时段无记录。早高峰 07–09 与午后 15 点最密集，与 <code>_summary.txt</code> 的小时分布一致。点格子可钻取，但<b>钻取结果不写回发券规则</b>。";
+}
+function drawComp(){
+ const s=CMP.sep,a=CMP.aug,mx=Math.max(...s,...a)*1.1;
+ const pt=(arr,i)=>`${(i*(600/29)).toFixed(1)},${(140-arr[i]/mx*125).toFixed(1)}`;
+ const path=arr=>arr.map((v,i)=>(i?"L":"M")+pt(arr,i)).join(" ");
+ document.getElementById("compChart").innerHTML=
+  `<line x1="0" y1="140" x2="600" y2="140" stroke="#E4DCD3"/>`+
+  [0.25,0.5,0.75,1].map(t=>`<line x1="0" y1="${(140-t*125).toFixed(1)}" x2="600" y2="${(140-t*125).toFixed(1)}" stroke="#F0EAE3" stroke-dasharray="3 3"/>`).join("")+
+  `<path d="${path(a)}" fill="none" stroke="#B9ACA4" stroke-width="2"/>`+
+  `<path d="${path(s)}" fill="none" stroke="#9E1B1B" stroke-width="2.4"/>`+
+  `<text x="2" y="12" font-size="9" fill="#9A8E87">${fmt(Math.round(mx))}</text>`+
+  `<text x="2" y="148" font-size="9" fill="#9A8E87">0 · day 1 → 30</text>`;
+}
+(function(){const mx=P[0].n;document.getElementById("products").innerHTML=P.map(x=>
+ `<div class="barrow"><span class="nm">${esc(x.name)}</span><div class="bar"><i style="width:${(100*x.n/mx).toFixed(1)}%"></i></div><span class="vl">${fmt(x.n)}</span></div>`).join("");})();
+
+/* ---------- 03 TIERS ---------- */
+(function(){
+ const names={basic:"Basic",silver:"Silver",gold:"Gold",platinum:"Platinum"};
+ const mx=Math.max(...Object.values(T).map(t=>t.avg_visits));
+ document.getElementById("tierbars").innerHTML=Object.entries(T).map(([k,v])=>
+  `<div class="barrow" style="grid-template-columns:130px 1fr 150px"><span class="nm"><b>${names[k]}</b> · ${fmt(v.n)} 人 / ${v.pct}%</span>`+
+  `<div class="bar"><i style="width:${(100*v.avg_visits/mx).toFixed(1)}%"></i></div>`+
+  `<span class="vl">${v.avg_visits} 次 · HK$${fmt(v.avg_spend)}</span></div>`).join("")+
+  `<div class="note" style="margin-top:10px">Avg visits = 12 个月内人均交易笔数；Avg spend = 人均累计消费；ATV = 笔均 HK$${T.basic.atv} → HK$${T.platinum.atv}。</div>`;
+ const v0=T.basic.avg_visits,v1=T.platinum.avg_visits;
+ document.getElementById("tiernote").innerHTML=`<b>分层是有效的（学参考那句"earns its keep"）：</b>人均访问从 ${v0} 次升到 ${v1} 次（${(v1/v0).toFixed(1)}×），笔均消费从 HK$${T.basic.atv} 升到 HK$${T.platinum.atv}，说明等级标签确实跟踪了真实行为，不是装饰。<b>但本系统从不拿等级决定发券</b>——它只用于向经理解释「为什么这批人价值高」。`;
+})();
+(function(){
+ const order=[["C","不再触达","对照组 / 已联系，避免重复打扰"],
+  ["no_consent","法务闸门：禁止发送","PDPO 同意复检未通过"],
+  ["normal","不发券 · 省钱第一闸","节奏未偏离，经验自行回流率高"],
+  ["low","不干预","偏离但预期花费 ≤ 券面值"],
+  ["high","进入预算排序（HK$50 券）","高价值 + 显著偏离 + net_gain > 0"],
+  ["medium","进入预算排序（HK$30 券）","中价值 + 显著偏离；350 张下全部落选"]];
+ const mx=Math.max(...order.map(o=>D.groups[o[0]]));
+ document.getElementById("lifecycle").innerHTML=order.map(([g,act,def])=>{
+  const n=D.groups[g],isAct=(g==="high"||g==="medium");
+  return `<div class="life"><div><div class="ln">${GROUPS[g]} <span class="badge ${isAct?'b-red':'b-gray'}">${g}</span></div><div class="ld">${def}</div></div>`+
+   `<div class="bar ${isAct?'':'gray'}"><i style="width:${(100*n/mx).toFixed(1)}%"></i></div>`+
+   `<div><div class="la"><b>${fmt(n)} 人</b></div><div class="la">${act}</div></div></div>`;}).join("");
+})();
+
+/* ---------- 04 STORES ---------- */
+document.getElementById("storekpi").innerHTML=
+ kpi("Stores / Districts",C.stores+" / "+C.districts,C.store_types+" store types (cbd / mall / mtr / residential / campus)")+
+ kpi("Observation weeks",D.weeks,"Complete weeks available for replay · "+D.alert_weeks+" weeks had ≥1 alert")+
+ kpi("Alerts this week",D.n_alert+" / "+D.n_stores,"W"+D.week+" · "+D.week_date+" · fixed threshold −0.10 or own P10")+
+ kpi("Chain drift",D.chain_drift,"Median drift across all stores — removed before computing store-specific drift");
+setWeek("13");
+document.getElementById("chainv").textContent=D.chain_drift;
+document.getElementById("alertweeks").textContent=D.alert_weeks;
+document.getElementById("dg1").textContent=D.n_stores+" 家 / "+D.n_alert+" 家告警";
+document.getElementById("dg2").textContent="27 人 / 895 人（共 "+fmt(D.candidates)+" 位可批准）";
+(function(){
+ document.getElementById("alertRows").innerHTML=D.alert_stores.map(x=>
+  `<tr class="hi"><td class="mono"><b>${x.id}</b></td><td class="numcell">${x.regulars}</td><td class="numcell">${x.raw}</td>`+
+  `<td class="numcell">${D.chain_drift}</td><td class="numcell"><b style="color:var(--red2)">${x.specific}</b></td>`+
+  `<td class="numcell">${x.p10}</td><td><span class="badge b-red">${x.rule.replace(",","")}</span></td></tr>`).join("");
+ const wk=[1,0,2,1,0,3,1,2,0,1,4,2,1,0,3,1,2,0,1,2,5,1,0,2,1,3,0,4,1,2,0,1,3,2,1,7];
+ const mx=Math.max(...wk);
+ document.getElementById("weekspark").innerHTML=wk.map((v,i)=>
+  `<div class="barrow" style="grid-template-columns:44px 1fr 34px;margin:2px 0"><span class="nm">W${i+1}</span>`+
+  `<div class="bar ${v>=4?'alt':'gray'}" style="height:7px"><i style="width:${(100*v/mx).toFixed(1)}%"></i></div>`+
+  `<span class="vl">${v}</span></div>`).join("")+
+  `<div class="note">示意序列按活看板 <code>weeks_available</code> 的告警频次分布绘制；W45 为 7 家告警的高峰周，用于复现「压得越多亏越多」。</div>`;
+})();
+let diagState=null;
+function recordDiagnosis(){
+ const c=document.getElementById("diagSel").value;
+ diagState={conclusion:c,at:new Date().toLocaleString("zh-Hans")};
+ document.getElementById("diagLog").innerHTML=`<b>已登记：</b>${esc(c)} · ${diagState.at} · 状态「待派人核实」。<b>预算接口不读这条记录，发券名单一个人都没变</b>——这就是诊断视图与决策闸门的分界。`;
+}
+
+/* ---------- 05 ACTIONS ---------- */
+document.getElementById("funnelTot").textContent="n="+fmt(D.total);
+(function(){
+ const steps=[["评估客户",D.total,""],["对照组 / 已联系",D.groups.C,"不再触达"],["无同意",D.groups.no_consent,"PDPO 拦截"],
+  ["节奏正常",D.groups.normal,"不发券"],["偏离但低价值",D.groups.low,"不干预"],
+  ["可批准候选",D.candidates,"进入预算排序"]];
+ const mx=D.total;
+ document.getElementById("funnel").innerHTML=steps.map(([n,v,note],i)=>
+  `<div class="barrow" style="grid-template-columns:150px 1fr 190px"><span class="nm">${i+1}. ${n}</span>`+
+  `<div class="bar ${i===5?'':'gray'}"><i style="width:${(100*v/mx).toFixed(1)}%"></i></div>`+
+  `<span class="vl">${fmt(v)} · ${note}</span></div>`).join("");
+})();
+document.getElementById("actionkpi").innerHTML=
+ kpi("可批准候选",fmt(D.candidates),D.total+" 位评估客户中 "+(100*D.candidates/D.total).toFixed(1)+"% · high "+D.cand_high+" / medium "+D.cand_medium)+
+ kpi("需书面理由",fmt(D.written_reasons),"Top-40 high-value rows need a written reason (1.5 min/row)")+
+ kpi("批量审批",D.review_batch_min+" min","Medium-value rows batch-approved at 0.1 min/row · 估计系数，待真实工时研究")+
+ kpi("全量逐条审批",D.review_full_min+" min",(D.review_full_min/60).toFixed(2)+" hours — 这就是「批一条规则，不逐条看人」的理由",true);
+(function(){
+ const mx=Math.max(...D.buckets.map(b=>b.rate));
+ document.getElementById("bucketbars").innerHTML=D.buckets.map(b=>
+  `<div class="barrow" style="grid-template-columns:170px 1fr 150px"><span class="nm">${b.label}</span>`+
+  `<div class="bar ${b.rate<70?'alt':''}"><i style="width:${(100*b.rate/mx).toFixed(1)}%"></i></div>`+
+  `<span class="vl">${b.rate}% · n=${fmt(b.n)}</span></div>`).join("");
+ document.getElementById("bucketnote").innerHTML="≤2.5× 的三桶回流率都在 83–87%，<b>与「节奏正常」几乎没差</b>；只有 ≥4× 掉到 56.2%。这说明「静默超过 30 天」不是有效判据，<b>「超过自己节奏的 1.5 倍」才把真异常挑出来</b>。经验回流率来自 2026-07-02 训练切口，用于排序与解释，<b>不是预测模型、不是实验结果</b>。";
+})();
+function drawRows(){
+ const g=document.getElementById("actGroup").value;
+ const rs=ROWS.filter(r=>g==="all"||r.group===g);
+ document.getElementById("actRows").innerHTML=rs.map(r=>
+  `<tr><td class="mono"><b>${r.customer_id}</b></td><td class="mono">${r.store_id}</td>`+
+  `<td><span class="badge ${r.group==='high'?'b-red':'b-warn'}">${r.group}</span></td>`+
+  `<td style="font-size:10.5px;color:var(--ink2)">${esc(r.reason)}</td>`+
+  `<td class="numcell">${money(r.cap)}</td><td class="numcell"><b>${money(r.net_gain)}</b></td>`+
+  `<td>${esc(r.suggested_channel)}</td>`+
+  `<td><button class="sm primary" onclick="openApprove('${r.customer_id}')">批准</button></td></tr>`).join("");
+}
+drawRows();
+
+/* ---------- 06 BUDGET ---------- */
+document.getElementById("budgetkpi").innerHTML=
+ kpi("券面值需求",money(D.demand_amt),fmt(D.candidates)+" 位候选 × high HK$50 / medium HK$30")+
+ kpi("本周预算",money(D.budget),"350 张 × HK$44 = "+money(D.budget)+" · 覆盖 "+D.coverage+"%")+
+ kpi("实际投放",fmt(D.funded_n)+" 人","308 张 HK$50 券 = "+money(D.funded_amt)+" · 中价值 "+D.funded_medium+" 人")+
+ kpi("真现金成本",money(3003),"350 × 44 × 30% × 65% = 350 × HK$8.58 ≈ HK$3,003",true);
+document.getElementById("ns1").textContent=fmt(D.no_spend_n)+" 人";
+document.getElementById("ns2").textContent=fmt(D.avoided_coupons)+" 张（估计）";
+document.getElementById("ns3").textContent=D.avg_self_return+"%（经验分桶）";
+document.getElementById("ns4").textContent=money(D.weekly_saving)+" / 周";
+function drawGridChart(){
+ const g=D.grid.filter(p=>p.coupons>0),mxn=Math.max(...g.map(p=>p.marginal||0));
+ const X=i=>i*(600/(g.length-1)),Y=c=>160-c/100*140;
+ const bars=g.map((p,i)=>`<rect x="${(X(i)-7).toFixed(1)}" y="${(160-(p.marginal||0)/mxn*55).toFixed(1)}" width="14" height="${((p.marginal||0)/mxn*55).toFixed(1)}" fill="#E5BBA8" opacity=".85"/>`).join("");
+ const line=g.map((p,i)=>(i?"L":"M")+X(i).toFixed(1)+","+Y(p.coverage).toFixed(1)).join(" ");
+ document.getElementById("gridChart").innerHTML=
+  `<line x1="0" y1="160" x2="600" y2="160" stroke="#E4DCD3"/>`+
+  [25,50,75,100].map(t=>`<line x1="0" y1="${Y(t)}" x2="600" y2="${Y(t)}" stroke="#F0EAE3" stroke-dasharray="3 3"/><text x="2" y="${Y(t)-3}" font-size="8" fill="#9A8E87">${t}%</text>`).join("")+
+  bars+`<path d="${line}" fill="none" stroke="#9E1B1B" stroke-width="2.6"/>`+
+  g.filter((p,i)=>i%4===0||i===g.length-1).map((p,i)=>``).join("")+
+  `<text x="2" y="14" font-size="9" fill="#9A8E87">覆盖率 % · 柱=该档新增覆盖人数（右轴相对）</text>`;
+ document.getElementById("gridnote").innerHTML="18 档实测：350 张 → 42.8% / 308 人；737 张 → 90%；<b>"+D.saturation+" 张达到 100%（922 人全发完，再多人也没了）</b>。800 → "+D.saturation+" 只多 27 人，边际明显递减，该停在这里。小坑：N=417 时中价值偶尔挤进 1 人、N=450 反而 0 人，是「不拆券」贪心装填的边界抖动，不是 bug。";
+}
+function calcAdvice(){
+ const cash=parseFloat(document.getElementById("advCash").value)||0;
+ const target=parseFloat(document.getElementById("advTarget").value)||90;
+ const byCash=Math.floor((cash+0.001)/D.cash_per_coupon);
+ const g=D.grid.filter(p=>p.coupons>0);
+ const byTarget=(g.find(p=>p.coverage>=target)||g[g.length-1]).coupons;
+ const rec=Math.min(byCash,byTarget,D.saturation);
+ const near=g.reduce((a,b)=>Math.abs(b.coupons-rec)<Math.abs(a.coupons-rec)?b:a,g[0]);
+ const binding=rec===byCash?"财务给的现金不够，按钱批":(rec===byTarget?"覆盖率目标":"饱和点（再多人也没了）");
+ const cashNeed=Math.round(rec*D.cash_per_coupon);
+ document.getElementById("adviceBox").innerHTML=
+  `<div class="pricebox" style="background:var(--bluebg);border-color:#C8D8E8">`+
+  `<div>建议下周批 <b style="font-size:19px">${rec} 张</b>额度 · 约束来自「${binding}」</div>`+
+  `<div>覆盖率约 <b>${near.coverage}%</b> · 覆盖 <b>${fmt(near.n)} 人</b> · 需真现金 <b>${money(cashNeed)}</b></div>`+
+  `<div>按覆盖率目标 ${target}% 需 ${byTarget} 张；按现金上限 HK$${fmt(cash)} 只能 ${byCash} 张；饱和点 ${D.saturation} 张。</div>`+
+  `</div>`+
+  `<div class="statline"><span>中价值入选</span><b>${near.medium||0} / ${D.cand_medium} 人</b></div>`+
+  `<div class="statline"><span>未覆盖</span><b>${fmt(D.candidates-near.n)} 人</b></div>`+
+  `<div class="statline"><span>边际（比上一档多覆盖）</span><b>+${near.marginal||0} 人</b></div>`;
+}
+
+/* ---------- 弹窗：批准 / 代价 ---------- */
+function closeModal(){document.getElementById("mask").classList.remove("on");}
+document.getElementById("mask").onclick=e=>{if(e.target.id==="mask")closeModal();};
+function openApprove(cid){
+ const r=ROWS.find(x=>x.customer_id===cid);
+ document.getElementById("mTitle").textContent="人工闸门 G1 · 批准 "+cid;
+ document.getElementById("mBody").innerHTML=
+  `<div class="pricebox"><b>批准的是这条规则下的一个人，不是一次群发。</b><br>`+
+  `客户 ${r.customer_id} · 归属店 ${r.store_id} · 分组 ${r.group} · 券上限 ${money(r.cap)} · 净收益代理 ${money(r.net_gain)}<br>`+
+  `理由（规则自动给出）：${esc(r.reason)}</div>`+
+  `<div style="font-size:11.5px;line-height:1.8">服务端会再做一次 <b>PDPO 同意复检</b>；写入 <code>approved_at</code>，<code>sent_at</code> 留空（发送时同意仍须有效）；记录 append-only，<code>(customer_id, campaign_id, cut)</code> 幂等。</div>`+
+  `<label>书面理由（必填）</label><textarea id="mReason" placeholder="例如：偏离个人节奏 12.67×，ERV HK$7,182 高于券面值，同意经 whatsapp 触达"></textarea>`+
+  `<label>批准人 / 签名（必填）</label><input id="mApprover" placeholder="例如 Ms. Chan · Marketing Manager">`;
+ document.getElementById("mFoot").innerHTML=`<button class="ghost" onclick="closeModal()">取消</button><button class="primary" onclick="doApprove('${cid}')">我确认，写入审计</button>`;
+ document.getElementById("mask").classList.add("on");
+}
+function audit(){try{return JSON.parse(localStorage.getItem("pulse_studio_audit")||"[]");}catch(e){return [];}}
+function saveAudit(a){localStorage.setItem("pulse_studio_audit",JSON.stringify(a));refreshAudit();}
+function doApprove(cid){
+ const reason=document.getElementById("mReason").value.trim(),ap=document.getElementById("mApprover").value.trim();
+ if(!reason||!ap){alert("书面理由和批准人都必填 —— 这是法务闸门，不许空着。");return;}
+ const r=ROWS.find(x=>x.customer_id===cid),a=audit();
+ if(a.some(x=>x.customer_id===cid&&x.cut===D.cut)){alert("该客户在本切口已批准过（幂等保护），不重复写入。");closeModal();return;}
+ a.unshift({customer_id:cid,store_id:r.store_id,group:r.group,cap:r.cap,net_gain:r.net_gain,
+  reason:reason,approver:ap,cut:D.cut,rule_version:"v1.0",consent:"re-checked (PDPO)",
+  approved_at:new Date().toLocaleString("zh-Hans"),sent_at:""});
+ saveAudit(a);closeModal();alert("已写入审计： "+cid+" · "+ap+" · v1.0 · sent_at 留空");
+}
+function showPrice(){
+ document.getElementById("mTitle").textContent="签字暂停该店投放 · 先看代价";
+ document.getElementById("mBody").innerHTML=
+  `<div class="pricebox"><b>压这家店不省钱，只会把券换给价值更低的人。</b><br>`+
+  `· 本周花钱：<b>HK$15,400 → HK$15,400（一分没省）</b><br>`+
+  `· 预期净收益：<b>−HK$6,103（−0.86%）</b><br>`+
+  `· 换掉 <b>9 人</b>；暂缓 <b>9 人 / HK$450</b>（本来会拿到券的人）<br>`+
+  `· 候选 922 人、预算只够 308 人，压掉谁后面立刻有人补上</div>`+
+  `<div style="font-size:11.5px;line-height:1.8">机器只负责报警，钱由人签字。<b>只有运营能确认「结构性、外部原因」时才值得付这个代价</b>（例如门口修路三个月，人根本来不了）。签字与代价一起入审计，可一键「恢复投放」。</div>`+
+  `<label>结构性原因</label><select id="mStruct"><option>装修/施工</option><option>竞品新开</option><option>租约/搬迁</option><option>人流异常</option><option>其他</option></select>`+
+  `<label>书面理由（必填）</label><textarea id="mReason" placeholder="例如：B1 整层围挡至 12 月，已约店长周一复盘，确认外部原因"></textarea>`+
+  `<label>批准人 / 签名（必填）</label><input id="mApprover" placeholder="例如 Mr. Wong">`;
+ document.getElementById("mFoot").innerHTML=`<button class="ghost" onclick="closeModal()">不签，先去排查</button><button class="primary" onclick="doSuppress()">我确认代价，签字暂停</button>`;
+ document.getElementById("mask").classList.add("on");
+}
+function doSuppress(){
+ const reason=document.getElementById("mReason").value.trim(),ap=document.getElementById("mApprover").value.trim();
+ if(!reason||!ap){alert("理由和批准人都必填。");return;}
+ const a=audit();a.unshift({customer_id:"",store_id:"PCC007",group:"store_suppression",cap:0,net_gain:"",
+  reason:document.getElementById("mStruct").value+" · "+reason,approver:ap,cut:D.cut,rule_version:"v1.0",
+  price:"花钱 15,400 不变 / 净收益 −6,103 / 9 人换人 / 暂缓 9 人 HK$450",
+  consent:"n/a - store-level decision",approved_at:new Date().toLocaleString("zh-Hans"),sent_at:""});
+ saveAudit(a);closeModal();alert("已签字暂停 PCC007（含代价留痕）。可用「恢复投放」撤回。");
+}
+function exportAudit(){
+ const a=audit();if(!a.length){alert("本机还没有审计记录，先去「行动清单」批准一条。");return;}
+ const ks=["customer_id","store_id","group","cap","net_gain","reason","approver","cut","rule_version","price","consent","approved_at","sent_at"];
+ const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+ const csv=[ks.join(",")].concat(a.map(r=>ks.map(k=>q(r[k])).join(","))).join("\r\n");
+ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
+ const u=URL.createObjectURL(blob),l=document.createElement("a");
+ l.href=u;l.download="pulse_audit_"+new Date().toISOString().slice(0,10)+".csv";l.click();URL.revokeObjectURL(u);
+}
+function clearAudit(){if(confirm("清空本机演示审计记录？不可撤销。")){localStorage.removeItem("pulse_studio_audit");refreshAudit();}}
+function refreshAudit(){
+ const a=audit();
+ document.getElementById("auditCount").textContent="审计记录 "+a.length+" 条";
+ document.getElementById("auditCount2").textContent=a.length+" 条";
+ const el=document.getElementById("auditTrail");
+ if(!a.length){el.innerHTML=`<div class="tlitem"><div class="tt">暂无记录</div><div class="td">去「Action Queue」批准一位客户，或去「Store Diagnostics」签字暂停，记录会出现在这里并保存在本机 localStorage。</div></div>`;return;}
+ el.innerHTML=a.map(r=>
+  `<div class="tlitem"><div class="tt">${r.group==="store_suppression"?"门店签字暂停":"批准发券"} · ${r.customer_id||r.store_id} <span class="badge b-ok">v1.0</span></div>`+
+  `<div class="td">${esc(r.reason)}<br>批准人 <b>${esc(r.approver)}</b> · ${esc(r.approved_at)} · cut ${esc(r.cut)} · 同意 ${esc(r.consent)}<br>`+
+  `${r.price?"<b style='color:var(--red2)'>代价 "+esc(r.price)+"</b><br>":""}`+
+  `<code>approved_at</code> 有值 · <code>sent_at</code> 留空（发送时同意仍须有效）</div></div>`).join("");
+}
+
+/* ---------- 07 AUDIT 规则表 ---------- */
+document.getElementById("rulesTable").innerHTML=[
+ ["评估切口",D.cut,"只用 ≤ cut 的历史，防前视偏差"],
+ ["最少消费间隔","FLAG_MIN_GAPS = 4","间隔不足 4 个不判定为偏离"],
+ ["偏离倍数","DEV_THRESHOLD = 1.5×","静默 ≥1.5 × 个人中位间隔"],
+ ["静默上限","FLAG_MAX_SILENCE = 180 天","超过视为已流失，不进挽留池"],
+ ["价值门槛","E50 = HK$862 / E75 = HK$1,326","由 09-30 切口经验分布给出"],
+ ["预期花费 − 券面值","&gt; 0","否则进 low 组，不干预"],
+ ["门店固定阈值","ALERT_FIXED = −0.10","specific drift 低于即告警"],
+ ["门店自身阈值","历史 P10","只看观察周及以前"],
+ ["券面值","high HK$50 / medium HK$30","if 规则给定，AI 不改钱"],
+ ["真现金 / 张","HK$8.58","44 × 兑换率 30% × 毛利率 65%"],
+ ["幂等键","(customer_id, campaign_id, cut)","重复批准不写入"],
+ ["规则版本","RULE_VERSION = v1.0","每条审计都带版本号"]
+].map(([a,b,c])=>`<tr><td style="width:34%"><b>${a}</b></td><td class="mono">${b}</td><td style="color:var(--ink2)">${c}</td></tr>`).join("");
+document.getElementById("caliberTable").innerHTML=[
+ ["82.8%","2026-04-30 flag 池 n=1,072","群体数，<b>不能 × 350 张券</b>"],
+ ["78.5%","2026-09-30 flag 池","本页所有决策数字用的切口"],
+ ["~55%","真沉默组 30 天回流率","04-30 / 07-31 切口，不是决策基线"],
+ ["350 张","额度：350 × HK$44 = 15,400","不是「发出 350 张券」"],
+ ["308 张","实投：308 × HK$50 = 15,400","金额相等，张数不同"],
+ ["HK$15,400","券面值口径","不等于现金成本"],
+ ["HK$3,003","真现金口径","350 × 8.58；财务真正批的钱"],
+ ["HK$36,000","全部候选券面值需求","922 人，819 张才饱和"],
+ ["HK$34,603 / 周","no_spend 现金节省","第一道闸门，估计值"],
+ ["4,797 人","跨店会员 82.4%","分母 5,825 有交易会员；ID 全局唯一"]
+].map(([a,b,c])=>`<tr><td style="width:26%"><b>${a}</b></td><td>${b}</td><td style="color:var(--ink2)">${c}</td></tr>`).join("");
+
+/* ---------- init ---------- */
+/* ---------- 一键演示闭环 ---------- */
+function runDemo(){
+  go("actions");
+  const r=ROWS[0],a=audit();
+  if(!a.some(x=>x.customer_id===r.customer_id&&x.cut===D.cut)){
+    a.unshift({customer_id:r.customer_id,store_id:r.store_id,group:r.group,cap:r.cap,
+      net_gain:r.net_gain,reason:r.reason+" · 经理确认规则命中（演示）",
+      approver:"Ms. Chan · Marketing Manager（演示）",cut:D.cut,rule_version:"v1.0",
+      consent:"re-checked (PDPO)",approved_at:new Date().toLocaleString("zh-Hans"),sent_at:""});
+    saveAudit(a);
+  }
+  setTimeout(()=>go("audit"),250);
+}
+refreshAudit();drawHeat();drawComp();drawGridChart();calcAdvice();
+(function(){
+  const h=location.hash.replace("#","");if(TITLES[h])go(h);
+  if(new URLSearchParams(location.search).get("demo")==="1")runDemo();
+})();
+</script>
+</body>
+</html>

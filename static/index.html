@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse · Module 3 — 每周挽留预算决策板</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:"Microsoft YaHei","PingFang SC",sans-serif; }
+  body { background:#EEF1F6; color:#1A2230; }
+  .topbar { background:#0E3F8C; color:#fff; padding:10px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .topbar .logo { font-size:17px; font-weight:bold; }
+  .topbar .logo span { font-weight:normal; font-size:12px; margin-left:8px; color:#9FC1F0; }
+  .topbar .env { margin-left:auto; font-size:12px; line-height:1.5; text-align:right; }
+  .topbar .env b { color:#FFD37E; }
+  .positioning { background:#FFF8E7; border-bottom:1px solid #F0DCA8; padding:8px 20px; font-size:12.5px; color:#6B5320; }
+  .tabs { display:flex; gap:4px; padding:12px 20px 0; background:#fff; border-bottom:1px solid #D6DCE5; }
+  .tab { padding:9px 18px; font-size:14px; cursor:pointer; color:#4A5568; border:1px solid transparent; border-bottom:none; border-radius:8px 8px 0 0; }
+  .tab.active { background:#0E3F8C; color:#fff; }
+  .main { padding:16px 20px 40px; max-width:1280px; margin:0 auto; }
+  .panel { background:#fff; border:1px solid #D6DCE5; border-radius:8px; padding:14px 16px; margin-bottom:14px; }
+  .panel h2 { font-size:14px; color:#0E3F8C; margin-bottom:10px; }
+  .panel h2 .hint { font-weight:normal; font-size:12px; color:#8B97A8; margin-left:8px; }
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:14px; }
+  .kpi { background:#fff; border:1px solid #D6DCE5; border-radius:8px; padding:12px 16px; }
+  .kpi .t { font-size:12px; color:#6B7686; }
+  .kpi .v { font-size:22px; font-weight:bold; color:#0E3F8C; margin-top:4px; }
+  .kpi.warn .v { color:#C0392B; }
+  .kpi .sub { font-size:11px; color:#8B97A8; margin-top:4px; line-height:1.4; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th { background:#F7F9FC; color:#4A5568; text-align:left; padding:8px 10px; border-bottom:2px solid #D6DCE5; white-space:nowrap; }
+  td { padding:9px 10px; border-bottom:1px solid #EEF1F6; vertical-align:middle; }
+  .badge { display:inline-block; font-size:11px; padding:1px 8px; border-radius:9px; white-space:nowrap; }
+  .b-high { background:#FDECEA; color:#C0392B; border:1px solid #F2B8B5; }
+  .b-medium { background:#FFF4E5; color:#B26A00; border:1px solid #F0D9B5; }
+  .b-normal { background:#E8F5E9; color:#2E7D32; border:1px solid #BFD8C0; }
+  .b-C, .b-low { background:#E4E7EC; color:#6B7686; }
+  .b-no_consent { background:#EDE7F6; color:#5E35B1; border:1px solid #CEBEE8; }
+  .cid { font-weight:bold; color:#0E3F8C; }
+  .money { font-variant-numeric:tabular-nums; }
+  .btn { border:none; border-radius:5px; padding:5px 10px; font-size:12px; cursor:pointer; }
+  .btn.approve { background:#2E7D32; color:#fff; }
+  .btn.approve:hover { background:#1B5E20; }
+  .btn.suppress { background:#C0392B; color:#fff; }
+  .btn.ghost { background:#F0F5FC; color:#1E4FA8; border:1px solid #C3D4EE; }
+  .btn:disabled { background:#E4E7EC; color:#8B97A8; cursor:not-allowed; }
+  .alert-row { background:#FFF3F3 !important; }
+  .clickable { cursor:pointer; }
+  .clickable:hover td { background:#F0F5FC; }
+  .seg { margin:10px 0; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .seg button { border:1px solid #C3D4EE; background:#F0F5FC; color:#1E4FA8; padding:4px 12px; border-radius:12px; font-size:12px; cursor:pointer; }
+  .seg button.active { background:#1E4FA8; color:#fff; }
+  .muted { color:#8B97A8; }
+  .gatebar { font-size:12.5px; color:#5A6778; background:#F7F9FC; border:1px solid #D6DCE5; border-radius:6px; padding:9px 12px; margin-bottom:14px; line-height:1.6; }
+  .gatebar b { color:#C0392B; }
+  .ok { color:#2E7D32; font-weight:bold; }
+  .err { color:#C0392B; }
+  .hidden { display:none; }
+  select, input { font:inherit; font-size:12.5px; padding:4px 8px; border:1px solid #C3D4EE; border-radius:4px; background:#fff; }
+  .param { display:inline-flex; align-items:center; gap:5px; font-size:12px; color:#4A5568; margin-right:12px; }
+  .param input { width:76px; }
+  .modal { position:fixed; inset:0; background:rgba(10,25,50,.45); display:flex; align-items:center; justify-content:center; z-index:50; }
+  .modal.hidden { display:none; }
+  .modal .box { background:#fff; border-radius:10px; padding:20px; width:460px; max-width:92vw; box-shadow:0 12px 40px rgba(0,0,0,.25); }
+  .modal h3 { font-size:15px; color:#0E3F8C; margin-bottom:12px; }
+  .modal .line { font-size:12.5px; margin-bottom:8px; line-height:1.6; }
+  .modal label { display:block; font-size:12px; color:#4A5568; margin:10px 0 4px; }
+  .modal input, .modal textarea { width:100%; padding:7px 9px; border:1px solid #C3D4EE; border-radius:5px; font-size:12.5px; }
+  .modal textarea { height:70px; resize:vertical; }
+  .modal .actions { margin-top:14px; display:flex; gap:8px; justify-content:flex-end; }
+  .footnote { font-size:11.5px; color:#7A8698; line-height:1.6; margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">Pulse<span>每周挽留预算决策板 · Module 3</span></div>
+  <div class="env">行动清单评估截止 <b id="cut">…</b><br>门店诊断观察周 <b id="weeklabel">…</b></div>
+</div>
+<div class="positioning">
+  <b>一句话定位：</b>Pulse 不是告诉你谁要走了，它告诉你——这一周，那笔挽留预算该花在谁身上、花多少、以及为什么对某些人一分都不花。
+  <span class="muted">（使用者：每周三打开审批清单的营销经理）</span>
+</div>
+
+<div style="margin:0 18px 10px;padding:9px 14px;background:#2B211E;color:#F0E5DF;border-radius:5px;font-size:12px;line-height:1.7;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+  <b style="color:#FFD9A8;white-space:nowrap">NEW · 成品级决策工作台</b>
+  <span>按老师参考重做视觉与信息架构：7 模块导航、每个数字带口径、可点可签字、含一键演示闭环。</span>
+  <a href="/static/decision_workspace.html" style="background:#C0392B;color:#fff;padding:4px 11px;border-radius:4px;font-weight:700;white-space:nowrap;text-decoration:none">打开 Decision Workspace →</a>
+  <span style="color:#B9A8A0">（本页继续作为连接真实 API 的活看板保留，两者同源同规则）</span>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="stores">① 门店诊断</div>
+  <div class="tab" data-tab="actions">② 行动清单</div>
+  <div class="tab" data-tab="audit">③ 审批记录</div>
+</div>
+
+<div class="main">
+  <div id="tab-stores"></div>
+  <div id="tab-actions" class="hidden"></div>
+  <div id="tab-audit" class="hidden"></div>
+</div>
+
+<div id="modal" class="modal hidden"><div class="box" id="modalbox"></div></div>
+
+<script>
+const API = '';
+const label = {high:'高价值+偏离', medium:'中价值+偏离', normal:'不用管', low:'收益不足·不花',
+               C:'历史太少', no_consent:'无同意·拦截', all:'全部'};
+let currentStore = '';
+let currentWeek = 13;
+
+async function j(url, opts) {
+  const r = await fetch(API + url, opts);
+  return r.json();
+}
+function fmt(x){ return 'HK$' + Number(x||0).toLocaleString(); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function openModal(html){ document.getElementById('modalbox').innerHTML = html;
+  document.getElementById('modal').classList.remove('hidden'); }
+function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
+
+// ---------- ① 门店诊断（诊断视图，不做自动决策） ----------
+const CONC = {normal:'只是波动', unclear:'原因未定', structural:'确认为结构性'};
+const CONC_FULL = {normal:'只是波动，个人照常投放', unclear:'原因未定，继续排查',
+                   structural:'确认为结构性，建议停本周投放'};
+async function renderStores(week) {
+  const el = document.getElementById('tab-stores');
+  el.innerHTML = '<div class="muted">加载门店诊断…</div>';
+  const s = await j('/api/stores' + (week ? '?week=' + week : ''));
+  currentWeek = s.week;
+  document.getElementById('weeklabel').textContent =
+    s.week_date + ' ~ ' + s.week_end + (s.replay ? '（历史回放）' : '（最新周）');
+  const opts = (s.weeks_available||[]).map(w =>
+    `<option value="${w.week}" ${w.week===s.week?'selected':''}>${w.date} · ${w.n_alert} 家告警</option>`).join('');
+  let html = `<div class="gatebar">
+    <b>这一页是诊断视图，不是自动决策器。</b>它只回答两件事：哪家店这周熟客来得比平常少、
+    是不是这条街自己的问题（已扣掉全连锁共同趋势）。
+    本周 <b>${s.n_alert}/${s.n_stores}</b> 家告警，已排查 <b>${s.n_diagnosed||0}</b> 家，已暂停投放 <b>${s.n_suppressed||0}</b> 家。
+    <br><b>它不会自己停券</b>：个人层决定谁值得发券；门店层只有经理单独签字，才能改「这周要不要在这家店投」，签字前会先显示代价。不签字 = 照常按个人层规则投放。
+    ${s.replay?'<br><b>这是 PRD §4.1 指定的历史回放周</b>。':''}
+    <br>观察周：
+    <select id="weeksel" onchange="renderStores(this.value)">${opts}</select>
+    <span class="muted">漂移指数 = 近 4 周常客均值 ÷ 前 8 周均值 − 1，再扣连锁中位数；阈值 &lt; −0.10 或自身历史 P10。</span>
+  </div>`;
+  html += '<div class="panel"><h2>各店常客诊断<span class="hint">点击任一行 → 钻取该店真实名单；告警行可记录排查结论</span></h2><table>' +
+    '<tr><th>门店</th><th>区域</th><th>类型</th><th>周常客</th><th>specific 漂移</th><th>自身P10</th><th>状态</th><th>排查结论 / 动作</th></tr>';
+  for (const st of s.stores) {
+    const dg = st.diagnosis;
+    const badge = st.suppressed ? '<span class="badge b-high">已暂停投放</span>'
+      : dg && dg.conclusion==='structural' ? '<span class="badge b-high">结构性 · 建议停投</span>'
+      : dg && dg.conclusion==='normal' ? '<span class="badge b-normal">已排查 · 正常波动</span>'
+      : dg ? '<span class="badge b-high">已排查 · 待定</span>'
+      : st.alert ? '<span class="badge b-high">告警 · 待排查</span>'
+      : '<span class="badge b-normal">正常</span>';
+    let act = '';
+    if (st.suppressed) {
+      act = `<button class="btn ghost" onclick="event.stopPropagation();release('${st.store_id}',${s.week})">恢复投放</button>
+        <div class="footnote">${esc((st.suppression&&st.suppression.structural)||'未填原因')} · ${esc((st.suppression&&st.suppression.approver)||'')} · 本周代价 ${fmt((st.suppression&&st.suppression.price&&st.suppression.price.gain_delta)||0)}</div>`;
+    } else if (st.alert || dg) {
+      act = `<button class="btn ghost" onclick="event.stopPropagation();diagnose('${st.store_id}',${s.week})">${dg?'更新结论':'记录排查结论'}</button>`;
+      if (st.alert) act += `<button class="btn suppress" onclick="event.stopPropagation();suppress('${st.store_id}',${s.week})">暂停该店预算</button>`;
+      act += dg ? `<div class="footnote">${esc(CONC_FULL[dg.conclusion]||'')}${dg.structural?' · '+esc(dg.structural):''} · ${esc(dg.approver)} · ${esc(dg.note)}</div>`
+                : '<div class="footnote">只记录、不动钱</div>';
+    } else {
+      act = '<span class="muted">—</span>';
+    }
+    html += `<tr class="clickable ${st.alert?'alert-row':''}" onclick="drill('${st.store_id}')">
+      <td class="cid">${st.store_id}</td><td>${esc(st.district)}</td><td>${esc(st.store_type)}</td>
+      <td>${st.regulars_week}</td>
+      <td class="money">${st.specific_drift>0?'+':''}${st.specific_drift}</td>
+      <td class="money">${st.own_p10}</td>
+      <td>${badge}</td>
+      <td>${act}<div class="footnote">${esc(st.reason)}</div></td>
+    </tr>`;
+  }
+  html += '</table><div class="footnote">归属店与常客定义均只用观察周之前的历史，无前视偏差（PRD §4.1 陷阱 ii）。外部上下文（天气/客流/假日，PRD §3.2 #4）尚未接入，原因栏只能提示「去核实」。</div></div>';
+  const al = s.stores.filter(x => x.alert);
+  html += `<div class="panel" style="border-left:3px solid #BA7517">
+    <h2>门店诊断卡 · 给高层看的一页<span class="hint">只看、不点、不改钱</span></h2>
+    <div class="gatebar">
+      本周 <b>${s.n_stores}</b> 家店，<b>${s.n_alert}</b> 家告警。个人层本周共 <b>${s.candidates_total||0}</b> 位值得挽留的客户：
+      <b>${s.candidates_alert||0}</b> 位在告警店、<b>${s.candidates_healthy||0}</b> 位在健康店
+      —— 所以「健康店」一个都不能跳过，绝大多数该救的人在那里。<br>
+      <span class="muted">${esc(s.context_note||'')}</span>
+    </div>
+    ${al.length ? `<table><tr><th>门店</th><th>现象</th><th>该店值得救的人</th><th>券面值需求</th><th>排查结论</th><th>谁去看过</th><th>下一步</th></tr>
+      ${al.map(st => {
+        const dg = st.diagnosis, c = st.context || {candidates:0,high:0,medium:0,demand_amt:0};
+        return `<tr><td><b>${esc(st.store_id)}</b><div class="footnote">${esc(st.district)} · ${esc(st.store_type)}</div></td>
+          <td class="money">${st.specific_drift}<div class="footnote">${esc(st.alert_rule)}</div></td>
+          <td>${c.candidates} 人 <span class="muted">(高 ${c.high} / 中 ${c.medium})</span></td>
+          <td class="money">${fmt(c.demand_amt)}</td>
+          <td>${dg ? esc(CONC_FULL[dg.conclusion]||'') : '待排查'}${dg&&dg.structural?' · '+esc(dg.structural):''}</td>
+          <td>${dg ? esc(dg.approver) : '<b style="color:#BA7517">待派人</b>'}</td>
+          <td class="muted">${st.suppressed ? '已签字暂停本周投放；下周复查恢复日期。'
+            : '去现场确认：是不是路在修 / 商场改入口 / 对面新店截客？结论出来再决定要不要签字压制。'}</td></tr>`;
+      }).join('')}
+      </table><div class="footnote">这张卡交付的是「哪家店、什么现象、有多少值得救的人、谁去看过、结论是什么」。
+      它<b>不会</b>改分组、改券数或新增门店活动预算；要真的改钱，只能在上方签字压制，且签字前先告诉你代价。</div>`
+      : '<div class="gatebar">本周没有告警门店，无需派人排查；个人层名单照常走完整流程。</div>'}
+  </div>`;
+  html += `<div class="panel" style="border-left:3px solid #185FA5">
+    <h2>这一页不管什么<span class="hint">边界写在屏幕上，避免越界</span></h2>
+    <table>
+      <tr><th style="width:34%">不做</th><th>归谁</th></tr>
+      <tr><td>自动停止某家店的投放</td><td>不做。要停必须经理签字，且签字前显示代价（少多少预期净收益 / 换掉几人）</td></tr>
+      <tr><td>门店级促销、特别活动、加预算抢客</td><td>门店运营 / 市场部。本模块只出诊断单，不设计方案、不动门店预算</td></tr>
+      <tr><td>调编制、改租约、竞品情报</td><td>不在本模块范围</td></tr>
+    </table>
+    <div class="footnote">本模块交付的是一张<b>诊断单</b>：哪家店、什么现象、谁去看过、结论是什么、要不要暂停本周投放。
+    它服务的是「钱花得值不值」，不负责预测谁会流失——那是个人层的事。</div></div>`;
+  el.innerHTML = html;
+}
+
+function diagnose(store, week) {
+  openModal(`<h3>记录排查结论 · ${esc(store)}</h3>
+    <div class="line">这一步<b>只记录、不动钱</b>，也不会改任何人的发券结果。要停本周投放，请另外点「暂停该店预算」。</div>
+    <label>结论</label>
+    <select id="d-conc">
+      <option value="normal">只是波动，个人照常投放</option>
+      <option value="unclear">原因未定，继续排查</option>
+      <option value="structural">确认为结构性问题，建议停本周投放</option>
+    </select>
+    <label>结构性原因（选「确认为结构性」时填）</label>
+    <select id="d-struct">
+      <option value="">— 不适用 —</option>
+      <option>装修/施工</option><option>竞品新开</option><option>租约/搬迁</option>
+      <option>人流异常</option><option>其他</option>
+    </select>
+    <label>排查人（必填）</label><input id="d-approver" placeholder="例如 Mr. Wong">
+    <label>看到了什么 / 下一步（必填）</label><textarea id="d-note" placeholder="例如：商场 B1 整层围挡至 12 月，已约店长下周一复盘；本周个人照常投放"></textarea>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">取消</button>
+      <button class="btn ghost" id="d-go">保存结论</button></div>`);
+  document.getElementById('d-go').onclick = async () => {
+    const body = JSON.stringify({store_id:store, week:week,
+      conclusion:document.getElementById('d-conc').value,
+      structural:document.getElementById('d-struct').value,
+      approver:document.getElementById('d-approver').value,
+      reason:document.getElementById('d-note').value});
+    const r = await j('/api/diagnose',{method:'POST',headers:{'Content-Type':'application/json'},body});
+    if(r.ok){ closeModal(); await renderStores(week); alert('已记录排查结论（不影响预算）。'); }
+    else alert(r.error||'失败');
+  };
+}
+
+function drill(store) {
+  currentStore = store;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelector('.tab[data-tab="actions"]').classList.add('active');
+  ['stores','actions','audit'].forEach(k=>document.getElementById('tab-'+k).classList.toggle('hidden', k!=='actions'));
+  renderActions('all', 0, store);
+}
+
+async function suppress(store, week) {
+  const b0 = await j(`/api/budget?coupons=350&face=44&week=${week}`);
+  const list = (b0.suppressed_stores||[]).concat([store]).join(',');
+  const b1 = await j(`/api/budget?coupons=350&face=44&week=${week}&suppress=${encodeURIComponent(list)}`);
+  const marginal = b1.gain - b0.gain;
+  const opt = ['装修/施工','竞品新开','租约/搬迁','人流异常','其他']
+    .map(x=>`<option value="${x}">${x}</option>`).join('');
+  openModal(`<h3>暂停该店本周预算 · ${esc(store)}</h3>
+    <div class="line">签字后：该店本周可批准客户不进审批名单，预算转给其他店。<b>告警本身不会自动压制。</b></div>
+    <div style="border:0.5px solid #C0392B;border-radius:8px;padding:10px 12px;margin:10px 0;background:#FCEBEB">
+      <b>这次签字的代价</b><br>
+      花钱：仍是 ${fmt(b1.funded_amt)}（券一张不少发，压店不省钱）<br>
+      预期净收益：${fmt(b1.gain)}（不压制 ${fmt(b1.baseline_gain)}，这一步再少 ${fmt(Math.abs(marginal))}）<br>
+      换人：${b1.swapped_n} 人 · 暂缓：${b1.deferred_n} 人 / ${fmt(b1.deferred_amt)}
+    </div>
+    <label>结构性原因（下周复查依据）</label><select id="m-struct">${opt}</select>
+    <label>操作人（必填）</label><input id="m-approver" placeholder="例如 Ms. Chan">
+    <label>书面理由（必填）</label><textarea id="m-reason" placeholder="例如：商场围挡施工至 12 月，确认是外部原因，本周不投"></textarea>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">取消</button>
+      <button class="btn suppress" id="m-go">我确认，写入审计</button></div>`);
+  document.getElementById('m-go').onclick = async () => {
+    const body = JSON.stringify({store_id:store, week:week, coupons:350, face:44,
+      structural:document.getElementById('m-struct').value,
+      approver:document.getElementById('m-approver').value,
+      reason:document.getElementById('m-reason').value});
+    const r = await j('/api/suppress',{method:'POST',headers:{'Content-Type':'application/json'},body});
+    if(r.ok){ closeModal(); await renderStores(week); alert('已压制 '+store+' 本周预算；代价已随签字写入审计。'); }
+    else alert(r.error||'失败');
+  };
+}
+
+async function release(store, week) {
+  openModal(`<h3>恢复投放 · ${esc(store)}</h3>
+    <div class="line">恢复后该店候选人重新进入本周审批名单，预算按净收益重新排序。</div>
+    <label>操作人（必填）</label><input id="m-approver">
+    <label>书面理由（必填）</label><textarea id="m-reason" placeholder="例如：施工已结束，客流恢复"></textarea>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">取消</button>
+      <button class="btn ghost" id="m-go">确认恢复</button></div>`);
+  document.getElementById('m-go').onclick = async () => {
+    const body = JSON.stringify({store_id:store, week:week, action:'release',
+      approver:document.getElementById('m-approver').value,
+      reason:document.getElementById('m-reason').value});
+    const r = await j('/api/suppress',{method:'POST',headers:{'Content-Type':'application/json'},body});
+    if(r.ok){ closeModal(); await renderStores(week); alert('已恢复投放：'+store); }
+    else alert(r.error||'失败');
+  };
+}
+
+// ---------- ② 行动清单 ----------
+async function renderActions(group='all', offset=0, store=currentStore, limit=50) {
+  const el = document.getElementById('tab-actions');
+  el.innerHTML = '<div class="muted">加载真实名单…</div>';
+  const qs = `?group=${group}&limit=${limit}&offset=${offset}` + (store?`&store=${store}`:'');
+  const [ac, sum, base] = await Promise.all([j('/api/actions'+qs), j('/api/summary'), j('/api/baseline')]);
+  document.getElementById('cut').textContent = ac.cut;
+
+  const rev = sum.review;
+  let html = `<div class="kpis">
+    <div class="kpi"><div class="t">本周可批准（高/中价值）</div><div class="v">${rev.approvable}</div>
+      <div class="sub">共 ${rev.total} 人评分；其余由规则直接给出「不花钱」及理由</div></div>
+    <div class="kpi"><div class="t">不干预决定</div><div class="v">${rev.no_spend}</div>
+      <div class="sub">每条都有 reason，可在名单逐行查、可申诉</div></div>
+    <div class="kpi"><div class="t">人工审批工作量</div><div class="v">${rev.minutes} <small>分钟</small></div>
+      <div class="sub">${rev.hours} 小时 · 批量审批口径（Top ${rev.written_reason_rows||40} 条书面理由 1.5 分/条 + 中价值批量 0.1 分/条）。<b>若全量逐条审批 ${rev.full_minutes} 分钟（${rev.full_hours} 小时）</b>——诚实回答「5,000 行会不会淹死经理」</div></div>
+    <div class="kpi warn"><div class="t">flag 池 30 天自行回流</div><div class="v">${base.flag_return}%</div>
+      <div class="sub">n=${base.flag_n}，切口 ${base.cut}，已排除 ${base.contacted_excluded} 名 30 天内被联系者</div></div>
+  </div>`;
+
+  html += `<div class="panel"><h2>本周预算分配<span class="hint">门店层 = 诊断视图 + 人工闸门 · 只有人工签字的压制才生效 · 金额由规则给定，AI 不改钱</span></h2>
+    <div class="seg">
+      <span class="param">本周券数 <input id="b-coupons" type="number" value="350" step="10" min="0"></span>
+      <span class="param">券面值 <input id="b-face" type="number" value="44" step="1" min="0"></span>
+      <button class="btn ghost" onclick="refreshBudget()">重算</button>
+    </div><div id="budgetbox" class="muted">加载中…</div></div>`;
+
+  html += `<div class="panel" style="border-left:3px solid #185FA5"><h2>下周该批多少预算<span class="hint">灵活预算 = 财务现金上限 / 覆盖率目标，两个外部输入 · 纯试算，不改个人层规则</span></h2>
+    <div class="seg">
+      <span class="param">下周真现金上限 <input id="a-cash" type="number" value="3003" step="100" min="0"></span>
+      <span class="param">覆盖率目标 % <input id="a-target" type="number" value="90" step="5" min="0" max="100"></span>
+      <span class="param">兑换率 <input id="a-redeem" type="number" value="0.30" step="0.05"></span>
+      <span class="param">毛利率 <input id="a-margin" type="number" value="0.65" step="0.05"></span>
+      <button class="btn ghost" onclick="refreshAdvice()">算下周</button>
+    </div><div id="advicebox" class="muted">加载中…</div></div>`;
+
+  html += `<div class="panel"><h2>基线口径卡<span class="hint">实时从 data/ 复算，不是贴上去的数字</span></h2>
+    <div class="gatebar">
+      <b>flag 池</b> ${base.flag_return}%（n=${base.flag_n}） ·
+      <b>真沉默 ≥30 天</b> ${base.silent_return}%（n=${base.silent_n}） ·
+      ≥4 间隔真沉默子群 ${base.silent4_return}%（n=${base.silent4_n}） ·
+      观察窗 ${base.cut} → ${base.d1}${base.censored?'（右删失）':''}<br>
+      <b>诚实说明：</b>${esc(base.note)}<br>
+      <span class="muted">名单里的「自行回流概率」= 按偏离倍数分桶的经验回流率，用于排序与解释，不是预测模型、不是实验结果。</span>
+    </div>
+    <table><tr><th>偏离桶</th><th>样本 n</th><th>经验 30 天回流率</th></tr>
+    ${base.buckets.map(b=>`<tr><td>${esc(b.label)}</td><td>${b.n}</td><td>${b.rate===null?'—':b.rate+'%'}</td></tr>`).join('')}
+    </table></div>`;
+
+  // 活的成本参数表（PRD 8.1 / DSH 第二部分 3）
+  html += `<div class="panel"><h2>省下的钱 · 活的成本参数表<span class="hint">现场改任一参数，数字立刻变</span></h2>
+    <div class="seg">
+      <span class="param">券面值 <input id="p-face" type="number" value="44" step="1"></span>
+      <span class="param">兑换率 <input id="p-redeem" type="number" value="0.30" step="0.05"></span>
+      <span class="param">毛利率 <input id="p-margin" type="number" value="0.65" step="0.05"></span>
+      <span class="param">旧规则覆盖率 <input id="p-blanket" type="number" value="1.0" step="0.1"></span>
+      <button class="btn ghost" onclick="refreshSavings()">重算</button>
+    </div><div id="savingbox" class="muted">加载中…</div></div>`;
+
+  html += '<div class="panel"><h2>待处理清单<span class="hint">按预期净收益降序 · 规则定金额，AI 只把理由翻成人话</span></h2>';
+  html += `<div class="gatebar">评估截止 <b>${ac.cut}</b> · 规则版本 <b>${ac.rule_version}</b> ·
+    ${esc(ac.net_gain_note)}<br>
+    ${store?`当前钻取门店 <b>${esc(store)}</b> <button class="btn ghost" onclick="currentStore='';renderActions('all',0,'')">清除门店过滤</button>`:'全部门店'}
+  </div>`;
+  html += '<div class="seg">' + ['all','high','medium','normal','low','C','no_consent'].map(g =>
+      `<button data-g="${g}" class="${g===group?'active':''}" onclick="currentStore=currentStore;renderActions('${g}',0,currentStore)">${label[g]} (${(rev.counts[g]||0)})</button>`).join('') + '</div>';
+  html += '<table><tr><th>客户</th><th>门店</th><th>分组</th><th>静默</th><th>偏离</th><th>ERV</th><th>自行回流</th><th>净收益</th><th>渠道</th><th>建议动作 / 理由</th><th>操作</th></tr>';
+  for (const r of ac.rows) {
+    const bcls = {high:'b-high',medium:'b-medium',normal:'b-normal',low:'b-low',C:'b-C',no_consent:'b-no_consent'}[r.group]||'b-normal';
+    html += `<tr>
+      <td class="cid">${r.customer_id}</td><td>${esc(r.store_id)}</td>
+      <td><span class="badge ${bcls}">${label[r.group]||r.group_label}</span></td>
+      <td>${r.silence_days} 天</td><td>${r.deviation?r.deviation+'×':'—'}</td>
+      <td class="money">${fmt(r.erv)}</td><td>${r.return_prob===null?'—':r.return_prob+'%'}</td>
+      <td class="money">${fmt(r.net_gain)}</td>
+      <td class="muted">${esc((r.channels||[]).join(','))||'—'}</td>
+      <td>${esc(r.action)}${r.cap?` · 上限 <b class="money">${fmt(r.cap)}</b>`:''}
+          <div class="footnote">${esc(r.reason)}</div></td>
+      <td>${r.can_approve ? `<button class="btn approve" onclick='approveOpen(${JSON.stringify(r)})'>批准</button>`
+                          : '<span class="muted">不可选</span>'}</td>
+    </tr>`;
+  }
+  if(!ac.rows.length) html += '<tr><td colspan="11" class="muted">该筛选下暂无客户。</td></tr>';
+  html += `</table><div class="seg">
+    <span class="muted">显示 ${ac.total?ac.offset+1:0}–${Math.min(ac.offset+ac.limit,ac.total)} / 共 <b>${ac.total}</b> 条（服务端分页，不再悄悄截断）</span>
+    <button class="btn ghost" ${ac.offset<=0?'disabled':''} onclick="renderActions('${group}',${Math.max(0,ac.offset-ac.limit)},currentStore,${ac.limit})">上一页</button>
+    <button class="btn ghost" ${ac.offset+ac.limit>=ac.total?'disabled':''} onclick="renderActions('${group}',${ac.offset+ac.limit},currentStore,${ac.limit})">下一页</button>
+  </div></div>`;
+  el.innerHTML = html;
+  refreshSavings();
+  refreshBudget();
+  refreshAdvice();
+}
+
+async function refreshBudget(){
+  const box = document.getElementById('budgetbox');
+  if (!box) return;
+  const cc = document.getElementById('b-coupons');
+  const ff = document.getElementById('b-face');
+  if (!cc || !ff) return;
+  const b = await j(`/api/budget?coupons=${encodeURIComponent(cc.value)}&face=${encodeURIComponent(ff.value)}&week=${currentWeek||''}`);
+  const sup = b.suppressed_stores.length ? b.suppressed_stores.join('、') : '无（全部投放）';
+  const sg = x => (x>=0?'+':'−') + fmt(Math.abs(x));
+  let h = `<div class="gatebar">
+    <b>需求</b> ${b.demand_n} 人 / ${fmt(b.demand_amt)}（券面值） ·
+    <b>本周预算</b> ${b.total_coupons} 张 × ${fmt(b.face)} = ${fmt(b.budget)} ·
+    <b>覆盖</b> ${b.coverage}%<br>
+    <b>实际投放</b> ${b.funded_n} 人 / ${fmt(b.funded_amt)} ·
+    <b>未覆盖</b> ${b.unserved_n} 人 / ${fmt(b.unserved_amt)} ·
+    <b>本周压制</b> ${esc(sup)}${b.suppressed_n ? `（${b.suppressed_n} 人 / ${fmt(b.suppressed_amt)} 不投）` : ''}<br>
+    <b>压制的代价</b> 预期净收益 ${fmt(b.gain)}（不压制 ${fmt(b.baseline_gain)}，${sg(b.gain_delta)} / ${b.gain_delta_pct}%）·
+    换人 ${b.swapped_n} 人 · <b>暂缓 ${b.deferred_n} 人 / ${fmt(b.deferred_amt)}</b>（本来会拿到券的那批）<br>
+    <span class="muted">压制不省钱：券数与总额不变，只是把券换给别人。告警不会自动压制，必须经理签字。</span>
+    ${(b.unhandled_alerts&&b.unhandled_alerts.length)?`<br><b>告警未处理</b> ${b.unhandled_alerts.join('、')} —— 不处理=照常按个人判据投放，不阻断。`:''}
+    <br><span class="muted">按净收益降序装满：高价值 ${b.funded_high}/${b.demand_high} 拿到券，中价值 ${b.funded_medium}/${b.demand_medium}。</span>
+    ${(b.demand_medium > 0 && b.funded_medium === 0) ? '<br><b style="color:#C0392B">注意：中价值客户整批落选 —— 净收益排序下高价值门槛更高。是否设中价值保底配额，需要业务拍板。</b>' : ''}
+  </div>`;
+  h += '<table><tr><th>门店</th><th>状态</th><th>待批（高/中）</th><th>需求</th><th>已投放</th><th>未覆盖</th><th>说明</th></tr>';
+  b.by_store.forEach(d => {
+    h += `<tr><td><b>${esc(d.store_id)}</b></td>
+      <td>${d.suppressed ? '<b style="color:#C0392B">已压制</b>' : '可投放'}</td>
+      <td>${d.demand_n} <span class="muted">(${d.high_n}/${d.medium_n})</span></td>
+      <td class="money">${fmt(d.demand_amt)}</td>
+      <td class="money">${fmt(d.funded_amt)}</td>
+      <td class="money">${d.unserved_n ? fmt(d.unserved_amt) : '—'}</td>
+      <td class="muted">${esc(d.reason)}</td></tr>`;
+  });
+  h += '</table>';
+  if (b.deferred_n) {
+    h += `<div style="margin-top:14px"><b>被暂缓的 ${b.deferred_n} 人 / ${fmt(b.deferred_amt)}</b>
+      <span class="muted">—— 他们本来会拿到券；压制解除后自动回到审批名单。</span>
+      <div style="max-height:220px;overflow:auto;margin-top:6px">
+      <table><tr><th>客户</th><th>门店</th><th>分组</th><th>券面值</th><th>预期净收益</th></tr>
+      ${b.deferred.map(d=>`<tr><td class="cid">${esc(d.customer_id)}</td><td>${esc(d.store_id)}</td>
+        <td>${esc(label[d.group]||d.group)}</td><td class="money">${fmt(d.coupon)}</td>
+        <td class="money">${fmt(d.net_gain)}</td></tr>`).join('')}
+      </table></div></div>`;
+  }
+  h += `<div class="footnote"><b>规则：</b>${esc(b.rule)}<br><b>诚实说明：</b>${esc(b.caveat)}</div>`;
+  box.innerHTML = h;
+}
+
+async function refreshAdvice(){
+  const box = document.getElementById('advicebox');
+  if (!box) return;
+  const g = id => document.getElementById(id);
+  if (!g('a-cash') || !g('a-target')) return;
+  const q = `cash=${encodeURIComponent(g('a-cash').value)}&target=${encodeURIComponent(g('a-target').value)}`
+          + `&redeem=${encodeURIComponent(g('a-redeem').value)}&margin=${encodeURIComponent(g('a-margin').value)}&face=44`;
+  const a = await j('/api/advice?'+q);
+  const r = a.recommended;
+  const last = a.grid[a.grid.length-1], prev = a.grid[a.grid.length-2];
+  let h = `<div class="gatebar">
+    <b>本周需求</b> ${a.demand_n} 人 / ${fmt(a.demand_amt)} ·
+    <b>每张券真现金</b> ${fmt(a.cash_per_coupon)}（44 × ${a.redeem} × ${a.margin}） ·
+    <b>饱和点</b> <b>${a.saturation_coupons} 张</b>（再多没人可发）<br>
+    <b style="font-size:15px">建议下周批 ${a.recommended_coupons} 张额度</b>（${esc(a.binding_label)}）
+    → 覆盖 <b>${r.coverage}%</b> / ${r.funded_n} 人，真现金 <b>${fmt(r.cash)}</b>；距饱和还差 ${a.headroom_coupons} 张<br>
+    <b>中价值</b> ${r.medium}/${a.demand_medium} 拿到券，<b>${r.medium_unserved} 人落选</b>${r.medium_unserved ? ' —— 高价值门槛更高，是否设保底配额需业务拍板。' : '（全部覆盖）'}<br>
+    <b>三条判据</b>：① 现金上限 券数 ≤ 现金 ÷ ${fmt(a.cash_per_coupon)}${a.by_cash ? `（${fmt(a.cash_cap)} → ${a.by_cash.coupons} 张 / ${a.by_cash.coverage}%）` : ''}；
+    ② 覆盖率目标 ${a.target}% → ${a.by_target.coupons} 张（${a.by_target.coverage}%）；
+    ③ 边际递减：${prev.coupons} → ${last.coupons} 张只多 ${last.marginal_n} 人，接近饱和就该停。<br>
+    <span class="muted">这张卡只回答「给多少钱能覆盖多少人」，不预测下周会有多少新候选人——下周名单要重新跑一次个人层。</span>
+  </div>`;
+  h += '<table><tr><th>额度张数</th><th>覆盖率</th><th>覆盖人数</th><th>中价值入选</th><th>比上一档多覆盖</th><th>真现金</th></tr>';
+  a.grid.forEach(p => {
+    const isRec = p.coupons === a.recommended_coupons, isSat = p.coupons === a.saturation_coupons;
+    const mark = isRec ? ' style="background:#E6F1FB"' : (isSat ? ' style="background:#EAF3DE"' : '');
+    h += `<tr${mark}><td class="money">${p.coupons}${isRec ? ' <b>← 建议</b>' : (isSat ? ' <b>← 饱和</b>' : '')}</td>
+      <td>${p.coverage}%</td><td>${p.funded_n}</td><td>${p.medium}</td>
+      <td>${p.marginal_n > 0 ? '+' + p.marginal_n : '—'}</td><td class="money">${fmt(p.cash)}</td></tr>`;
+  });
+  h += '</table>';
+  h += `<div class="footnote"><b>公式：</b>${esc(a.formula)}<br><b>规则：</b>${esc(a.rule)}<br>`
+     + a.notes.map(n => '· ' + esc(n)).join('<br>') + `</div>`;
+  box.innerHTML = h;
+}
+
+async function refreshSavings(){
+  const q = `face=${document.getElementById('p-face').value}&redeem=${document.getElementById('p-redeem').value}`
+          + `&margin=${document.getElementById('p-margin').value}&blanket=${document.getElementById('p-blanket').value}`;
+  const s = await j('/api/savings?'+q);
+  document.getElementById('savingbox').innerHTML =
+    `<table><tr><th>口径</th><th>不干预人数 / 券数</th><th>平均自行回流</th><th>避免的重复券</th><th>单券现金成本</th><th>券面值口径</th><th>现金成本口径</th></tr>
+     <tr><td><b>全量名单（本板实时）</b></td><td>${s.no_spend_count} 人 × 覆盖率 ${s.blanket_rate}</td><td>${s.avg_self_return}%</td><td>${s.avoided_coupons} 张</td>
+         <td class="money">${fmt(s.cost_per_coupon)}</td><td class="money">${fmt(s.face_value_saving)}</td><td class="money"><b>${fmt(s.weekly_saving)}</b></td></tr>
+     <tr><td><b>PRD §4 示意周预算</b></td><td>${s.prd_coupons} 张/周</td><td>—</td><td>${s.prd_wasted} 张（10% 误判）</td>
+         <td class="money">${fmt(s.cost_per_coupon)}</td><td class="money">${fmt(s.prd_face_saving)}</td><td class="money"><b>${fmt(s.prd_cash_saving)}</b></td></tr></table>
+     <div class="footnote">公式：${esc(s.formula)}。PRD 的 ~HK$1,500/周是<b>券面值口径</b>（35 张 × HK$44），不是现金成本口径；两者都随左侧参数实时变化。<br>
+       <b>以下均为估计、需真实数据校准：</b>${esc(s.estimates.join('、'))}。${esc(s.note)}</div>`;
+}
+
+function approveOpen(r) {
+  openModal(`<h3>批准挽留 · ${esc(r.customer_id)}</h3>
+    <div class="line">门店 <b>${esc(r.store_id)}</b> · 分组 <b>${label[r.group]}</b> ·
+      渠道 <b>${esc(r.suggested_channel)}</b> · 券上限 <b>${fmt(r.cap)}</b>（服务端锁定，不可改）</div>
+    <div class="line">规则给出的理由：${esc(r.reason)}</div>
+    <div class="line muted">同意依据：${esc(r.consent_basis||'—')}。批准时服务端会<b>再次校验同意</b>（渠道、时间戳、opt-out）。</div>
+    <label>操作人（必填）</label><input id="m-approver" placeholder="例如 Ms. Chan">
+    <label>书面理由（必填，PRD §4 高价值上限需人工写理由）</label>
+    <textarea id="m-reason" placeholder="例如：偏离个人节奏 5.1 倍且 ERV 高，同意按 HK$50 上限发券"></textarea>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">取消</button>
+      <button class="btn approve" id="m-go">批准并写审计</button></div>`);
+  document.getElementById('m-go').onclick = async () => {
+    const body = JSON.stringify({customer_id:r.customer_id, group:r.group,
+      channel:r.suggested_channel, cap:r.cap,
+      approver:document.getElementById('m-approver').value,
+      reason:document.getElementById('m-reason').value});
+    const res = await j('/api/approve',{method:'POST',headers:{'Content-Type':'application/json'},body});
+    if(res.ok){ closeModal();
+      alert('已写入审计日志：\n'+res.record.message_id+' · status=approved\n'
+            +res.consent_check+'\n\nsent_at 留空，等发送模块写。');
+    } else alert('未通过：'+(res.error||'失败')+(res.detail?'\n'+res.detail:''));
+  };
+}
+
+// ---------- ③ 审批记录 ----------
+async function renderAudit() {
+  const el = document.getElementById('tab-audit');
+  const a = await j('/api/audit');
+  const recs = (a.records||[]).slice().reverse();
+  let html = `<div class="panel"><h2>审批审计日志<span class="hint">随机抽一条，能答：发给谁 / 什么同意依据 / 谁批 / 何时批 / 凭什么</span></h2>
+    <div class="gatebar">messages 同 schema 写回：<code>${esc(a.messages_file)}</code>（源文件 messages.csv 不被改动）；
+      扩展审计字段：<code>${esc(a.decision_log_file)}</code>，用 message_id 关联。<br>
+      <b>${esc(a.note)}</b> 批准 ≠ 发送，PDPO 要求发送时同意仍有效（PRD §9.3）。</div>`;
+  if (!recs.length) html += '<div class="muted">尚无审批记录 —— 到「行动清单」批准一条试试。</div>';
+  else {
+    html += '<table><tr><th>message_id</th><th>status</th><th>客户</th><th>门店</th><th>渠道</th><th>券上限</th><th>同意依据 / 校验</th><th>书面理由</th><th>批准人</th><th>批准时间</th><th>sent_at</th></tr>';
+    for (const r of recs) html += `<tr>
+      <td>${esc(r.message_id)}</td><td class="ok">${esc(r.status)}</td>
+      <td class="cid">${esc(r.customer_id)||'—'}</td><td>${esc(r.store_id||'—')}</td>
+      <td>${esc(r.channel||'—')}</td><td class="money">${r.cap?fmt(r.cap):'—'}</td>
+      <td>${esc(r.consent_basis||'—')}<div class="footnote">${esc(r.consent_check||'')}</div></td>
+      <td>${esc(r.reason||'—')}</td><td>${esc(r.approved_by||'—')}</td>
+      <td>${esc(r.approved_at||'—')}</td><td class="muted">${esc(r.sent_at)||'（待发送模块写）'}</td></tr>`;
+    html += '</table>';
+  }
+  html += `<div class="footnote">本周另有 <b>全量决策快照</b>（含每条「不花钱」的 reason、cap、分组与回流概率，可申诉）：
+    <code>${esc(a.snapshot?a.snapshot.file:'—')}</code>，${a.snapshot?a.snapshot.count:0} 条；规则可复算，故不逐条重复写日志。</div></div>`;
+  el.innerHTML = html;
+}
+
+// ---------- tabs ----------
+function bindTabs(){
+  document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    ['stores','actions','audit'].forEach(k => document.getElementById('tab-'+k).classList.toggle('hidden', k!==t.dataset.tab));
+    if (t.dataset.tab==='stores') renderStores();
+    if (t.dataset.tab==='actions') renderActions('all',0,currentStore);
+    if (t.dataset.tab==='audit') renderAudit();
+  });
+}
+
+renderStores();
+Promise.all([j('/api/summary')]).then(([s])=>{ document.getElementById('cut').textContent = s.cut; });
+bindTabs();
+// deep-link for the demo: open http://localhost:8000/#actions or #audit directly
+const h0 = (location.hash||'').replace('#','');
+if (h0==='actions' || h0==='audit') document.querySelector(`.tab[data-tab="${h0}"]`).click();
+</script>
+</body>
+</html>

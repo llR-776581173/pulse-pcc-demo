@@ -1,0 +1,337 @@
+{
+  "run_at": "2026-11-21T00:44:27",
+  "all_green": true,
+  "n_pass": 40,
+  "n_fail": 0,
+  "runtime_error": null,
+  "results": [
+    {
+      "group": "BASELINE",
+      "code": "B01",
+      "name": "selftest.py 18/18 回归基线",
+      "status": "PASS",
+      "detail": "exit=0 | 18/18 checks passed",
+      "spec": "00 §5 / 04 §1 / 04 §4"
+    },
+    {
+      "group": "BASELINE",
+      "code": "B02",
+      "name": "demo_probe.py 5/5 可复跑验证",
+      "status": "PASS",
+      "detail": "exit=0 | 5/5",
+      "spec": "04 §2 / 04 §4"
+    },
+    {
+      "group": "BASELINE",
+      "code": "B03",
+      "name": "基准规格 00 未被改动（需求锁定）",
+      "status": "PASS",
+      "detail": "sha256=2bf1a6465aa3bfe3",
+      "spec": "用户文档规则 1 / 00 全文"
+    },
+    {
+      "group": "BASELINE",
+      "code": "B04",
+      "name": "selftest.py 文件未被修改（18 项不增不减）",
+      "status": "PASS",
+      "detail": "sha256=9dd163d47843ea29",
+      "spec": "04 §1 / 用户第 4 点"
+    },
+    {
+      "group": "BASELINE",
+      "code": "B05",
+      "name": "新增断言独立文件 selftest_lifecycle.py 已建",
+      "status": "PASS",
+      "detail": "present",
+      "spec": "04 §1 / 04 §4 / 05 P2-6"
+    },
+    {
+      "group": "PAGE",
+      "code": "P01",
+      "name": "存在独立干净商用演示页（不动答辩材料）",
+      "status": "PASS",
+      "detail": "candidates=['static\\\\demo_workspace.html']",
+      "spec": "00 §3 / 00 §5 / 05 P0-1"
+    },
+    {
+      "group": "PAGE",
+      "code": "P02",
+      "name": "演示页无任何待校准/假设提示文字",
+      "status": "PASS",
+      "detail": "hits=NONE",
+      "spec": "00 §3 / 01 勾检 / 01 禁字样清单"
+    },
+    {
+      "group": "PAGE",
+      "code": "P03",
+      "name": "旧答辩材料 static/index.html 原样保留（允许含提示）",
+      "status": "PASS",
+      "detail": "legacy wording=['未接入', '不是预测模型']（按 00 §5 保留，不作演示入口）",
+      "spec": "00 §5"
+    },
+    {
+      "group": "PAGE",
+      "code": "P04",
+      "name": "根路由 / 指向演示外壳而非旧答辩页",
+      "status": "PASS",
+      "detail": "root route = other",
+      "spec": "00 §3 / 05 P0-1"
+    },
+    {
+      "group": "PAGE",
+      "code": "P05",
+      "name": "前端存在阈值/预算面板并触发全链路重算",
+      "status": "PASS",
+      "detail": "demo shell UI wiring=present",
+      "spec": "00 §3 / 04 #1 / 04 #6"
+    },
+    {
+      "group": "LOGIC",
+      "code": "X00",
+      "name": "核心模块可导入并运行",
+      "status": "PASS",
+      "detail": "OK",
+      "spec": "代码须处于可运行状态"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L01",
+      "name": "六状态定义完整",
+      "status": "PASS",
+      "detail": "['NEW_UNPURCHASED', 'FIRST_PURCHASE', 'ACTIVE', 'AT_RISK', 'DEEP_DORMANT', 'CHURNED']",
+      "spec": "00 §2 / 00 §4 / 交接包 §3.2"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L02",
+      "name": "转移矩阵含两条回流边且 CHURNED 不直接复活",
+      "status": "PASS",
+      "detail": "{'NEW_UNPURCHASED': ['FIRST_PURCHASE'], 'FIRST_PURCHASE': ['ACTIVE'], 'ACTIVE': ['AT_RISK'], 'AT_RISK': ['ACTIVE', 'DEEP_DORMANT'], 'DEEP_DORMANT': ['ACTIVE', 'CHURNED'], 'CHURNED': ['FIRST_PURCHASE']}",
+      "spec": "00 §2 / 00 §4 / 05 A / 04 #5"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L03",
+      "name": "转移合法性不被硬编码绕过（禁止跳级）",
+      "status": "PASS",
+      "detail": "bypass='or st == ACTIVE'=False",
+      "spec": "00 §2 / 交接包 §3.2 / 04 #5"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L04",
+      "name": "时间轴按天演进，转移日志含风险状态转移",
+      "status": "PASS",
+      "detail": "ACTIVE->AT_RISK=26742, AT_RISK->DEEP_DORMANT=687, recall=22",
+      "spec": "00 §3 / 00 §4 / 04 #2 #5 / 交接包 §3.2"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L05",
+      "name": "三窗口 T/[T-W,T]/[T,T+H] 与预警提前天数可算",
+      "status": "PASS",
+      "detail": "window/lead keys=['window', 'warn_lead_days']",
+      "spec": "00 §4 / 04 #2 #3 / 02 A 第 3 项"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L06",
+      "name": "状态机数据层持久化（快照表 + append-only 转移表）",
+      "status": "PASS",
+      "detail": "snapshot=True transition=True | audit=['audit_messages.csv', 'budget_floor.json', 'customer_state_snapshot_v1_0.csv', 'customer_state_transition_v1_0.csv', 'pulse_decision_log.csv', 'pulse_decision_snapshot_v1_0.csv', 'store_diagnosis.json', 'store_suppression.json']",
+      "spec": "交接包 §3.1 数据契约 / 00 §4"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L07",
+      "name": "每客户每天恰好一行快照（按 as_of_date 分区）",
+      "status": "PASS",
+      "detail": "snapshot=True transition=True | as_of_date in source=True",
+      "spec": "交接包 §3.1 / 00 §4"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L08",
+      "name": "rule_version 贯穿 lifecycle / timeline / 转移记录 / 导出",
+      "status": "PASS",
+      "detail": "lifecycle.rule_version=v1.0 | timeline has=True | transition has=True",
+      "spec": "01 原则 / 02 D.5 / 04 #9 #10"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L09",
+      "name": "数据层 provisional / calibrated 机器可读标记",
+      "status": "PASS",
+      "detail": "config keys=['fields', 'log', 'meta', 'note', 'version']",
+      "spec": "02 表头 / 01 原则 / 05 P1-4"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L10",
+      "name": "配置字段标签中性（无待校准字样）",
+      "status": "PASS",
+      "detail": "bad labels=[]",
+      "spec": "01 禁字样清单 / 05 P1-3"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L11",
+      "name": "decision_log 含 state_at_decision 外联",
+      "status": "PASS",
+      "detail": "SNAP=['cut', 'rule_version', 'customer_id', 'store_id'] | LOG=['message_id', 'decision', 'customer_id', 'store_id']",
+      "spec": "交接包 §3.3 / 00 §4"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L12",
+      "name": "旧 rule_version 快照保留、不覆盖",
+      "status": "PASS",
+      "detail": "overwrite-on-version-change=False",
+      "spec": "02 D.5 / 04 #10"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L13",
+      "name": "只读 ≤ cut，无前视泄漏",
+      "status": "PASS",
+      "detail": "pre-cut filter=True",
+      "spec": "00 §6 红线 4 / 04 §4 防前视"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L14",
+      "name": "状态定义不掺 value_tier / risk_score",
+      "status": "PASS",
+      "detail": "_state_for(silence_days, median_days, n_gaps, H, dev_thr, max_sil, min_gaps)",
+      "spec": "00 §2 原则 3 / 05 A"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L15",
+      "name": "六个决策出口定义不变",
+      "status": "PASS",
+      "detail": "groups=['C', 'high', 'low', 'medium', 'no_consent', 'normal']",
+      "spec": "00 §2 原则 2 / 00 §4"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L16",
+      "name": "改阈值后状态机全链路重算（状态真变）",
+      "status": "PASS",
+      "detail": "C01441: default=DEEP_DORMANT -> max_sil=120:CHURNED",
+      "spec": "00 §3 / 01 口述 8 / 04 #1"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L17",
+      "name": "params 全链路接线（含 H / 兑换率 / 毛利率）",
+      "status": "PASS",
+      "detail": "keys=['ALERT_FIXED', 'BASELINE_REGULAR_CAP', 'DEV_THRESHOLD', 'FACE_BUDGET', 'FACE_HIGH', 'FACE_MED', 'FLAG_MAX_SILENCE', 'FLAG_MIN_GAPS', 'GROSS_MARGIN', 'MIN_WEEKS', 'REDEMPTION', 'TRAILING_DAYS', 'WARN_DAYS_H']",
+      "spec": "00 §3 / 04 #1"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L18",
+      "name": "六状态分布完整（注册未消费会员纳入状态机）",
+      "status": "PASS",
+      "detail": "distribution={'NEW_UNPURCHASED': 284, 'FIRST_PURCHASE': 733, 'ACTIVE': 3284, 'AT_RISK': 1320, 'DEEP_DORMANT': 295, 'CHURNED': 84}",
+      "spec": "00 §4 / 02 A 第 4 项活跃分母口径"
+    },
+    {
+      "group": "LOGIC",
+      "code": "L19",
+      "name": "批准 ≠ 发送：审批记录 sent_at 留空",
+      "status": "PASS",
+      "detail": "approval keeps sent_at empty=True",
+      "spec": "00 §6 红线 1 / 01 口述 4"
+    },
+    {
+      "group": "CASE",
+      "code": "C01",
+      "name": "预置案例不注入合成事件",
+      "status": "PASS",
+      "detail": "_demo_events_for=False hardcoded-slices=False",
+      "spec": "00 §3 / 03 硬约束 / 05 P0-2"
+    },
+    {
+      "group": "CASE",
+      "code": "C02",
+      "name": "A/B/C 三组预置案例可走通时间轴",
+      "status": "PASS",
+      "detail": "A/C05326:ACTIVE(2) A/C01255:ACTIVE(2) A/C02151:ACTIVE(2) B/C01441:DEEP_DORMANT(2) B/C03110:DEEP_DORMANT(2) B/C01387:DEEP_DORMANT(2) C/C00437:ACTIVE(3) C/C01475:ACTIVE(2)",
+      "spec": "00 §4 / 03 / 04 #4"
+    },
+    {
+      "group": "CASE",
+      "code": "C03",
+      "name": "改阈值后预置案例状态真实变化（非硬编码动画）",
+      "status": "PASS",
+      "detail": "3/3 B-group cases changed state",
+      "spec": "00 §3 / 01 口述 9 / 04 #4"
+    },
+    {
+      "group": "CASE",
+      "code": "C04",
+      "name": "A 组回流弧线在 cut 内完成、零数据改动",
+      "status": "PASS",
+      "detail": "A ids in <=cut history=True | txn=118365",
+      "spec": "03 筛选口径 / 00 §3"
+    },
+    {
+      "group": "D05",
+      "code": "D01",
+      "name": "[05 P0-1] 干净商用演示页已落地",
+      "status": "PASS",
+      "detail": "shells=['demo_workspace.html']",
+      "spec": "05 P0-1"
+    },
+    {
+      "group": "D05",
+      "code": "D02",
+      "name": "[05 P0-2] 预置案例改为从合成数据筛出",
+      "status": "PASS",
+      "detail": "_demo_events_for=False",
+      "spec": "05 P0-2"
+    },
+    {
+      "group": "D05",
+      "code": "D03",
+      "name": "[05 P1-3] rule_config 中性标签",
+      "status": "PASS",
+      "detail": "bad=[]",
+      "spec": "05 P1-3"
+    },
+    {
+      "group": "D05",
+      "code": "D04",
+      "name": "[05 P1-4] provisional / calibrated 元数据",
+      "status": "PASS",
+      "detail": "keys=['fields', 'log', 'meta', 'note', 'version']",
+      "spec": "05 P1-4"
+    },
+    {
+      "group": "D05",
+      "code": "D05",
+      "name": "[05 P1-5] /api/send 与『发送未接入』口径统一",
+      "status": "PASS",
+      "detail": "writes sent_at timestamp=False",
+      "spec": "05 P1-5"
+    },
+    {
+      "group": "D05",
+      "code": "D06",
+      "name": "[05 P2-6] selftest_lifecycle.py 独立断言文件",
+      "status": "PASS",
+      "detail": "present=True",
+      "spec": "05 P2-6"
+    },
+    {
+      "group": "ENV",
+      "code": "E01",
+      "name": "运行中服务已加载当前磁盘代码（需重启）",
+      "status": "PASS",
+      "detail": "GET http://127.0.0.1:8100/api/lifecycle -> 200",
+      "spec": "环境项：非代码缺陷，但阻塞演示与 HTTP 层验收"
+    }
+  ]
+}

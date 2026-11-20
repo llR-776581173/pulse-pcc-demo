@@ -1,0 +1,1121 @@
+{
+ "coverage": {
+  "txn": 118365,
+  "customers_reg": 6000,
+  "customers_with_txn": 5825,
+  "zero_txn": 175,
+  "stores": 25,
+  "districts": 15,
+  "store_types": 5,
+  "span": [
+   "2025-11-01",
+   "2026-10-31"
+  ],
+  "days": 365,
+  "total_sales": 8014199.7,
+  "atv": 67.71,
+  "linked_rate": 100.0,
+  "multi_store_n": 4797,
+  "multi_store_pct": 82.4,
+  "consent_rows": 36000,
+  "blocked_msgs": 3534,
+  "msgs_total": 10749,
+  "no_consent_pct": 32.9
+ },
+ "board": {
+  "period": "2026-09-01 .. 2026-09-30 (30 days)",
+  "new_members": 205,
+  "new_prev": 203,
+  "new_delta": 2,
+  "active_members": 4475,
+  "active_prev": 4537,
+  "active_delta": -62,
+  "quiet30": 969,
+  "quiet60": 406,
+  "returned": 1261,
+  "active_rate": 76.8,
+  "new_member_rate": 3.5,
+  "top10_share": 30.5,
+  "loyal_base": 5203,
+  "registry": 6000,
+  "with_txn": 5825,
+  "sep_txn": 10449,
+  "sep_sales": 709607.3,
+  "sep_unique": 4475
+ },
+ "tiers": {
+  "basic": {
+   "n": 2278,
+   "pct": 38.0,
+   "avg_visits": 7.3,
+   "avg_spend": 345.0,
+   "atv": 47.4
+  },
+  "silver": {
+   "n": 2116,
+   "pct": 35.3,
+   "avg_visits": 22.6,
+   "avg_spend": 1206.0,
+   "atv": 53.4
+  },
+  "gold": {
+   "n": 1325,
+   "pct": 22.1,
+   "avg_visits": 29.9,
+   "avg_spend": 2419.0,
+   "atv": 80.9
+  },
+  "platinum": {
+   "n": 281,
+   "pct": 4.7,
+   "avg_visits": 51.0,
+   "avg_spend": 5233.0,
+   "atv": 102.7
+  }
+ },
+ "channels": {
+  "in_store": {
+   "n": 1823,
+   "atv": 67.4
+  },
+  "instagram": {
+   "n": 1213,
+   "atv": 68.2
+  },
+  "app": {
+   "n": 1072,
+   "atv": 67.9
+  },
+  "h5": {
+   "n": 850,
+   "atv": 67.7
+  },
+  "facebook": {
+   "n": 567,
+   "atv": 68.5
+  },
+  "whatsapp": {
+   "n": 475,
+   "atv": 66.3
+  }
+ },
+ "blocks": [
+  {
+   "start": "2026-04-04",
+   "end": "2026-05-03",
+   "n": 191
+  },
+  {
+   "start": "2026-05-04",
+   "end": "2026-06-02",
+   "n": 212
+  },
+  {
+   "start": "2026-06-03",
+   "end": "2026-07-02",
+   "n": 185
+  },
+  {
+   "start": "2026-07-03",
+   "end": "2026-08-01",
+   "n": 211
+  },
+  {
+   "start": "2026-08-02",
+   "end": "2026-08-31",
+   "n": 201
+  },
+  {
+   "start": "2026-09-01",
+   "end": "2026-09-30",
+   "n": 205
+  }
+ ],
+ "districts": [
+  {
+   "name": "Central",
+   "n": 12591,
+   "sales": 843478.0
+  },
+  {
+   "name": "Sha Tin",
+   "n": 11349,
+   "sales": 767539.0
+  },
+  {
+   "name": "Causeway Bay",
+   "n": 9360,
+   "sales": 644473.0
+  },
+  {
+   "name": "Tsim Sha Tsui",
+   "n": 9191,
+   "sales": 617577.0
+  },
+  {
+   "name": "Kwun Tong",
+   "n": 8770,
+   "sales": 602394.0
+  },
+  {
+   "name": "Admiralty",
+   "n": 8355,
+   "sales": 548712.0
+  },
+  {
+   "name": "Mong Kok",
+   "n": 8338,
+   "sales": 565321.0
+  },
+  {
+   "name": "Tseung Kwan O",
+   "n": 7860,
+   "sales": 536308.0
+  },
+  {
+   "name": "Tsuen Wan",
+   "n": 7833,
+   "sales": 526020.0
+  },
+  {
+   "name": "Wan Chai",
+   "n": 7539,
+   "sales": 503640.0
+  },
+  {
+   "name": "Quarry Bay",
+   "n": 6109,
+   "sales": 410082.0
+  },
+  {
+   "name": "Kowloon Bay",
+   "n": 6049,
+   "sales": 404357.0
+  },
+  {
+   "name": "Tuen Mun",
+   "n": 5398,
+   "sales": 368511.0
+  },
+  {
+   "name": "Yuen Long",
+   "n": 5153,
+   "sales": 362080.0
+  },
+  {
+   "name": "Tai Po",
+   "n": 4470,
+   "sales": 313708.0
+  }
+ ],
+ "heat": [
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   148,
+   260,
+   123,
+   47,
+   16,
+   122,
+   106,
+   72,
+   142,
+   103,
+   61,
+   69,
+   26,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   185,
+   315,
+   187,
+   61,
+   29,
+   175,
+   111,
+   90,
+   177,
+   136,
+   90,
+   85,
+   35,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   239,
+   345,
+   225,
+   68,
+   23,
+   156,
+   139,
+   88,
+   200,
+   157,
+   101,
+   127,
+   33,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   149,
+   271,
+   198,
+   51,
+   19,
+   143,
+   115,
+   76,
+   178,
+   113,
+   78,
+   93,
+   29,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   172,
+   262,
+   174,
+   50,
+   22,
+   142,
+   86,
+   65,
+   169,
+   97,
+   76,
+   88,
+   25,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   109,
+   194,
+   211,
+   108,
+   130,
+   166,
+   129,
+   92,
+   32,
+   7,
+   3,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   101,
+   182,
+   223,
+   86,
+   124,
+   169,
+   125,
+   114,
+   25,
+   6,
+   4,
+   0,
+   0,
+   0,
+   0
+  ]
+ ],
+ "heat_txn": [
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   152,
+   270,
+   124,
+   47,
+   17,
+   122,
+   108,
+   72,
+   144,
+   106,
+   61,
+   70,
+   27,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   196,
+   329,
+   192,
+   64,
+   29,
+   179,
+   111,
+   92,
+   178,
+   138,
+   90,
+   88,
+   35,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   253,
+   381,
+   233,
+   71,
+   23,
+   158,
+   141,
+   90,
+   208,
+   159,
+   101,
+   131,
+   33,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   157,
+   286,
+   204,
+   52,
+   19,
+   146,
+   115,
+   79,
+   180,
+   118,
+   79,
+   96,
+   29,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   180,
+   274,
+   176,
+   50,
+   22,
+   146,
+   87,
+   71,
+   173,
+   99,
+   76,
+   90,
+   25,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   112,
+   198,
+   219,
+   109,
+   135,
+   167,
+   129,
+   95,
+   32,
+   7,
+   3,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   105,
+   191,
+   230,
+   88,
+   127,
+   172,
+   128,
+   115,
+   25,
+   6,
+   4,
+   0,
+   0,
+   0,
+   0
+  ]
+ ],
+ "top_products": [
+  {
+   "name": "iced_americano",
+   "n": 31470
+  },
+  {
+   "name": "breakfast_set",
+   "n": 22821
+  },
+  {
+   "name": "cold_brew",
+   "n": 19267
+  },
+  {
+   "name": "latte",
+   "n": 14661
+  },
+  {
+   "name": "iced_latte",
+   "n": 13531
+  },
+  {
+   "name": "croissant",
+   "n": 10869
+  }
+ ],
+ "comp": {
+  "sep": [
+   393,
+   370,
+   364,
+   360,
+   286,
+   278,
+   122,
+   353,
+   368,
+   357,
+   354,
+   270,
+   288,
+   386,
+   368,
+   381,
+   385,
+   385,
+   292,
+   283,
+   367,
+   139,
+   397,
+   388,
+   311,
+   305,
+   288,
+   398,
+   392,
+   374
+  ],
+  "aug": [
+   294,
+   311,
+   392,
+   410,
+   375,
+   423,
+   411,
+   304,
+   273,
+   425,
+   377,
+   406,
+   347,
+   398,
+   299,
+   285,
+   128,
+   387,
+   405,
+   131,
+   426,
+   331,
+   296,
+   397,
+   399,
+   410,
+   420,
+   424,
+   305,
+   306
+  ]
+ },
+ "decision": {
+  "cut": "2026-09-30",
+  "total": 5716,
+  "groups": {
+   "high": 417,
+   "medium": 505,
+   "low": 768,
+   "normal": 3281,
+   "C": 733,
+   "no_consent": 12
+  },
+  "E50": 862,
+  "E75": 1326,
+  "candidates": 922,
+  "cand_high": 417,
+  "cand_medium": 505,
+  "demand_amt": 36000,
+  "budget": 15400,
+  "funded_n": 308,
+  "funded_amt": 15400,
+  "coverage": 42.8,
+  "funded_high": 308,
+  "funded_medium": 0,
+  "unserved_n": 614,
+  "cash_per_coupon": 8.58,
+  "weekly_saving": 34603,
+  "no_spend_n": 4794,
+  "avoided_coupons": 4033,
+  "avg_self_return": 84.1,
+  "prd_cash_saving": 300,
+  "saturation": 819,
+  "by_target": 737,
+  "by_target_cov": 90.0,
+  "by_cash": 350,
+  "recommended": 350,
+  "grid": [
+   {
+    "coupons": 0,
+    "coverage": 0.0,
+    "n": 0,
+    "marginal": 0,
+    "medium": 0,
+    "cash": 0
+   },
+   {
+    "coupons": 50,
+    "coverage": 6.1,
+    "n": 44,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 429
+   },
+   {
+    "coupons": 100,
+    "coverage": 12.2,
+    "n": 88,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 858
+   },
+   {
+    "coupons": 150,
+    "coverage": 18.3,
+    "n": 132,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 1287
+   },
+   {
+    "coupons": 200,
+    "coverage": 24.4,
+    "n": 176,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 1716
+   },
+   {
+    "coupons": 250,
+    "coverage": 30.6,
+    "n": 220,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 2145
+   },
+   {
+    "coupons": 300,
+    "coverage": 36.7,
+    "n": 264,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 2574
+   },
+   {
+    "coupons": 350,
+    "coverage": 42.8,
+    "n": 308,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 3003
+   },
+   {
+    "coupons": 400,
+    "coverage": 48.9,
+    "n": 352,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 3432
+   },
+   {
+    "coupons": 450,
+    "coverage": 55.0,
+    "n": 396,
+    "marginal": 44,
+    "medium": 0,
+    "cash": 3861
+   },
+   {
+    "coupons": 500,
+    "coverage": 61.1,
+    "n": 455,
+    "marginal": 59,
+    "medium": 38,
+    "cash": 4290
+   },
+   {
+    "coupons": 550,
+    "coverage": 67.2,
+    "n": 528,
+    "marginal": 73,
+    "medium": 111,
+    "cash": 4719
+   },
+   {
+    "coupons": 600,
+    "coverage": 73.3,
+    "n": 602,
+    "marginal": 74,
+    "medium": 185,
+    "cash": 5148
+   },
+   {
+    "coupons": 650,
+    "coverage": 79.4,
+    "n": 675,
+    "marginal": 73,
+    "medium": 258,
+    "cash": 5577
+   },
+   {
+    "coupons": 700,
+    "coverage": 85.5,
+    "n": 748,
+    "marginal": 73,
+    "medium": 331,
+    "cash": 6006
+   },
+   {
+    "coupons": 750,
+    "coverage": 91.7,
+    "n": 822,
+    "marginal": 74,
+    "medium": 405,
+    "cash": 6435
+   },
+   {
+    "coupons": 800,
+    "coverage": 97.8,
+    "n": 895,
+    "marginal": 73,
+    "medium": 478,
+    "cash": 6864
+   },
+   {
+    "coupons": 819,
+    "coverage": 100.0,
+    "n": 922,
+    "marginal": 27,
+    "medium": 505,
+    "cash": 7027
+   }
+  ],
+  "week": 13,
+  "week_date": "2026-01-31",
+  "n_alert": 1,
+  "n_stores": 25,
+  "weeks": 36,
+  "alert_weeks": 25,
+  "chain_drift": -0.0048,
+  "alert_stores": [
+   {
+    "id": "PCC007",
+    "regulars": 54.0,
+    "raw": -0.1273,
+    "specific": -0.1224,
+    "p10": -0.1224,
+    "rule": ",FIXED"
+   }
+  ],
+  "review_batch_min": 110.5,
+  "review_full_min": 676.0,
+  "written_reasons": 40,
+  "flag_return": 78.5,
+  "silent_return": 49.2,
+  "buckets": [
+   {
+    "label": "< 0.75x baseline",
+    "n": 1754,
+    "rate": 85.2
+   },
+   {
+    "label": "0.75-1.5x (on rhythm)",
+    "n": 836,
+    "rate": 85.8
+   },
+   {
+    "label": "1.5-2.5x",
+    "n": 578,
+    "rate": 87.4
+   },
+   {
+    "label": "2.5-4x",
+    "n": 359,
+    "rate": 83.6
+   },
+   {
+    "label": ">= 4x",
+    "n": 329,
+    "rate": 56.2
+   }
+  ],
+  "baseline_note": "82.8% 是 2026-04-30 切口的 flag 池；~55% 是真沉默组（04-30/07-31 切口）的 30 天回流率。本板按 2026-09-30 实时复算，数字不同是切口不同，切勿跨切口比较。已排除观测窗内被联系者；经验回流率来自 2026-07-02 训练切口，用于排序与解释，不是预测模型、不是实验结果。"
+ },
+ "sample_rows": [
+  {
+   "customer_id": "C03679",
+   "store_id": "PCC018",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 7132,
+   "suggested_channel": "app_push",
+   "reason": "Dev 12.67x own baseline (19 d vs 2 d); ERV HK$7182"
+  },
+  {
+   "customer_id": "C02361",
+   "store_id": "PCC009",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 5157,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 2.00x own baseline (6 d vs 3 d); ERV HK$5207"
+  },
+  {
+   "customer_id": "C03957",
+   "store_id": "PCC012",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 4770,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 1.50x own baseline (6 d vs 4 d); ERV HK$4820"
+  },
+  {
+   "customer_id": "C03893",
+   "store_id": "PCC008",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 4488,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 1.56x own baseline (7 d vs 4 d); ERV HK$4538"
+  },
+  {
+   "customer_id": "C00217",
+   "store_id": "PCC023",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 4412,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 2.67x own baseline (16 d vs 6 d); ERV HK$4462"
+  },
+  {
+   "customer_id": "C01614",
+   "store_id": "PCC021",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 4261,
+   "suggested_channel": "app_push",
+   "reason": "Dev 5.00x own baseline (10 d vs 2 d); ERV HK$4311"
+  },
+  {
+   "customer_id": "C02338",
+   "store_id": "PCC004",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 3664,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 4.50x own baseline (18 d vs 4 d); ERV HK$3714"
+  },
+  {
+   "customer_id": "C03010",
+   "store_id": "PCC025",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 3584,
+   "suggested_channel": "app_push",
+   "reason": "Dev 2.50x own baseline (10 d vs 4 d); ERV HK$3634"
+  },
+  {
+   "customer_id": "C02201",
+   "store_id": "PCC001",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 3543,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 2.00x own baseline (8 d vs 4 d); ERV HK$3593"
+  },
+  {
+   "customer_id": "C02892",
+   "store_id": "PCC004",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 3525,
+   "suggested_channel": "facebook",
+   "reason": "Dev 3.05x own baseline (84 d vs 28 d); ERV HK$3575"
+  },
+  {
+   "customer_id": "C04078",
+   "store_id": "PCC023",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 3520,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 3.18x own baseline (89 d vs 28 d); ERV HK$3570"
+  },
+  {
+   "customer_id": "C05073",
+   "store_id": "PCC015",
+   "group": "high",
+   "cap": 50.0,
+   "net_gain": 3485,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 4.25x own baseline (17 d vs 4 d); ERV HK$3535"
+  },
+  {
+   "customer_id": "C02718",
+   "store_id": "PCC005",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1294,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 2.33x own baseline (14 d vs 6 d); ERV HK$1324"
+  },
+  {
+   "customer_id": "C04182",
+   "store_id": "PCC024",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1291,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 12.73x own baseline (70 d vs 6 d); ERV HK$1321"
+  },
+  {
+   "customer_id": "C03037",
+   "store_id": "PCC016",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1290,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 1.90x own baseline (19 d vs 10 d); ERV HK$1320"
+  },
+  {
+   "customer_id": "C02906",
+   "store_id": "PCC013",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1289,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 6.50x own baseline (26 d vs 4 d); ERV HK$1319"
+  },
+  {
+   "customer_id": "C00953",
+   "store_id": "PCC023",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1289,
+   "suggested_channel": "app_push",
+   "reason": "Dev 4.13x own baseline (31 d vs 8 d); ERV HK$1319"
+  },
+  {
+   "customer_id": "C03771",
+   "store_id": "PCC009",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1288,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 2.00x own baseline (12 d vs 6 d); ERV HK$1318"
+  },
+  {
+   "customer_id": "C02826",
+   "store_id": "PCC003",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1285,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 4.15x own baseline (27 d vs 6 d); ERV HK$1315"
+  },
+  {
+   "customer_id": "C04473",
+   "store_id": "PCC016",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1281,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 5.92x own baseline (74 d vs 12 d); ERV HK$1311"
+  },
+  {
+   "customer_id": "C03649",
+   "store_id": "PCC018",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1281,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 2.00x own baseline (15 d vs 8 d); ERV HK$1311"
+  },
+  {
+   "customer_id": "C01767",
+   "store_id": "PCC012",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1281,
+   "suggested_channel": "app_push",
+   "reason": "Dev 3.33x own baseline (30 d vs 9 d); ERV HK$1311"
+  },
+  {
+   "customer_id": "C03822",
+   "store_id": "PCC020",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1279,
+   "suggested_channel": "whatsapp",
+   "reason": "Dev 2.62x own baseline (17 d vs 6 d); ERV HK$1309"
+  },
+  {
+   "customer_id": "C02506",
+   "store_id": "PCC004",
+   "group": "medium",
+   "cap": 30.0,
+   "net_gain": 1278,
+   "suggested_channel": "app_push",
+   "reason": "Dev 22.20x own baseline (222 d vs 10 d); ERV HK$1308"
+  }
+ ]
+}

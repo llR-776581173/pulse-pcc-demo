@@ -1,0 +1,13 @@
+campaign_id,segment_definition,channel,offer,send_window,owner
+CP001,birthday_month_current,whatsapp,Free upsize on any handcrafted drink,monthly,Mktg-KChan
+CP002,new_follower_no_purchase_7d,instagram,HK$10 off first order,always_on,Mktg-KChan
+CP003,dormant_30d,whatsapp,HK$15 return voucher,weekly,Mktg-LWong
+CP004,bean_refill_due,app_push,10% off 250g beans,weekly,Mktg-LWong
+CP005,breakfast_set_lapsed,facebook,Breakfast set HK$38,weekly,Mktg-AHo
+CP006,iced_americano_regular,app_push,Buy 4 get 1 iced americano,seasonal_summer,Mktg-AHo
+CP007,high_value_exclusive,whatsapp,Early access: single origin,monthly,Mktg-KChan
+CP008,post_purchase_voucher,app_push,HK$8 off next visit within 7 days,always_on,Mktg-LWong
+CP009,weekend_brunch_nudge,facebook,"2-for-1 pastry, Sat-Sun before 12:00",weekly,Mktg-AHo
+CP010,rainy_day_rescue,whatsapp,"HK$12 off, valid 48h",weather_triggered,Mktg-KChan
+CP011,new_member_welcome,h5,Welcome: free pastry on 2nd visit,always_on,Mktg-AHo
+CP012,lapsed_review_recovery,instagram,Tell us what went wrong - HK$20,monthly,Mktg-LWong

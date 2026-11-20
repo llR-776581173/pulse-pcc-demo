@@ -1,0 +1,64 @@
+PCC SYNTHETIC DATASET SUMMARY (seed=20261026)
+window: 2025-11-01 .. 2026-10-31
+customers=6000  transactions=118365  events=70015  messages=10749  consent_rows=36000  stores=25
+total transaction value = HK$ 8,014,199.7
+
+transactions by month:
+   2025-11  8371
+   2025-12  9357
+   2026-01  8327
+   2026-02  7812
+   2026-03  9358
+   2026-04  9518
+   2026-05  10505
+   2026-06  9720
+   2026-07  11090
+   2026-08  11426
+   2026-09  10449
+   2026-10  12432
+
+transactions by hour (top 8):
+   08:00  17236
+   15:00  13424
+   09:00  12604
+   12:00  10944
+   07:00  10311
+   16:00  9753
+   13:00  9510
+   14:00  8457
+
+transactions by weekday (0=Mon):
+   0  17748
+   1  18125
+   2  18296
+   3  17682
+   4  18145
+   5  14479
+   6  13890
+
+member tiers: {'basic': 2278, 'silver': 2116, 'gold': 1325, 'platinum': 281}
+archetypes:   {'morning_commuter': 1499, 'weekend_brunch': 846, 'breakfast_set': 743, 'high_value': 412, 'bean_buyer': 496, 'student': 634, 'office_afternoon': 789, 'one_timer': 581}
+messages blocked for no consent: 3534 / 10749 (32.9%)
+customers with zero transactions: 175
+
+--- seasonality evidence (citable in the PRD) ---
+iced vs hot drink share by month:
+   month 11  iced  53.2%  hot  46.8%  (n=7580)
+   month 12  iced  47.4%  hot  52.6%  (n=8421)
+   month  1  iced  45.3%  hot  54.7%  (n=7513)
+   month  2  iced  45.1%  hot  54.9%  (n=7007)
+   month  3  iced  55.1%  hot  44.9%  (n=8413)
+   month  4  iced  62.2%  hot  37.8%  (n=8739)
+   month  5  iced  70.5%  hot  29.5%  (n=9577)
+   month  6  iced  76.1%  hot  23.9%  (n=8844)
+   month  7  iced  78.8%  hot  21.2%  (n=10142)
+   month  8  iced  78.7%  hot  21.3%  (n=10517)
+   month  9  iced  72.6%  hot  27.4%  (n=9417)
+   month 10  iced  64.8%  hot  35.2%  (n=11387)
+
+weekday vs weekend share of transactions, by store archetype:
+   cbd          weekday  91.8%  weekend   8.2%  (n=30918)
+   mall         weekday  57.1%  weekend  42.9%  (n=22695)
+   mtr          weekday  80.5%  weekend  19.5%  (n=41871)
+   residential  weekday  61.9%  weekend  38.1%  (n=19434)
+   campus       weekday  84.1%  weekend  15.9%  (n=3447)
