@@ -21,7 +21,7 @@
 
   /* ---------- shell : collapsible side nav + main ---------- */
   .side{position:fixed;inset:0 auto 0 0;width:238px;z-index:30;display:flex;flex-direction:column;
-        background:linear-gradient(178deg,rgba(255,255,255,.14),rgba(58,46,45,.12)),var(--side);
+        background:var(--side);
         border-right:1px solid var(--mole);transition:width .22s ease}
   .side-head{height:76px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px;
              border-bottom:1px solid rgba(58,46,45,.18)}
@@ -63,7 +63,7 @@
   .topbar .env{margin-left:auto;display:flex;gap:9px;align-items:center;font-size:12px;color:var(--muted)}
   .env .chip{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:6px 11px;white-space:nowrap}
   .env .chip b{color:var(--brush);font-variant-numeric:tabular-nums}
-  .content{padding:22px 28px 54px;flex:1;position:relative;overflow:hidden}
+  .content{padding:18px 24px 46px;flex:1;position:relative;overflow:hidden}
   .floral-deco{position:fixed;right:14px;bottom:10px;width:82px;height:82px;opacity:.055;
                pointer-events:none;z-index:0}
   .floral-top{position:absolute;right:-26px;top:-30px;width:132px;height:132px;opacity:.07;
@@ -74,7 +74,7 @@
 
   /* ---------- per-view filter bar ---------- */
   .filterbar{background:var(--card);border:1px solid var(--line);border-radius:12px;
-             box-shadow:0 2px 10px rgba(58,46,45,.05);padding:12px 17px;margin-bottom:18px;
+             box-shadow:0 2px 10px rgba(58,46,45,.05);padding:12px 17px;margin-bottom:14px;
              display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;z-index:2}
   .filterbar .fbt{font-size:12px;font-weight:600;color:var(--brush);display:flex;align-items:center;gap:8px;white-space:nowrap}
   .filterbar .fbt::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--tan)}
@@ -86,20 +86,20 @@
   .filterbar .scope b{color:var(--brush);font-weight:600}
 
   /* ---------- responsive grid cards ---------- */
-  .grid{display:grid;gap:16px;margin-bottom:16px}
+  .grid{display:grid;gap:12px;margin-bottom:12px}
   .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
   .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
   .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
   .g21{grid-template-columns:1.28fr 1fr}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
-        box-shadow:0 2px 12px rgba(58,46,45,.055);padding:18px 20px;position:relative;min-width:0}
-  .card > h3{font-size:13.5px;color:var(--brush);margin-bottom:15px;display:flex;align-items:center;gap:9px}
+        box-shadow:0 2px 12px rgba(58,46,45,.055);padding:16px 18px;position:relative;min-width:0}
+  .card > h3{font-size:13.5px;color:var(--brush);margin-bottom:12px;display:flex;align-items:center;gap:9px}
   .card > h3::before{content:"";width:4px;height:15px;border-radius:2px;background:var(--tan);flex:none}
   .card > h3 .hint{font-weight:400;font-size:11.5px;color:var(--muted);margin-left:auto;white-space:nowrap}
   .card .sub{font-size:11.5px;color:var(--muted);margin:-8px 0 14px}
   .eyebrow{font-size:10.5px;letter-spacing:1.4px;color:var(--tan);font-weight:700;margin-bottom:12px}
 
-  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;
        box-shadow:0 2px 12px rgba(58,46,45,.055);position:relative;overflow:hidden;min-width:0}
   .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tan)}
   .kpi .t{font-size:12px;color:var(--muted)}
@@ -167,7 +167,7 @@
 
   /* ---------- tables / pills / timeline ---------- */
   table.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
-  .tbl th{background:var(--soft);color:var(--mole);text-align:left;padding:9px 11px;
+  .tbl th{background:rgba(189,141,99,.26);color:var(--mole);text-align:left;padding:9px 11px;
           border-bottom:2px solid var(--line);white-space:nowrap;font-weight:700;font-size:11.5px}
   .tbl td{padding:10px 11px;border-bottom:1px solid #F1E7DA;vertical-align:middle}
   .tbl tbody tr:hover{background:#FDF9F3}
@@ -304,6 +304,87 @@
   .recalc-row b{color:var(--brush);font-variant-numeric:tabular-nums;font-size:13.5px}
   .recalc-row .delta{font-style:normal;font-size:11.5px;color:var(--rain);font-weight:600;min-width:96px;text-align:right}
   .recalc-foot{margin-top:14px;text-align:right}
+
+  /* ===================== R7 新增组件（严格沿用五原色卡；灰蓝仍 ≤5% 点缀） ===================== */
+  /* H2 客户列表：新增沉寂天数 / 价值等级两列，保留门店与双按钮 */
+  .tl-row.case-row{grid-template-columns:84px 82px 66px 66px 70px auto}
+  .vtag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:8px;white-space:nowrap}
+  .vt-high{background:rgba(138,90,60,.14);color:#8A5A3C;font-weight:600}
+  .vt-med{background:rgba(189,141,99,.18);color:#8A5A3C}
+  .vt-low{background:rgba(189,141,99,.10);color:var(--muted)}
+  .case-btns{display:flex;gap:5px}
+  .case-btns .btn{padding:3px 8px;font-size:11.5px}
+  @media(max-width:960px){.tl-row.case-row{grid-template-columns:84px 82px 1fr auto}
+    .case-store,.case-sil,.case-val{display:none}}
+  /* H4 参数输入框辨识度与反馈（主按钮深木棕 / 输入框边框榻榻米棕） */
+  .param input:hover,.cfg-actions input:hover,.modal input:hover,.modal textarea:hover,
+  .ai-in input:hover{border-color:var(--brush);background:#FFFFFF}
+  .param input:focus,.cfg-actions input:focus,.modal input:focus,.modal textarea:focus,
+  .ai-in input:focus{outline:2px solid rgba(138,90,60,.28);outline-offset:1px;border-color:var(--brush)}
+  /* M4 统一加载中 / 空状态 */
+  .loadbox,.emptybox{display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--soft);
+    border:1px dashed var(--tan);border-radius:9px;font-size:12.5px;color:var(--muted);line-height:1.7}
+  .emptybox{border-style:solid;border-color:var(--line)}
+  .loadbox::before{content:"";width:13px;height:13px;border-radius:50%;flex:none;
+    border:2px solid rgba(189,141,99,.35);border-top-color:#8A5A3C;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  /* L1 轻微 hover 反馈 */
+  .tl-row:hover{background:#FDF9F3}
+  .srow:hover{border-color:var(--tan);background:#FFF7EE}
+  .logrow:hover{color:var(--ink)}
+  .funnel .fl:hover .fb{opacity:.82}
+  .card:hover{box-shadow:0 4px 16px rgba(58,46,45,.09)}
+  /* N1 复盘条形 */
+  .revbar{display:flex;align-items:center;gap:10px;font-size:12.5px;margin-bottom:7px}
+  .revbar .nm{width:170px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none}
+  .revbar .track{flex:1;height:16px;background:rgba(231,207,184,.5);border-radius:5px;overflow:hidden}
+  .revbar .fill{height:100%;border-radius:5px;transition:width .3s ease}
+  .revbar .n{width:130px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mole);font-weight:600;font-size:12px;flex:none}
+  /* N2 帮助中心条目 */
+  .hlp-item{padding:11px 14px;border:1px solid var(--line);border-radius:9px;background:var(--soft);
+    font-size:12.5px;color:var(--mole);line-height:1.75;margin-bottom:9px}
+  .hlp-item b{color:var(--brush)}
+  .hlp-q{font-weight:600;color:var(--ink);margin-bottom:3px}
+  /* N3 / AI 推荐（灰蓝小面积点缀） */
+  .ai-advice{border:1px solid rgba(67,113,142,.42);border-left:3px solid var(--rain);
+    background:rgba(67,113,142,.07);border-radius:0 10px 10px 0;padding:12px 14px;
+    font-size:12.5px;color:var(--mole);line-height:1.8}
+  .ai-advice b{color:var(--brush)}
+  .ai-advice em{color:var(--rain);font-style:normal;font-weight:600}
+  .ai-report{width:100%;height:260px;resize:vertical;border:1px solid var(--line);border-radius:9px;
+    padding:11px;font-size:12px;line-height:1.7;color:var(--ink);background:var(--soft)}
+  /* AI 智能问答助手（右下角悬浮 + 对话面板） */
+  .ai-fab{position:fixed;right:18px;bottom:18px;z-index:55;display:flex;align-items:center;gap:8px;
+    border:1px solid var(--brush);background:var(--brush);color:#FFF7EE;border-radius:24px;
+    padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;
+    box-shadow:0 8px 22px rgba(138,90,60,.32);transition:transform .15s,box-shadow .15s}
+  .ai-fab:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(138,90,60,.4)}
+  .ai-fab svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .ai-panel{position:fixed;right:18px;bottom:74px;width:372px;max-width:94vw;height:500px;max-height:72vh;
+    z-index:56;display:none;flex-direction:column;background:#FFFFFF;border:1px solid var(--line);
+    border-radius:14px;box-shadow:0 18px 48px rgba(58,46,45,.28);overflow:hidden}
+  .ai-hd{display:flex;align-items:center;gap:9px;padding:12px 14px;background:var(--soft);
+    border-bottom:1px solid var(--line);font-size:13px;color:var(--mole)}
+  .ai-hd .muted{font-size:10.5px}
+  .ai-x{margin-left:auto;border:none;background:transparent;font-size:17px;color:var(--muted);
+    cursor:pointer;line-height:1;padding:0 3px}
+  .ai-x:hover{color:var(--mole)}
+  .ai-msgs{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:9px;
+    scrollbar-width:thin;scrollbar-color:var(--tan) var(--soft)}
+  .ai-msg{max-width:88%;padding:9px 12px;border-radius:11px;font-size:12.5px;line-height:1.65;white-space:pre-wrap}
+  .ai-msg.user{align-self:flex-end;background:var(--brush);color:#fff;border-bottom-right-radius:3px}
+  .ai-msg.ai{align-self:flex-start;background:var(--soft);border:1px solid rgba(67,113,142,.30);
+    color:var(--ink);border-bottom-left-radius:3px}
+  .ai-msg.ai b{color:var(--brush)}
+  .ai-msg.ai em{color:var(--rain);font-style:normal;font-weight:600}
+  .ai-chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 13px 9px}
+  .ai-chips button{border:1px solid var(--line);background:#FFFDF9;border-radius:14px;
+    padding:4px 10px;font-size:11px;color:var(--mole);cursor:pointer}
+  .ai-chips button:hover{border-color:var(--tan);background:var(--soft)}
+  .ai-in{display:flex;gap:8px;padding:11px 13px;border-top:1px solid var(--line);background:var(--soft)}
+  .ai-in input{flex:1;border:1px solid var(--tan);border-radius:8px;padding:8px 11px;
+    font-size:12.5px;background:#FFFFFF;min-width:0}
 </style>
 </head>
 <body>
@@ -325,6 +406,10 @@
       <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><path d="M6 9v4c0 3 3 4 6 4s6-1 6-4V9"/><circle cx="18" cy="6" r="2.5"/><path d="M9 17l3 3 3-3"/></svg>
       <span class="label">流失预警客户池</span>
     </div>
+    <div class="nav-item" data-view="review" onclick="switchView('review')">
+      <svg viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M5 16l4-5 4 3 6-8"/></svg>
+      <span class="label">干预效果复盘</span>
+    </div>
     <div class="nav-item" data-view="audit" onclick="switchView('audit')">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
       <span class="label">营销审批记录</span>
@@ -332,6 +417,15 @@
     <div class="nav-item" data-view="config" onclick="switchView('config')">
       <svg viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4" fill="#FFFDF9"/><circle cx="15" cy="17" r="2.4" fill="#FFFDF9"/></svg>
       <span class="label">规则阈值配置</span>
+    </div>
+    <div class="nav-item" data-view="profile" onclick="switchView('profile')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.2-3.8 4-5.6 7-5.6s5.8 1.8 7 5.6"/></svg>
+      <span class="label">单客户全景画像</span>
+    </div>
+    <div class="nav-cap" style="padding-top:10px">支持</div>
+    <div class="nav-item" data-view="help" onclick="switchView('help')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.2 1-1.2 1.9"/><path d="M12 16.6v.1"/></svg>
+      <span class="label">数据口径与帮助</span>
     </div>
   </div>
   <div class="side-foot"><b>Pulse</b> · 内部营销工作台<br>模块视图彼此独立</div>
@@ -496,6 +590,92 @@
       </div>
     </section>
 
+    <!-- ---------- 视图 5 · 干预效果复盘（R7 N1，从审批页拆出） ---------- -->
+    <section class="view" data-view="review">
+      <div class="filterbar" data-view="review">
+        <span class="fbt">本页筛选</span>
+        <label>日期范围
+          <select data-f="date"><option value="all">全部时段</option><option value="d30">近 30 天</option><option value="d90">近 90 天</option></select>
+        </label>
+        <label>客户价值维度
+          <select data-f="group"><option value="all">全部维度</option><option value="high">高价值</option><option value="medium">中价值</option><option value="low">低价值</option></select>
+        </label>
+        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块</span>
+      </div>
+
+      <div class="mini four" id="revkpis"></div>
+
+      <div class="grid g21">
+        <div class="card">
+          <div class="eyebrow">复盘分析 / 01</div>
+          <h3>分门店效果排行 <span class="hint">干预候选 · 平均预估回流概率</span></h3>
+          <div id="revstore"></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">复盘分析 / 02</div>
+          <h3>客户价值维度 <span class="hint">候选分布 · 预估回流概率</span></h3>
+          <div id="revval"></div>
+        </div>
+      </div>
+
+      <div class="grid g2">
+        <div class="card">
+          <div class="eyebrow">复盘分析 / 03</div>
+          <h3>面额券效果对比 <span class="hint">同投放张数 · 三档面额</span></h3>
+          <div id="revface"></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">复盘分析 / 04</div>
+          <h3>审批月度趋势 <span class="hint">按批准时间聚合</span></h3>
+          <div id="revtrend"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">复盘分析 / 05</div>
+        <h3>投入产出与总结 <span class="hint">基于当前评估周期</span></h3>
+        <div id="revsum"></div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <button class="btn primary" onclick="aiMonthly()">AI 生成月报</button>
+          <span class="muted" style="font-size:11.5px">基于当前工作台真实数据自动汇总，可一键复制用于汇报</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 视图 6 · 单客户全景画像（R7 N3，从右侧时间轴面板升级） ---------- -->
+    <section class="view" data-view="profile">
+      <div class="filterbar" data-view="profile">
+        <span class="fbt">画像入口</span>
+        <span class="scope">在「流失预警客户池」点客户行的 <b>时间轴 / 画像</b> 按钮，本页自动生成该客户全景画像</span>
+      </div>
+      <div id="profilebody"></div>
+    </section>
+
+    <!-- ---------- 视图 7 · 数据口径与帮助中心（R7 N2，侧边栏最底部） ---------- -->
+    <section class="view" data-view="help">
+      <div class="filterbar" data-view="help">
+        <span class="fbt">帮助中心</span>
+        <span class="scope">全部指标口径 · 参数说明 · 数据规则集中在此页，核对口径不必再翻全站</span>
+      </div>
+      <div id="helpbody"></div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ---------- R7 · AI 智能问答助手（演示级：前端预置问答与规则，不调用外部大模型接口） ---------- -->
+<button class="ai-fab" id="ai-fab" onclick="toggleAI()" title="AI 智能问答助手">
+  <svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="11" rx="3"/><circle cx="9" cy="12.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="12.5" r="1.1" fill="currentColor" stroke="none"/><path d="M12 7V4.5M9.5 4.5h5"/></svg>
+  <span>AI 助手</span>
+</button>
+<div class="ai-panel" id="ai-panel" role="dialog" aria-label="AI 智能问答助手">
+  <div class="ai-hd"><b>AI 智能问答助手</b><span class="muted">基于当前工作台数据作答</span>
+    <button class="ai-x" onclick="toggleAI(false)" title="关闭">×</button></div>
+  <div class="ai-msgs" id="ai-msgs"></div>
+  <div class="ai-chips" id="ai-chips"></div>
+  <div class="ai-in">
+    <input id="ai-q" placeholder="试试问：本月高危客户有多少人？" onkeydown="if(event.key==='Enter')aiSend()">
+    <button class="btn primary small" onclick="aiSend()">发送</button>
   </div>
 </div>
 
@@ -516,8 +696,10 @@ const ST = {NEW_UNPURCHASED:['p-new','进店未消费'],FIRST_PURCHASE:['p-first
 const EXITS={high:['高价值','#43718E'],medium:['中价值','#8A5A3C'],low:['低价值·不花','#BD8D63'],
              normal:['节奏正常·不花','rgba(189,141,99,.62)'],C:['历史不足','#E7CFB8'],no_consent:['无同意·拦截','#43718E']};
 const STATE_ORDER=['ACTIVE','AT_RISK','DEEP_DORMANT','FIRST_PURCHASE','CHURNED','NEW_UNPURCHASED'];
-const STATE_COLOR={ACTIVE:'#8A5A3C',AT_RISK:'#43718E',DEEP_DORMANT:'#3A2E2D',
-                   FIRST_PURCHASE:'#BD8D63',CHURNED:'#43718E',NEW_UNPURCHASED:'#E7CFB8'};
+/* H1 色系统一：健康/正常类 = 棕系明度阶梯(#8A5A3C→#BD8D63→#E7CFB8)；
+   风险类(预警/深度沉寂/判定流失) = 灰蓝系明度阶梯(#43718E→#38536B→#2C4356)，无纯黑色块 */
+const STATE_COLOR={ACTIVE:'#8A5A3C',AT_RISK:'#43718E',DEEP_DORMANT:'#38536B',
+                   FIRST_PURCHASE:'#BD8D63',CHURNED:'#2C4356',NEW_UNPURCHASED:'#E7CFB8'};
 const CASE_GROUPS={A:'已回流验证客户',B:'高危预警客户',C:'健康活跃客户'};
 const PARAM_TIPS={
   DEV_THRESHOLD:'判断客户消费行为偏离正常规律的倍数阈值：这次来得比平时晚多少倍，才算节奏不对、需要提醒',
@@ -541,17 +723,22 @@ const VIEW_META={
   overview:{title:'营销总览',desc:'大盘核心数字 · 客户状态 · 预警汇总'},
   cases:{title:'流失预警客户池',desc:'已回流验证 / 高危预警 / 健康活跃 · 单客户生命周期时间轴'},
   audit:{title:'营销审批记录',desc:'审批明细 · 批准与发送分离'},
-  config:{title:'规则阈值配置',desc:'预警 / 沉寂 / 回流参数 · 全链路重算'}
+  config:{title:'规则阈值配置',desc:'预警 / 沉寂 / 回流参数 · 全链路重算'},
+  review:{title:'干预效果复盘',desc:'投入产出 · 分门店排行 · 面额对比 · 月度趋势'},
+  profile:{title:'单客户全景画像',desc:'基础信息 · 消费分层 · 预警原因 · 干预方案 · 回流追踪'},
+  help:{title:'数据口径与帮助',desc:'指标口径 · 参数大白话 · 数据来源 · 常见问题'}
 };
 const VIEW_FILTERS={overview:{date:'all',group:'all'},
                     cases:{date:'all',group:'all',high:false,channel:false,warn30:false},
-                    audit:{date:'all',group:'all'},config:{date:'all',group:'all'}};
+                    audit:{date:'all',group:'all'},config:{date:'all',group:'all'},
+                    review:{date:'all',group:'all'},profile:{date:'all',group:'all'},help:{date:'all',group:'all'}};
 const GROUP_KW={
   overview:{active:['活跃复购'],risk:['沉寂预警'],deep:['深度沉寂'],churn:['判定流失'],
             first:['首购激活'],new:['进店未消费']},
   cases:{active:['活跃复购'],risk:['沉寂预警'],deep:['深度沉寂'],churn:['判定流失']},
   audit:{approved:['批准','approve','send','send_coupon'],nofund:['不花','no_spend','skip']},
-  config:{warn:[],silent:[],recall:[]}
+  config:{warn:[],silent:[],recall:[]},
+  review:{high:['高价值'],medium:['中价值'],low:['低价值']}
 };
 let ACTIVE='overview';
 
@@ -563,6 +750,9 @@ function switchView(v){
   document.getElementById('viewdesc').textContent=VIEW_META[v].desc;
   applyViewFilters(v);
   if(v==='cases')scheduleCases();
+  if(v==='review')loadReview().catch(function(){});
+  if(v==='profile')renderProfile();
+  if(v==='help')renderHelp();
 }
 function toggleNav(){document.body.classList.toggle('nav-collapsed');}
 function withinWindow(ds,mode){
@@ -804,16 +994,17 @@ async function loadActions(){
   const sum=await j('/api/summary');
   const c=sum.review.counts||{};
   const max=Math.max(1,...Object.values(c).map(v=>v||0));
+  const tot=Math.max(1,Object.keys(c).reduce((s,k)=>s+(Number(c[k])||0),0));
   document.getElementById('funnel').innerHTML='<div class="funnel">'+
     Object.keys(EXITS).map(g=>{
       const n=c[g]||0;const [lab,color]=EXITS[g];
-      return `<div class="fl" data-frow><span class="nm">${lab}</span><div><div class="fb" style="width:${Math.round(100*n/max)}%;background:${color}"></div></div><span class="n">${n}</span></div>`;
+      return `<div class="fl" data-frow title="${lab}：${n} 人 · 占决策总量 ${(100*n/tot).toFixed(1)}%"><span class="nm">${lab}</span><div><div class="fb" style="width:${Math.round(100*n/max)}%;background:${color}"></div></div><span class="n">${n}</span></div>`;
     }).join('')+'</div>';
 }
 async function loadBudget(){
   let b;
   try{b=await j('/api/budget?coupons=350&face=44');BUDGET_DATA=b;}
-  catch(e){document.getElementById('budgetbox').innerHTML='<div class="hintbar">预算数据加载失败</div>';return;}
+  catch(e){document.getElementById('budgetbox').innerHTML='<div class="emptybox">预算数据加载失败，可点击右上角刷新或稍后重试</div>';return;}
   document.getElementById('budgetbox').innerHTML=
    `<div class="budget-big">${b.coverage}%</div>
     <div class="hintbar" style="margin-top:6px">本周预算覆盖</div>
@@ -829,7 +1020,7 @@ async function loadBudget(){
 // ---------------- demo cases + timeline (OPT-01 order comes from backend, unchanged) ----------------
 function caseLoading(msg){
   const el=document.getElementById('caselist');
-  if(el)el.innerHTML='<div class="hintbar">'+msg+'</div>';
+  if(el)el.innerHTML='<div class="loadbox">'+msg+'</div>';
 }
 function scheduleCases(){
   if(CASES_STATE==='ready'||CASE_LOADING)return;
@@ -865,10 +1056,13 @@ function caseRow(c,idx){
   const channel=(c.group!=='no_consent')?'1':'0';
   const lead=Number(c.max_warn_lead||0);
   const warn30=(lead>0&&lead<=30)?'1':'0';
+  const vl=VAL_LABEL[c.group]||['—','vt-low'];
   return `<div class="tl-row case-row" data-frow data-fgroup data-high="${high}" data-channel="${channel}" data-warn30="${warn30}"><span class="tl-date">${esc(c.customer_id)}</span>
     <span><span class="pill ${p[0]}">${p[1]}</span></span>
-    <span class="muted">${esc(c.store_id)}</span>
-    <button class="btn small" onclick="showTimeline('${esc(c.customer_id)}')">时间轴</button></div>`;
+    <span class="muted case-store">${esc(c.store_id||'')}</span>
+    <span class="mono case-sil" title="距最后一次消费的天数">沉寂 ${c.silence_days!=null?c.silence_days:'—'}天</span>
+    <span class="case-val"><span class="vtag ${vl[1]}">${vl[0]}</span></span>
+    <span class="case-btns"><button class="btn small" onclick="showTimeline('${esc(c.customer_id)}')">时间轴</button><button class="btn small" onclick="openProfile('${esc(c.customer_id)}')">画像</button></span></div>`;
 }
 function renderCaseList(){
   const cont=document.getElementById('caselist');
@@ -878,7 +1072,7 @@ function renderCaseList(){
   cont.innerHTML=list.length?
     '<div class="muted" style="margin-bottom:6px">共 '+total+' 位 · 显示前 8</div>'+
     '<div class="timeline">'+list.slice(0,8).map(caseRow).join('')+'</div>'
-    :'<div class="hintbar">正在加载案例…</div>';
+    :'<div class="loadbox">正在加载案例…</div>';
   applyViewFilters('cases');
 }
 async function loadCase(g){
@@ -940,12 +1134,13 @@ function renderTimeline(){
 function setTimelineMode(m){TL_MODE=(m==='all')?'all':'key';renderTimeline();}
 function toggleTimelineAll(){setTimelineMode(TL_MODE==='key'?'all':'key');}
 async function showTimeline(cid){
+  PROFILE_DATA={cid:cid,case:findCase(cid)};
   document.getElementById('tlsub').textContent=cid;
   const box=document.getElementById('timeline');
-  box.innerHTML='<div class="hintbar">正在加载该客户状态时间轴…</div>';
+  box.innerHTML='<div class="loadbox">正在加载该客户状态时间轴…</div>';
   let tl;
   try{tl=await j('/api/lifecycle/customers/'+encodeURIComponent(cid)+'/timeline');}
-  catch(e){box.innerHTML='<div class="hintbar">时间轴加载失败：'+esc(e.message)+'</div>';return;}
+  catch(e){box.innerHTML='<div class="emptybox">时间轴加载失败：'+esc(e.message)+' <button class="btn small" onclick="showTimeline(\''+cid+'\')">重试</button></div>';return;}
   TL_CACHE={cid:cid,tl:tl,rows:(tl.transitions||[]).map(classifyTransition)};
   TL_MODE='key';   // 切换客户时回到默认「仅看关键事件」
   renderTimeline();
@@ -958,7 +1153,7 @@ async function loadAudit(){
     j('/api/audit'), LC_DATA?Promise.resolve(LC_DATA):j('/api/lifecycle'),
     BUDGET_DATA?Promise.resolve(BUDGET_DATA):j('/api/budget?coupons=350&face=44')
   ]);
-  const all=a.records||[];
+  const all=a.records||[];AUDIT_CACHE=all;
   const recs=all.slice().reverse().slice(0,12);
   // 近 7 天窗口以记录内最新审批时间为基准，结果可复算、不依赖客户端时钟
   const stamps=all.map(r=>Date.parse(String(r.approved_at||'').replace(' ','T'))).filter(t=>!isNaN(t));
@@ -976,17 +1171,372 @@ async function loadAudit(){
     `<div class="kpi"><div class="t">待审批数</div><div class="v">${pending}</div><div class="s">已诊断 · 待经理签批</div></div>
      <div class="kpi"><div class="t">本周已通过数</div><div class="v">${passed}</div><div class="s">近 7 天已放行</div></div>
      <div class="kpi"><div class="t">已发送数</div><div class="v">${sent}</div><div class="s">批准与发送分离 · 逐条留痕</div></div>
-     <div class="kpi"><div class="t">成功回流人数</div><div class="v">${returned}</div><div class="s">状态机完成回流验证客户</div></div>`;
+     <div class="kpi"><div class="t">累计验证回流客户</div><div class="v">${returned}</div><div class="s">状态机全量验证 · 非审批干预直接带来</div></div>`;
   const table=recs.length?
    '<table class="tbl"><tr><th>时间</th><th>客户</th><th>动作</th><th>渠道</th><th>操作人</th><th>sent</th></tr>'+
    recs.map(r=>`<tr data-frow data-fgroup><td class="mono">${esc(r.approved_at||'')}</td><td>${esc(r.customer_id||'—')}</td>
      <td>${esc(r.decision||'')}</td><td>${esc(r.channel||'')}</td><td>${esc(r.approved_by||'')}</td>
      <td>${r.sent_at?'是':'<span class="muted">—</span>'}</td></tr>`).join('')+'</table>'
-   :'<div class="muted">暂无记录</div>';
-  const eff=`<div class="audit-summary">近 30 天干预回流率 <b>${rate}%</b>，人均挽回消费 <b>${hkd(per)}</b>
-     <div class="muted" style="font-size:11px;margin-top:4px">统计口径：曾进入预警客户中完成回流验证的占比 · 收益代理量按预算覆盖人数均摊（前端基于当前评估周期汇总）</div></div>`;
+   :'<div class="emptybox">暂无审批记录 · 经理批准后将在此留痕</div>';
+  const eff=`<div class="audit-summary">累计验证回流客户 <b>${returned}</b> · 曾进入预警客户中完成回流验证占比 <b>${rate}%</b>（状态机全量口径，非审批干预直接转化）· 人均挽回消费代理 <b>${hkd(per)}</b>
+     <div class="muted" style="font-size:11px;margin-top:4px">口径说明：回流为客户在状态机中完成「预警→活跃」验证的全量统计；收益代理量按预算覆盖人数均摊（前端基于当前评估周期汇总，不夸大干预效果）</div></div>`;
   document.getElementById('audit').innerHTML=table+eff;
   applyViewFilters('audit');
+}
+
+/* ===================== R7 新增（纯前端展示层：全部基于现有接口返回的真实字段加工；
+   不触发后端重算、不产生新切面数据、不改 rule_version；AI 为前端预置规则与话术，不调用外部大模型接口） ===================== */
+let AUDIT_CACHE=null,ACTIONS_CACHE=null,ACTIONS_LOADING=null,REVIEW_READY=false,HELP_READY=false,PROFILE_DATA=null;
+const VAL_LABEL={high:['高价值','vt-high'],medium:['中价值','vt-med'],low:['低价值','vt-low'],
+                 normal:['节奏正常','vt-low'],C:['历史不足','vt-low'],no_consent:['未授权','vt-low']};
+const CH_MAP={app_push:'App 推送',email:'邮件',sms:'短信',instagram:'Instagram',wechat:'微信'};
+const PARAM_LABELS={
+  DEV_THRESHOLD:'节奏偏离倍数阈值',FLAG_MIN_GAPS:'最少观察间隔次数',FLAG_MAX_SILENCE:'流失判定时长',
+  BASELINE_REGULAR_CAP:'常客正常间隔上限',WARN_DAYS_H:'预警提前天数 H',ALERT_FIXED:'门店整体预警阈值',
+  MIN_WEEKS:'门店观察最少周数',TRAILING_DAYS:'回流观察天数',FACE_HIGH:'高价值券面额',
+  FACE_MED:'中价值券面额',FACE_BUDGET:'预算折算券面额',REDEMPTION:'券核销率',GROSS_MARGIN:'毛利率'};
+function findCase(cid){
+  for(const g of ['A','B','C']){const c=(CASE_CIDS[g]||[]).find(x=>x.customer_id===cid);if(c)return c;}
+  return null;
+}
+async function ensureActions(){
+  if(ACTIONS_CACHE!==null)return ACTIONS_CACHE;
+  if(!ACTIONS_LOADING)ACTIONS_LOADING=(async()=>{
+    try{const d=await j('/api/actions?limit=80');ACTIONS_CACHE=Array.isArray(d)?d:(((d)&&(d.items||d.rows))||[]);}
+    catch(e){ACTIONS_CACHE=[];}
+    return ACTIONS_CACHE;
+  })();
+  const r=await ACTIONS_LOADING;ACTIONS_LOADING=null;return r;
+}
+
+/* ---------- N1 干预效果复盘 ---------- */
+async function loadReview(){
+  if(REVIEW_READY)return;
+  document.getElementById('revstore').innerHTML='<div class="loadbox">正在加载复盘数据…</div>';
+  let acts=[],lc,bd,cfg,aud=[];
+  try{[acts,lc,bd,cfg,aud]=await Promise.all([ensureActions(),LC_DATA||j('/api/lifecycle'),
+      BUDGET_DATA||j('/api/budget?coupons=350&face=44'),j('/api/config'),j('/api/audit')]);}
+  catch(e){document.getElementById('revstore').innerHTML='<div class="emptybox">复盘数据加载失败：'+esc(e.message)+'</div>';return;}
+  AUDIT_CACHE=(aud&&aud.records)||AUDIT_CACHE||[];
+  const pool=lc.demo_pool_counts||{},d=lc.distribution||{};
+  const A=Number(pool.A||0),B=Number(pool.B||0);
+  const gain=Number(bd.gain||0),fundedAmt=Number(bd.funded_amt||0),fundedN=Number(bd.funded_n||0);
+  const roi=fundedAmt>0?(gain/fundedAmt).toFixed(2):'—';
+  document.getElementById('revkpis').innerHTML=
+    `<div class="kpi"><div class="t">预算覆盖率</div><div class="v">${bd.coverage||0}%</div><div class="s">投放 ${fundedN} / 需求 ${bd.demand_n} 人</div></div>
+     <div class="kpi"><div class="t">投入产出比</div><div class="v">${roi}</div><div class="s">挽回消费代理 ${hkd(gain)} / 投入 ${hkd(fundedAmt)}</div></div>
+     <div class="kpi"><div class="t">累计验证回流客户</div><div class="v">${A}</div><div class="s">状态机全量验证 · 非审批干预直接带来</div></div>
+     <div class="kpi"><div class="t">干预候选池</div><div class="v">${B}</div><div class="s">高危预警 · 值得激励</div></div>`;
+  // 分门店排行：干预候选决策按门店聚合（现有接口真实字段 store_id / return_prob）
+  const byStore={};
+  (acts||[]).forEach(a=>{const s=a.store_id||'—';if(!byStore[s])byStore[s]={n:0,p:0};byStore[s].n++;byStore[s].p+=Number(a.return_prob||0);});
+  const rows=Object.keys(byStore).map(s=>({s:s,n:byStore[s].n,p:byStore[s].n?byStore[s].p/byStore[s].n:0}))
+    .sort((a,b)=>b.n-a.n).slice(0,8);
+  const mx=Math.max(1,...rows.map(r=>r.n));
+  document.getElementById('revstore').innerHTML=rows.length?
+    rows.map(r=>`<div class="revbar" data-frow><span class="nm">${esc(r.s)}</span><div class="track"><div class="fill" style="width:${Math.round(100*r.n/mx)}%;background:var(--tan)"></div></div><span class="n">${r.n} 位 · 回流预估 ${r.p.toFixed(1)}%</span></div>`).join('')
+    +'<div class="muted" style="font-size:11px;margin-top:6px">口径：当前评估周期干预候选决策按门店聚合 · 回流概率为决策引擎预估</div>'
+    :'<div class="emptybox">暂无门店维度候选数据</div>';
+  // 客户价值维度
+  const byVal={};
+  (acts||[]).forEach(a=>{const g=a.group||'—';if(!byVal[g])byVal[g]={n:0,p:0};byVal[g].n++;byVal[g].p+=Number(a.return_prob||0);});
+  const vr=Object.keys(byVal).map(g=>({g:g,n:byVal[g].n,p:byVal[g].n?byVal[g].p/byVal[g].n:0})).sort((a,b)=>b.n-a.n);
+  const vmx=Math.max(1,...vr.map(r=>r.n));
+  document.getElementById('revval').innerHTML=vr.length?
+    vr.map(r=>{const vl=VAL_LABEL[r.g]||[r.g,'vt-low'];
+      return `<div class="revbar" data-frow data-fgroup><span class="nm"><span class="vtag ${vl[1]}">${vl[0]}</span></span><div class="track"><div class="fill" style="width:${Math.max(3,Math.round(100*r.n/vmx))}%;background:var(--brush)"></div></div><span class="n">${r.n} 位 · ${r.p.toFixed(1)}%</span></div>`;}).join('')
+    +`<div class="audit-summary" style="margin-top:10px">曾进入预警客户中完成回流验证占比 <b>${A+B>0?(A/(A+B)*100).toFixed(1):'0.0'}%</b>（状态机全量口径）· 审批干预候选按预估回流概率择优</div>`
+    :'<div class="emptybox">暂无价值维度候选数据</div>';
+  // 面额券对比：GET 查询现有预算接口（只读，不写入、不改规则版本）
+  const faceBox=document.getElementById('revface');
+  try{
+    const faces=[['高价值面额 '+cfg.fields.FACE_HIGH,cfg.fields.FACE_HIGH],
+                 ['中价值面额 '+cfg.fields.FACE_MED,cfg.fields.FACE_MED],
+                 ['预算折算面额 '+cfg.fields.FACE_BUDGET,cfg.fields.FACE_BUDGET]];
+    const bs=[];
+    for(const it of faces){const b=await j('/api/budget?coupons=350&face='+it[1]);bs.push({lab:it[0],b:b});}
+    const covMx=Math.max(1,...bs.map(x=>Number(x.b.coverage||0)));
+    faceBox.innerHTML=
+      bs.map(x=>`<div class="revbar" data-frow><span class="nm">${x.lab}</span><div class="track"><div class="fill" style="width:${Math.max(3,Math.round(100*Number(x.b.coverage||0)/covMx))}%;background:var(--rain)"></div></div><span class="n">覆盖 ${x.b.coverage}% · ${x.b.funded_n} 人</span></div>`).join('')
+      +'<div class="muted" style="font-size:11px;margin-top:6px">同投放张数（350 张）· 不同面额的预算覆盖能力对比 · 灰蓝条为预算口径指标</div>';
+  }catch(e){faceBox.innerHTML='<div class="emptybox">面额对比加载失败，可稍后重试</div>';}
+  // 月度趋势：审批记录按批准月份聚合
+  const recs=(AUDIT_CACHE||[]).filter(r=>r.approved_at);
+  const byMon={};
+  recs.forEach(r=>{const m=String(r.approved_at).slice(0,7);byMon[m]=(byMon[m]||0)+1;});
+  const mons=Object.keys(byMon).sort().slice(-6);
+  if(mons.length){
+    const mv=Math.max(1,...mons.map(m=>byMon[m]));
+    document.getElementById('revtrend').innerHTML=
+      '<div style="display:flex;align-items:flex-end;gap:14px;height:150px;padding:6px 4px 0">'
+      +mons.map(m=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end" title="${m} · ${byMon[m]} 条审批"><b style="font-size:12px;color:var(--brush)">${byMon[m]}</b><div style="width:60%;max-width:52px;height:${Math.max(6,Math.round(110*byMon[m]/mv))}px;background:linear-gradient(180deg,var(--tan),rgba(189,141,99,.45));border-radius:6px 6px 0 0"></div><span class="muted" style="font-size:10.5px">${m}</span></div>`).join('')
+      +'</div><div class="muted" style="font-size:11px;margin-top:6px">审批通过量按月聚合（近 '+mons.length+' 个月）</div>';
+  }else document.getElementById('revtrend').innerHTML='<div class="emptybox">暂无审批记录可聚合</div>';
+  // 投入产出总结
+  const per=fundedN>0?Math.round(gain/fundedN):0;
+  document.getElementById('revsum').innerHTML=
+    `<div class="audit-summary">本周预算 ${hkd(fundedAmt)} 覆盖 <b>${fundedN}</b> 位高危客户（覆盖率 <b>${bd.coverage}%</b>），挽回消费代理 <b>${hkd(gain)}</b>，人均 <b>${hkd(per)}</b>，投入产出比 <b>${roi}</b>；累计验证回流客户 <b>${A}</b> 位，曾进入预警客户中完成回流验证占比 ${A+B>0?(A/(A+B)*100).toFixed(1):'0.0'}%（状态机全量口径，非审批干预直接转化）。</div>`;
+  applyViewFilters('review');
+  REVIEW_READY=true;
+}
+
+/* ---------- AI 生成月报（固定模板 · 数字全部来自当前接口缓存，可直接复制） ---------- */
+let AI_REPORT='';
+function aiMonthly(){
+  const lc=LC_DATA||{},bd=BUDGET_DATA||{},d=lc.distribution||{},pool=lc.demo_pool_counts||{},wl=lc.warn_lead_days||{};
+  const A=pool.A||0,B=pool.B||0;
+  const roi=Number(bd.funded_amt||0)>0?(Number(bd.gain||0)/Number(bd.funded_amt)).toFixed(2):'—';
+  AI_REPORT=
+'【Pulse 营销干预月报 · 评估截止 '+(lc.cut||'—')+' · 规则版本 '+CUR+'】\n\n'
++'一、大盘：在册会员 '+(lc.total||0)+'，活跃复购 '+(d.ACTIVE||0)+'，沉寂预警 '+(d.AT_RISK||0)
++'，深度沉寂 '+(d.DEEP_DORMANT||0)+'，判定流失 '+(d.CHURNED||0)+'。\n'
++'二、核心价值：平均预警提前 '+(wl.mean!=null?wl.mean:'—')+' 天（可测 '+(wl.count||0)+' 次，范围 '
++(wl.min!=null?wl.min:'—')+'–'+(wl.max!=null?wl.max:'—')+' 天），比彻底流失更早锁定干预窗口。\n'
++'三、预算执行：覆盖率 '+(bd.coverage||0)+'%，投放 '+(bd.funded_n||0)+'/'+(bd.demand_n||0)+' 人，投入 '
++hkd(bd.funded_amt)+'，挽回消费代理 '+hkd(bd.gain)+'，人均 '
++(Number(bd.funded_n)>0?hkd(Math.round(Number(bd.gain)/Number(bd.funded_n))):'—')+'，投入产出比 '+roi+'。\n'
++'四、回流口径：累计验证回流客户 '+A+' 位（曾进入预警客户中完成回流验证占比 '
++(A+B>0?(A/(A+B)*100).toFixed(1):'0.0')+'%，状态机全量口径，非审批干预直接转化）。\n'
++'五、建议：优先跟进高危预警客户（当前候选 '+B+' 位），保持预警提前量优势；下一周期可视预算覆盖率微调券面额与投放人数。\n\n'
++'—— 本月报由工作台基于当前接口数据自动汇总，数字与页面一致，可直接用于汇报。';
+  openModal('<div class="recalc-hd">AI 生成月报</div>'
+   +'<div class="recalc-sub">基于当前工作台真实数据自动汇总 · 可直接复制用于汇报</div>'
+   +'<textarea class="ai-report" readonly>'+esc(AI_REPORT)+'</textarea>'
+   +'<div class="recalc-foot"><button class="btn" onclick="closeModal()">关闭</button>'
+   +'<button class="btn primary" onclick="aiCopy()">复制全文</button></div>');
+}
+function aiCopy(){
+  const t=AI_REPORT||'';
+  const done=()=>flash('已复制到剪贴板');
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done).catch(()=>aiCopyFallback(t,done));
+  else aiCopyFallback(t,done);
+}
+function aiCopyFallback(t,done){
+  const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);
+  ta.select();try{document.execCommand('copy');done();}catch(e){flash('复制失败，请手动选择文本',true);}
+  document.body.removeChild(ta);
+}
+
+/* ---------- N3 单客户全景画像 ---------- */
+function openProfile(cid){PROFILE_DATA={cid:cid,case:findCase(cid)};switchView('profile');}
+function aiAdviceText(c,act,tl){
+  const g=(c&&c.group)||'—';
+  const face={high:'上限券（FACE_HIGH）',medium:'标准券（FACE_MED）'};
+  let plan='观察名单 · 暂不占用预算';
+  if(g==='high')plan='Top-cap 挽回：按上限券面额发放 + 优先触达';
+  else if(g==='medium')plan='标准挽回：按中价值券面额发放';
+  const ch=act&&act.suggested_channel?(CH_MAP[act.suggested_channel]||act.suggested_channel):'App 推送（默认）';
+  const prob=act&&act.return_prob!=null?act.return_prob.toFixed(1)+'%':'—';
+  const erv=act&&act.erv!=null?hkd(act.erv):'—';
+  const tier=act&&act.member_tier?act.member_tier:'—';
+  return {plan:plan,ch:ch,prob:prob,erv:erv,tier:tier};
+}
+async function renderProfile(){
+  const box=document.getElementById('profilebody');
+  if(!PROFILE_DATA||!PROFILE_DATA.cid){
+    box.innerHTML='<div class="emptybox" style="padding:34px;font-size:13px">尚未选择客户 · 请到「流失预警客户池」点击任意客户行的「时间轴」或「画像」按钮，本页将自动生成该客户的完整生命周期画像。</div>';
+    return;
+  }
+  const cid=PROFILE_DATA.cid;
+  box.innerHTML='<div class="loadbox">正在生成 '+esc(cid)+' 的全景画像…</div>';
+  let acts=[];
+  try{acts=await ensureActions();}catch(e){acts=[];}
+  const act=(acts||[]).find(a=>a.customer_id===cid)||null;
+  const c=PROFILE_DATA.case||{};
+  const tl=(TL_CACHE&&TL_CACHE.cid===cid)?TL_CACHE.tl:null;
+  const trs=(tl&&tl.transitions)||[];
+  const state=c.state||(tl?tl.state:null);
+  const silence=(c.silence_days!=null?c.silence_days:(tl&&tl.silence_days!=null?tl.silence_days:null));
+  const base=(c.median_gap_days!=null?c.median_gap_days:(tl&&tl.median_gap_days!=null?tl.median_gap_days:null));
+  const lead=Number(c.max_warn_lead||0);
+  const st=state?(ST[state]||['p-new',state]):['p-new','—'];
+  const vl=VAL_LABEL[c.group]||['—','vt-low'];
+  const adv=aiAdviceText(c,act,tl);
+  const nWarn=trs.filter(t=>t.to_state==='AT_RISK'||t.to_state==='DEEP_DORMANT').length;
+  const nReturn=trs.filter(t=>t.to_state==='ACTIVE'&&t.from_state!=='ACTIVE').length;
+  const lastRet=trs.filter(t=>t.to_state==='ACTIVE'&&t.from_state!=='ACTIVE').map(t=>t.occurred_at).sort().pop();
+  const firstAt=trs.length?trs[0].occurred_at:null;
+  const recs=(AUDIT_CACHE||[]).filter(r=>r.customer_id===cid);
+  const reason=act?act.reason:(silence!=null?('已沉寂 '+silence+' 天，节奏偏离自身消费基线，进入预警观察'):'暂无预警记录');
+  box.innerHTML=
+   `<div class="mini four">
+      <div class="kpi"><div class="t">当前状态</div><div class="v" style="font-size:20px"><span class="pill ${st[0]}">${esc(st[1])}</span></div><div class="s">客户 ${esc(cid)}${c.store_id?' · 门店 '+esc(c.store_id):''}</div></div>
+      <div class="kpi"><div class="t">沉寂天数</div><div class="v">${silence!=null?silence:'—'}</div><div class="s">距最后一次消费${act&&act.baseline_days!=null?' · 个人基线 '+act.baseline_days+' 天':''}</div></div>
+      <div class="kpi"><div class="t">消费能力分层</div><div class="v" style="font-size:20px"><span class="vtag ${vl[1]}">${vl[0]}</span></div><div class="s">客户价值等级${adv.tier!=='—'?' · 会员层级 '+esc(adv.tier):''}</div></div>
+      <div class="kpi"><div class="t">预警提前量</div><div class="v">${lead>0?lead+' 天':'—'}</div><div class="s">${lead>0?'最近一次预警提前天数':'暂无预警记录'}</div></div>
+    </div>
+    <div class="grid g21">
+      <div class="card">
+        <div class="eyebrow">客户画像 / 01</div>
+        <h3>AI 推荐 <span class="hint">演示级 · 基于客户字段与决策引擎输出的固定规则</span></h3>
+        <div class="ai-advice">
+          <b>客户价值：</b>${esc(vl[0])}${adv.erv!=='—'?' · 预估客户生命周期价值 <em>'+adv.erv+'</em>':''}<br>
+          <b>流失风险：</b>${silence!=null?('已沉寂 <em>'+silence+'</em> 天'+(base!=null?('，个人基线 '+base+' 天'):'')+(nWarn>0?('，历史触发预警 <em>'+nWarn+'</em> 次'):'')):'暂无风险信号'}<br>
+          <b>推荐方案：</b>${esc(adv.plan)} · 首选渠道 <em>${esc(adv.ch)}</em><br>
+          <b>预估回流概率：</b><em>${adv.prob}</em>（决策引擎输出）
+          <div class="muted" style="font-size:11px;margin-top:6px">推荐结论由前端固定规则生成，数字来自决策接口真实字段；正式环境可接入企业内部大模型做深度赋能。</div>
+        </div>
+        <div class="hlp-item" style="margin-top:10px"><div class="hlp-q">流失预警原因</div>${esc(reason)}${act&&act.deviation!=null?' · 偏离自身基线 <b>'+act.deviation+' 倍</b>':''}${lead>0?' · 该次预警提前 <b>'+lead+' 天</b>':''}</div>
+        <div class="hlp-item"><div class="hlp-q">推荐干预方案</div>${esc(adv.plan)} · 渠道：${esc(adv.ch)}${act&&act.cap!=null?' · 券上限 <b>HK$'+act.cap+'</b>':''}${c.group==='high'||c.group==='medium'?'（按当前规则面额）':''}</div>
+      </div>
+      <div class="card">
+        <div class="eyebrow">客户画像 / 02</div>
+        <h3>基础信息与消费能力 <span class="hint">来自案例与时间轴接口</span></h3>
+        <table class="tbl">
+          <tr data-frow><td>客户编号</td><td class="mono">${esc(cid)}</td></tr>
+          <tr data-frow><td>所属门店</td><td class="mono">${esc(c.store_id||'—')}</td></tr>
+          <tr data-frow><td>客户状态</td><td><span class="pill ${st[0]}">${esc(st[1])}</span></td></tr>
+          <tr data-frow><td>价值分层</td><td><span class="vtag ${vl[1]}">${esc(vl[0])}</span></td></tr>
+          <tr data-frow><td>沉寂天数</td><td class="mono">${silence!=null?silence+' 天':'—'}</td></tr>
+          <tr data-frow><td>个人消费基线</td><td class="mono">${base!=null?base+' 天 / 次':'—'}</td></tr>
+          <tr data-frow><td>首次记录时间</td><td class="mono">${esc(firstAt||'—')}</td></tr>
+        </table>
+        <div class="hintbar" style="margin-top:10px">历史消费明细见右侧「单客户状态时间轴」三色视图；本页汇总其生命周期关键结论。</div>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <div class="eyebrow">客户画像 / 03</div>
+        <h3>历史发券与审批记录 <span class="hint">来自审批留痕接口</span></h3>
+        ${recs.length?'<table class="tbl"><tr><th>时间</th><th>决策</th><th>渠道</th><th>操作人</th></tr>'
+          +recs.slice().reverse().slice(0,6).map(r=>`<tr data-frow><td class="mono">${esc(r.approved_at||'')}</td><td>${esc(r.decision||'')}</td><td>${esc(r.channel||'')}</td><td>${esc(r.approved_by||'')}</td></tr>`).join('')+'</table>'
+         :'<div class="emptybox">该客户暂无审批发券记录 · 经理批准后将在此留痕</div>'}
+      </div>
+      <div class="card">
+        <div class="eyebrow">客户画像 / 04</div>
+        <h3>回流效果追踪 <span class="hint">状态机验证口径</span></h3>
+        <div class="mini" style="margin-bottom:10px">
+          <div class="kpi"><div class="t">历史触发预警</div><div class="v">${nWarn}</div><div class="s">状态迁移累计</div></div>
+          <div class="kpi"><div class="t">完成回流</div><div class="v">${nReturn}</div><div class="s">预警→活跃 验证次数</div></div>
+          <div class="kpi"><div class="t">最近回流</div><div class="v" style="font-size:14px">${esc(lastRet||'—')}</div><div class="s">状态机验证时间</div></div>
+        </div>
+        <div class="audit-summary">${nReturn>0?('该客户已完成 <b>'+nReturn+'</b> 次状态机验证回流，生命周期呈「沉寂 → 预警 → 回流」完整弧线，建议保持同节奏关怀。'):'该客户暂无回流验证记录，可结合预警提前量安排干预。'}</div>
+        <div style="margin-top:10px"><button class="btn" onclick="switchView('cases')">查看三色时间轴</button></div>
+      </div>
+    </div>`;
+  applyViewFilters('profile');
+}
+
+/* ---------- N2 数据口径与帮助中心 ---------- */
+function renderHelp(){
+  if(HELP_READY)return;
+  const lc=LC_DATA;
+  const metricRows=[
+    ['在册会员','评估截止日全体客户总数（六状态之和），口径唯一、不做去重取舍'],
+    ['活跃复购','观察窗内保持正常消费节奏的客户（ACTIVE）'],
+    ['沉寂 · 值得激励','沉寂预警（AT_RISK）+ 深度沉寂（DEEP_DORMANT）之和，是干预候选的来源池'],
+    ['判定流失','超过流失判定时长（FLAG_MAX_SILENCE）的客户（CHURNED），不直接复活，须重新首购进入'],
+    ['平均预警提前','预警发生时间相对彻底流失时点的平均提前天数（warn_lead_days.mean），系统核心价值指标'],
+    ['预算覆盖率','当前预算能覆盖的高危客户比例 = 投放人数 / 需求人数（budget.coverage）'],
+    ['累计验证回流客户','在状态机中完成「预警/深度沉寂 → 活跃」验证的客户全量计数，非审批干预直接带来的转化，两者口径已明确区分'],
+    ['投入产出比','挽回消费代理 / 预算投入（预算接口 gain / funded_amt，前端基于当前评估周期汇总）'],
+  ];
+  const paramRows=Object.keys(PARAM_TIPS).map(k=>'<div class="hlp-item"><div class="hlp-q">'+esc(PARAM_LABELS[k]||k)+'（'+esc(k)+'）</div>'+esc(PARAM_TIPS[k])+'</div>').join('');
+  document.getElementById('helpbody').innerHTML=
+   `<div class="grid g21">
+      <div class="card">
+        <div class="eyebrow">口径说明 / 01</div>
+        <h3>指标解释与统计口径 <span class="hint">全部指标一屏可查</span></h3>
+        ${metricRows.map(r=>'<div class="hlp-item"><div class="hlp-q">'+r[0]+'</div>'+r[1]+'</div>').join('')}
+      </div>
+      <div class="card">
+        <div class="eyebrow">口径说明 / 02</div>
+        <h3>数据来源与统计周期 <span class="hint">规则可追溯</span></h3>
+        <div class="hlp-item"><div class="hlp-q">数据来源</div>客户消费与状态数据来自工作台内置演示数据集，经状态机六状态与三窗口模型计算生成；所有页面数字与接口返回一致，可在「营销审批记录」逐条追溯。</div>
+        <div class="hlp-item"><div class="hlp-q">评估周期</div>统一以规则配置中的评估截止日（cut，当前 <b>${esc(lc?lc.cut||'2026-09-30':'2026-09-30')}</b>）为观察锚点；窗口 T−W / T / T+H 用于预警提前量测量。</div>
+        <div class="hlp-item"><div class="hlp-q">规则版本</div>任何参数调整都会递增规则版本并留痕（append-only 变更日志），历史版本可在「规则阈值配置」最近调整列表查看；当前版本 <b>${esc(CUR||'—')}</b>。</div>
+        <div class="hlp-item"><div class="hlp-q">数据声明</div>页面数字均由后端接口实时返回、前端只做展示层汇总；演示数据仅用于内部演示与验证，正式接入门店真实数据后口径不变。</div>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <div class="eyebrow">口径说明 / 03</div>
+        <h3>参数大白话说明 <span class="hint">13 个可调参数</span></h3>
+        ${paramRows}
+      </div>
+      <div class="card">
+        <div class="eyebrow">口径说明 / 04</div>
+        <h3>常见问题 FAQ <span class="hint">不用翻文档</span></h3>
+        <div class="hlp-item"><div class="hlp-q">为什么预警能「提前」？</div>系统用客户自身历史节奏建立基线，当沉寂时长超过个人正常间隔并逼近流失判定时长时提前提醒，平均可提前 <b>${lc&&lc.warn_lead_days&&lc.warn_lead_days.mean!=null?lc.warn_lead_days.mean:'—'}</b> 天。</div>
+        <div class="hlp-item"><div class="hlp-q">「回流」是怎么算的？</div>客户在状态机中从沉寂预警或深度沉寂回到活跃复购，即记一次验证回流；这是全量状态口径，与审批发券的干预转化分开统计，避免夸大效果。</div>
+        <div class="hlp-item"><div class="hlp-q">调整参数会发生什么？</div>提交后整套状态机与决策计算全链路重算，规则版本自动递增，页面会弹出高危预警人数与预算覆盖率的前后真实对比；需要填写操作人与调整依据。</div>
+        <div class="hlp-item"><div class="hlp-q">预算不够覆盖所有人怎么办？</div>系统按客户价值与预估回流概率择优投放；可在「干预效果复盘」对比不同面额的覆盖能力，再回「规则阈值配置」微调面额。</div>
+        <div class="hlp-item"><div class="hlp-q">AI 助手的回答可信吗？</div>右下角 AI 助手基于当前工作台接口数据按预置规则作答，数字与页面一致；系统已预留 AI 扩展能力，后续可接入企业内部大模型做深度赋能。</div>
+      </div>
+    </div>`;
+  HELP_READY=true;
+}
+
+/* ---------- AI 智能问答助手（右下角 · 演示级：预置问答规则，不调用外部大模型） ---------- */
+let AI_OPEN=false;
+function toggleAI(force){
+  AI_OPEN=(force!==undefined)?force:!AI_OPEN;
+  document.getElementById('ai-panel').style.display=AI_OPEN?'flex':'none';
+  if(AI_OPEN){
+    if(!document.getElementById('ai-msgs').children.length)aiGreet();
+    const q=document.getElementById('ai-q');if(q)q.focus();
+  }
+}
+function aiPush(role,txt){
+  const m=document.getElementById('ai-msgs');
+  const d=document.createElement('div');
+  d.className='ai-msg '+role;d.innerHTML=txt;
+  m.appendChild(d);m.scrollTop=m.scrollHeight;
+}
+function aiGreet(){
+  const lc=LC_DATA;
+  aiPush('ai','你好，我是 Pulse 智能助手，基于当前工作台的真实数据回答问题。'
+    +(lc?('当前评估截止 '+esc(lc.cut||'—')+' · 规则版本 '+esc(CUR||'—')+'。'):'')
+    +'\n可直接点下方问题，或输入你的问题。');
+  const chips=['本月高危客户有多少人','预算还能覆盖多少人','平均预警提前多少天','累计回流了多少客户','哪个门店候选最多','怎么调整预警参数'];
+  document.getElementById('ai-chips').innerHTML=chips.map(t=>'<button onclick="aiChip(this.textContent)">'+t+'</button>').join('');
+}
+function aiChip(t){aiAsk(t);}
+function aiSend(){
+  const el=document.getElementById('ai-q');
+  const q=(el.value||'').trim();
+  if(!q)return;
+  el.value='';aiAsk(q);
+}
+function aiAsk(q){
+  aiPush('user',esc(q));
+  setTimeout(()=>aiPush('ai',aiAnswer(q)),240);
+}
+function aiAnswer(q){
+  const lc=LC_DATA,d=lc?lc.distribution||{}:{},pool=lc?lc.demo_pool_counts||{}:{};
+  const bd=BUDGET_DATA||{};
+  const wl=lc?lc.warn_lead_days||{}:{};
+  if(!lc)return '数据还在加载中，请稍等几秒再问我。';
+  const A=Number(pool.A||0),B=Number(pool.B||0);
+  if(/(高危|预警|沉寂|风险)/.test(q)&&!/提前/.test(q)&&!/调整|参数|阈值/.test(q)){
+    const cov=bd.coverage!=null?bd.coverage:'—';
+    return '当前<b>沉寂预警（高危）</b><em>'+ (d.AT_RISK||0) +'</em> 人，深度沉寂 <b>'+(d.DEEP_DORMANT||0)+'</b> 人，合计「沉寂 · 值得激励」<em>'+((d.AT_RISK||0)+(d.DEEP_DORMANT||0))+'</em> 人。\n干预候选池 <b>'+B+'</b> 位 · 本周预算可覆盖其中 <em>'+cov+'%</em>（'+(bd.funded_n||0)+' 人）。\n到「流失预警客户池 → 高危预警客户」可逐位查看。';
+  }
+  if(/(预算|覆盖|券|花费)/.test(q)){
+    return '本周预算投入 <b>'+hkd(bd.funded_amt)+'</b>，覆盖高危客户 <em>'+(bd.coverage||0)+'%</em>（'+(bd.funded_n||0)+' / '+(bd.demand_n||0)+' 人），未覆盖 '+(bd.unserved_n||0)+' 人。\n挽回消费代理 <b>'+hkd(bd.gain)+'</b>。\n想对比不同面额的覆盖能力，去「干预效果复盘 → 面额券效果对比」。';
+  }
+  if(/提前|核心价值/.test(q)){
+    return '平均预警提前 <em>'+(wl.mean!=null?wl.mean:'—')+'</em> 天（可测 '+ (wl.count||0) +' 次，范围 '+(wl.min!=null?wl.min:'—')+'–'+(wl.max!=null?wl.max:'—')+' 天）。\n这是系统核心价值：比彻底流失更早锁定干预窗口。';
+  }
+  if(/(回流|挽回)/.test(q)){
+    return '累计验证回流客户 <em>'+A+'</em> 位，曾进入预警客户中完成回流验证占比 <b>'+(A+B>0?(A/(A+B)*100).toFixed(1):'0.0')+'%</b>（状态机全量口径，非审批干预直接转化）。\n详细投入产出见「干预效果复盘」。';
+  }
+  if(/门店/.test(q)){
+    return '门店维度排行在「<b>干预效果复盘 → 分门店效果排行</b>」，按干预候选数量与平均预估回流概率排序。\n这里直接给你最近一条结论：候选最多与回流预估最高的门店都以该页实时聚合为准。';
+  }
+  if(/(参数|阈值|调整|重算|配置)/.test(q)){
+    return '到「<b>规则阈值配置</b>」调整 13 个参数（每项都有问号大白话解释），提交需填写<b>操作人与调整依据</b>。\n重算完成后会弹出高危预警人数与预算覆盖率的前后真实对比，规则版本自动递增留痕。';
+  }
+  if(/(流失|判定)/.test(q)&&!/提前/.test(q)){
+    return '判定流失 <em>'+(d.CHURNED||0)+'</em> 人：沉寂超过流失判定时长即判定；判定后不直接复活，需重新首购进入生命周期。\n判沉标准可在「数据口径与帮助」查看。';
+  }
+  if(/(活跃|健康|大盘|多少客户|总|会员)/.test(q)){
+    return '在册会员 <em>'+(lc.total||0)+'</em>：活跃复购 <b>'+(d.ACTIVE||0)+'</b> · 沉寂预警 <b>'+(d.AT_RISK||0)+'</b> · 深度沉寂 <b>'+(d.DEEP_DORMANT||0)+'</b> · 判定流失 <b>'+(d.CHURNED||0)+'</b>。\n完整六状态分布见「营销总览」。';
+  }
+  if(/(你好|你是谁|能做什么|帮助|hi|hello)/i.test(q)){
+    return '我可以基于工作台真实数据回答：高危客户数、预算覆盖、预警提前量、回流口径、参数调整指引等。\n点下方问题或直接输入即可。';
+  }
+  return '这个问题我可以引导你到对应模块：\n· 数字类问题试试问「高危客户有多少人」「预算还能覆盖多少人」\n· 单客户分析到「流失预警客户池」点「画像」\n· 效果复盘到「干预效果复盘」\n· 口径定义到「数据口径与帮助」';
 }
 
 initShell();
