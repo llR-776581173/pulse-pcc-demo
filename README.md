@@ -154,3 +154,35 @@ PYTHONUTF8=1 python demo/acceptance_check.py --http --base=http://127.0.0.1:8100
 - 配色统一为**低饱和奶棕**：去掉原五色系里的蓝色 DOWNPOUR 与多色语义色，六状态 / 六出口 / pills 全部改为同一棕系明度阶梯；侧栏仍为低饱和奶棕渐变。
 - `/api/lifecycle/cases` 的 `limit` 为可选参数，**不传仍返回全量**（A 3058 / B 1607 / C 188），不影响任何验收 CASE。
 - 复验：真实浏览器 24/24、selftest 18/18、lifecycle 21/21、probe 5/5、acceptance 40/40 ALL GREEN。详见 `demo/docs/13_Round5_在线卡死与配色修复说明.md`。
+
+---
+
+## R6 · 五原色卡 + 四视图业务优化（当前版本）
+
+本轮**只改前端** `static/demo_workspace.html`（CSS / 文案 / 前端交互），后端状态机、计算逻辑、
+持久化数据、`demo/docs/00` 基准、`selftest.py` 基线、全部 ID / JS 函数名 / 接口地址均未改动。
+
+- **配色**：严格五原色卡 `#E7CFB8` 浅奶杏 / `#BD8D63` 榻榻米棕 / `#8A5A3C` 深木棕 /
+  `#3A2E2D` 深炭棕 / `#43718E` 灰蓝（≤5% 小面积点缀）；85% 暖棕 + 10% 深棕 + 5% 蓝；
+  左上角官方红色 logo 原样保留。
+- **营销总览**：5 张 KPI 卡（含「平均预警提前 5.2 天」灰蓝核心价值卡）、预算结论条
+  「当前预算可覆盖 42.8% 高危客户，对应 308 人」、筛选栏标注「仅作用于当前视图」。
+- **流失预警客户池**：菜单更名，A/B/C 改中文（已回流验证客户 / 高危预警客户 / 健康活跃客户），
+  新增 3 个前端筛选，时间轴三色区分正常消费 / 触发预警 / 回流成功，首屏 8 位完整回流弧线。
+- **营销审批记录**：顶部 4 张汇总小卡 + 表格下方效果闭环总结。
+- **规则阈值配置**：13 个参数问号 tooltip + 重算完成后真实前后数值对比弹框。
+
+**验收**：真实浏览器 38/38 PASS；`selftest.py 18/18`、`selftest_lifecycle.py 21/21`、
+`demo_probe.py 5/5`、`acceptance_check.py --http 40/40 ALL GREEN`。
+详见 `demo/docs/14_Round6_前端优化验收报告.md`。
+
+### 启动（不变）
+
+```bash
+set PYTHONUTF8=1          # Windows cmd；Git Bash / macOS / Linux 用 export PYTHONUTF8=1
+python pulse_app.py 8100  # 或 Windows 双击 run.bat；macOS/Linux 执行 bash run.sh
+```
+
+浏览器打开 `http://127.0.0.1:8100/`。
+
+在线活系统（无需本地启动）：`https://pcc-pulse-demo.app.workbuddy.host/?sharecode=KKXKERMBOR`

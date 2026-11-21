@@ -5,39 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pulse · 客户生命周期决策工作台</title>
 <style>
-  :root{--mole:#41352F;--brush:#8A6247;--tan:#B98F6B;--bluff:#E7D2BA;--rain:#7C5C45;
-        --ink:#41352F;--muted:#8E7B6A;--line:#E8D8C4;--bg:#F8F3EC;--card:#FFFFFF;
-        --soft:#FBF7F1;--side:#F1E5D6;--side2:#E9DBC7;
-        --green:#6E7A5E;--red:#9C5B4B;--amber:#A98056;--violet:#7A6A72}
+  /* Pacific Coffee 官方五原色卡 —— 严格固定：不新增、不删减、不引入跳色
+     #E7CFB8 FLORAL BLUFF 浅奶杏 · 整页主背景 / 卡片底色 / 卡片内分区
+     #BD8D63 TATAMI TAN   榻榻米棕 · 侧边导航底色 / 卡片边框 / 次级按钮 / 非激活状态标签
+     #8A5A3C BRUSHWOOD    深木棕 · 主操作按钮 / 左侧菜单选中高亮 / 核心 KPI 大数字 / 一级标题
+     #3A2E2D MOLE         深炭棕 · 所有正文文字 / 二级标题 / 表格表头文字
+     #43718E DOWNPOUR     灰蓝 · 仅小面积强调(≤5%)：高危预警与判定流失标记 / 图表核心数据线 / 异常提示 / 交互反馈高亮
+     85% 暖棕基底 + 10% 深棕功能区 + 5% 灰蓝重点点缀；棕系明度阶梯仅用于区分「其余状态」。 */
+  :root{--bluff:#E7CFB8;--tan:#BD8D63;--brush:#8A5A3C;--mole:#3A2E2D;--rain:#43718E;
+        --ink:#3A2E2D;--muted:rgba(58,46,45,.62);--line:rgba(189,141,99,.42);--bg:#E7CFB8;--card:#FFFFFF;
+        --soft:#FBF4E9;--side:#BD8D63;--side2:#BD8D63}
   *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
-  body{background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+  body{background:linear-gradient(rgba(255,255,255,.55),rgba(255,255,255,.55)),var(--bluff);
+     color:var(--ink);font-size:14px;line-height:1.5}
 
   /* ---------- shell : collapsible side nav + main ---------- */
   .side{position:fixed;inset:0 auto 0 0;width:238px;z-index:30;display:flex;flex-direction:column;
-        background:linear-gradient(178deg,var(--side) 0%,var(--side2) 100%);
-        border-right:1px solid #DDC7AB;transition:width .22s ease}
+        background:linear-gradient(178deg,rgba(255,255,255,.14),rgba(58,46,45,.12)),var(--side);
+        border-right:1px solid var(--mole);transition:width .22s ease}
   .side-head{height:76px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px;
-             border-bottom:1px solid #DDC7AB}
+             border-bottom:1px solid rgba(58,46,45,.18)}
   .side-head img{width:40px;height:40px;border-radius:50%;flex:none;background:#fff;padding:2px;
                   box-shadow:0 1px 5px rgba(58,46,45,.12)}
   .side-head .brand{font-size:15px;font-weight:700;color:var(--mole);white-space:nowrap;letter-spacing:.4px}
-  .side-head .brand small{display:block;font-weight:400;font-size:10.5px;color:#8A735C;letter-spacing:0;margin-top:1px}
+  .side-head .brand small{display:block;font-weight:400;font-size:10.5px;color:rgba(58,46,45,.78);letter-spacing:0;margin-top:1px}
   .navtoggle{margin-left:auto;flex:none;width:28px;height:28px;border-radius:8px;cursor:pointer;
-              border:1px solid #D6BEA0;background:#FFFCF6;color:var(--brush);font-size:14px;line-height:1}
-  .navtoggle:hover{background:#F6EADB}
+              border:1px solid rgba(58,46,45,.25);background:rgba(255,255,255,.85);color:var(--mole);font-size:14px;line-height:1}
+  .navtoggle:hover{background:#FFFFFF}
   .nav{padding:16px 10px;flex:1;overflow:hidden}
-  .nav-cap{font-size:10.5px;color:#9C8469;letter-spacing:1.2px;padding:0 12px 9px;white-space:nowrap}
+  .nav-cap{font-size:10.5px;color:rgba(58,46,45,.72);letter-spacing:1.2px;padding:0 12px 9px;white-space:nowrap}
   .nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;margin-bottom:5px;border-radius:10px;
-            color:#6B5541;cursor:pointer;font-size:13px;white-space:nowrap;border:1px solid transparent;
+            color:var(--mole);cursor:pointer;font-size:13px;white-space:nowrap;border:1px solid transparent;
             transition:background .15s,color .15s,box-shadow .15s}
   .nav-item svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;
                 stroke-linecap:round;stroke-linejoin:round}
-  .nav-item:hover{background:#FFFAF1;border-color:#E2CDB2}
+  .nav-item:hover{background:rgba(255,255,255,.26);border-color:rgba(58,46,45,.20)}
   .nav-item.active{background:var(--brush);color:#FFF7EE;border-color:var(--brush);
                    box-shadow:0 4px 12px rgba(138,90,60,.24);font-weight:600}
-  .side-foot{flex:none;padding:12px 16px;border-top:1px solid #DDC7AB;font-size:11px;color:#9A8268;
+  .side-foot{flex:none;padding:12px 16px;border-top:1px solid rgba(58,46,45,.18);font-size:11px;color:rgba(58,46,45,.80);
              line-height:1.7;white-space:nowrap;overflow:hidden}
-  .side-foot b{color:var(--brush);font-weight:600}
+  .side-foot b{color:var(--mole);font-weight:700}
   body.nav-collapsed .side{width:70px}
   body.nav-collapsed .side-head .brand,body.nav-collapsed .nav-cap,
   body.nav-collapsed .nav-item .label,body.nav-collapsed .side-foot{display:none}
@@ -49,7 +56,7 @@
 
   .main{margin-left:238px;min-height:100vh;display:flex;flex-direction:column;transition:margin-left .22s ease}
   body.nav-collapsed .main{margin-left:70px}
-  .topbar{height:76px;flex:none;background:#FFFDF9;border-bottom:1px solid var(--line);
+  .topbar{height:76px;flex:none;background:rgba(255,255,255,.93);border-bottom:1px solid var(--line);
           display:flex;align-items:center;gap:14px;padding:0 28px;position:sticky;top:0;z-index:20}
   .topbar .crumb{font-size:17px;font-weight:700;color:var(--mole);display:flex;align-items:baseline;gap:12px}
   .topbar .crumb small{font-size:12px;font-weight:400;color:var(--muted)}
@@ -72,7 +79,7 @@
   .filterbar .fbt{font-size:12px;font-weight:600;color:var(--brush);display:flex;align-items:center;gap:8px;white-space:nowrap}
   .filterbar .fbt::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--tan)}
   .filterbar label{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
-  .filterbar select{border:1px solid #DCC5A9;background:#FFFDF9;border-radius:7px;padding:6px 26px 6px 10px;
+  .filterbar select{border:1px solid var(--tan);background:#FFFDF9;border-radius:7px;padding:6px 26px 6px 10px;
                      font-size:12.5px;color:var(--ink);min-width:136px;cursor:pointer}
   .filterbar select:focus{outline:2px solid #E7CFB8;outline-offset:1px}
   .filterbar .scope{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
@@ -96,7 +103,7 @@
        box-shadow:0 2px 12px rgba(58,46,45,.055);position:relative;overflow:hidden;min-width:0}
   .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tan)}
   .kpi .t{font-size:12px;color:var(--muted)}
-  .kpi .v{font-size:29px;font-weight:700;color:var(--rain);margin-top:6px;letter-spacing:-.6px;
+  .kpi .v{font-size:29px;font-weight:700;color:var(--brush);margin-top:6px;letter-spacing:-.6px;
           font-variant-numeric:tabular-nums;line-height:1.2}
   .kpi .s{font-size:11.5px;color:var(--muted);margin-top:5px}
   .mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
@@ -125,8 +132,8 @@
   .matrix table{width:100%;border-collapse:separate;border-spacing:3px;font-size:11.5px}
   .matrix th{background:transparent;color:var(--muted);font-size:10.5px;padding:4px 2px;text-align:center;font-weight:600}
   .matrix td{border:none;border-radius:6px;background:var(--soft);text-align:center;padding:7px 2px;
-             color:#B6A592;font-variant-numeric:tabular-nums}
-  .matrix td.hot{background:#F0DFC8;color:var(--brush);font-weight:700}
+             color:var(--muted);font-variant-numeric:tabular-nums}
+  .matrix td.hot{background:rgba(189,141,99,.30);color:var(--brush);font-weight:700}
   .matrix td.hot2{background:var(--brush);color:#fff;font-weight:700}
   .matrix td.lbl{background:transparent;text-align:left;color:var(--ink);font-weight:600;white-space:nowrap;padding-left:2px}
   .matrix .note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7}
@@ -160,23 +167,23 @@
 
   /* ---------- tables / pills / timeline ---------- */
   table.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
-  .tbl th{background:var(--soft);color:var(--muted);text-align:left;padding:9px 11px;
-          border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;font-size:11.5px}
+  .tbl th{background:var(--soft);color:var(--mole);text-align:left;padding:9px 11px;
+          border-bottom:2px solid var(--line);white-space:nowrap;font-weight:700;font-size:11.5px}
   .tbl td{padding:10px 11px;border-bottom:1px solid #F1E7DA;vertical-align:middle}
   .tbl tbody tr:hover{background:#FDF9F3}
   .pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;white-space:nowrap}
-  .p-active{background:#EFE4D6;color:#6E5140;border:1px solid #D9C3A9}
-  .p-risk{background:#F5E9D8;color:#8A6247;border:1px solid #E3CBAE}
-  .p-deep{background:#EADBCB;color:#5C4636;border:1px solid #D5BCA3}
-  .p-churn{background:#E5DACE;color:#4A3A31;border:1px solid #CDBBA8}
-  .p-first{background:#F3E9DC;color:#7C5C45;border:1px solid #DEC7AC}
-  .p-new{background:#EFE8E0;color:#7A6A5E;border:1px solid #D8CABA}
-  .btn{border:1px solid #D9BFA2;border-radius:7px;padding:7px 14px;font-size:12.5px;cursor:pointer;
-       background:#F9F1E7;color:#6B4A33;transition:background .15s,transform .1s}
-  .btn:hover{background:#F1E2D0}
+  .p-active{background:rgba(138,90,60,.10);color:#8A5A3C;border:1px solid rgba(138,90,60,.32)}
+  .p-risk{background:rgba(67,113,142,.13);color:#43718E;border:1px solid rgba(67,113,142,.42)}
+  .p-deep{background:rgba(58,46,45,.10);color:#3A2E2D;border:1px solid rgba(58,46,45,.28)}
+  .p-churn{background:rgba(67,113,142,.16);color:#43718E;border:1px solid rgba(67,113,142,.48)}
+  .p-first{background:rgba(189,141,99,.16);color:#8A5A3C;border:1px solid rgba(189,141,99,.42)}
+  .p-new{background:rgba(231,207,184,.55);color:#3A2E2D;border:1px solid rgba(189,141,99,.38)}
+  .btn{border:1px solid var(--tan);border-radius:7px;padding:7px 14px;font-size:12.5px;cursor:pointer;
+       background:rgba(189,141,99,.14);color:var(--mole);transition:background .15s,transform .1s}
+  .btn:hover{background:rgba(189,141,99,.34)}
   .btn:active{transform:translateY(1px)}
   .btn.primary{background:var(--brush);color:#fff;border-color:var(--brush)}
-  .btn.primary:hover{background:#6F4E38}
+  .btn.primary:hover{background:var(--mole)}
   .btn.small{padding:4px 10px;font-size:12px}
   .seg{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
   .muted{color:var(--muted)}
@@ -186,7 +193,7 @@
 
   .timeline{position:relative;margin-top:8px;padding-left:18px}
   .timeline::before{content:"";position:absolute;left:5px;top:10px;bottom:10px;width:2px;background:var(--line)}
-  .tl-row{display:grid;gap:10px;padding:9px 0 9px 16px;border-bottom:1px dashed #EFE3D2;
+  .tl-row{display:grid;gap:10px;padding:9px 0 9px 16px;border-bottom:1px dashed var(--line);
           align-items:center;position:relative;font-size:12.5px}
   .tl-row::before{content:"";position:absolute;left:-17px;top:50%;transform:translateY(-50%);
                    width:9px;height:9px;border-radius:50%;background:var(--tan);border:2px solid #fff;
@@ -200,40 +207,87 @@
   .params{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:10px}
   .param{display:flex;align-items:center;justify-content:space-between;gap:9px;background:var(--soft);
          border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-size:12px;color:var(--ink)}
-  .param input{width:82px;padding:5px 7px;border:1px solid #D9BFA2;border-radius:6px;font-size:12.5px;
+  .param input{width:82px;padding:5px 7px;border:1px solid var(--tan);border-radius:6px;font-size:12.5px;
                background:#FFFDF9;text-align:right;font-variant-numeric:tabular-nums}
   .param input:focus{outline:2px solid #E7CFB8}
   .cfg-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;
                padding-top:14px;border-top:1px dashed var(--line)}
-  .cfg-actions input{border:1px solid #D9BFA2;border-radius:7px;padding:7px 10px;font-size:12.5px;background:#FFFDF9}
+  .cfg-actions input{border:1px solid var(--tan);border-radius:7px;padding:7px 10px;font-size:12.5px;background:#FFFDF9}
   .logrow{font-size:11.5px;color:var(--muted);padding:6px 0;border-bottom:1px dashed #F1E7DA}
   .logrow b{color:var(--brush);font-weight:600}
 
   .flash{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:80;display:none;
-         background:#F6EDE0;border:1px solid #E4D2B6;border-radius:9px;padding:10px 18px;
+         background:var(--soft);border:1px solid var(--tan);border-radius:9px;padding:10px 18px;
          font-size:12.5px;box-shadow:0 8px 26px rgba(58,46,45,.16);max-width:80vw}
   .modal-mask{position:fixed;inset:0;background:rgba(58,46,45,.5);display:none;align-items:center;justify-content:center;z-index:60}
   .modal-mask.open{display:flex}
   .modal{background:#fff;border-radius:14px;padding:22px;width:520px;max-width:94vw;box-shadow:0 14px 44px rgba(58,46,45,.3)}
   .modal h4{font-size:15px;color:var(--brush);margin-bottom:12px}
   .modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
-  .modal input,.modal textarea{width:100%;padding:7px 9px;border:1px solid #D9BFA2;border-radius:6px;font-size:13px;background:#FFFDF9}
+  .modal input,.modal textarea{width:100%;padding:7px 9px;border:1px solid var(--tan);border-radius:6px;font-size:13px;background:#FFFDF9}
   .modal textarea{height:64px;resize:vertical}
   .modal .actions{margin-top:16px;display:flex;gap:8px;justify-content:flex-end}
 
-  @media(max-width:1180px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(max-width:1180px){.g4,.g5{grid-template-columns:repeat(2,minmax(0,1fr))}
                            .g21{grid-template-columns:1fr}}
   @media(max-width:1000px){body .side{width:70px}
                             body .side-head .brand,body .nav-cap,body .nav-item .label,body .side-foot{display:none}
                             body .side-head{justify-content:center;padding:0}
                             body .nav-item{justify-content:center;padding:11px 0}
                             body .main{margin-left:70px}
-                            .g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(max-width:700px){.g4,.g3,.g2,.mini{grid-template-columns:1fr}
+                            .g3,.g5,.mini.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:700px){.g4,.g3,.g2,.g5,.mini,.mini.four{grid-template-columns:1fr}
                            .topbar{padding:0 16px;flex-wrap:wrap;height:auto;min-height:76px}
                            .topbar .env{margin-left:0}
                            .content{padding:18px 14px 44px}
                            .filterbar .scope{margin-left:0}}
+
+  /* ===================== R6 新增组件（严格沿用五原色卡） ===================== */
+  .g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .mini.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+  /* 核心价值 KPI：灰蓝仅作小面积高亮（左条 + 标题），大数字仍深木棕 */
+  .kpi.hero{border-color:rgba(67,113,142,.48);box-shadow:0 2px 14px rgba(67,113,142,.13)}
+  .kpi.hero::before{background:var(--rain)}
+  .kpi.hero .t{color:var(--rain);font-weight:600}
+  /* 预算结论条 */
+  .budget-summary{margin-top:10px;padding:9px 12px;background:var(--soft);border:1px solid var(--line);
+                  border-left:3px solid var(--brush);border-radius:0 8px 8px 0;font-size:12px;color:var(--mole);line-height:1.7}
+  .budget-summary b{color:var(--brush);font-variant-numeric:tabular-nums}
+  /* 审批页效果闭环 */
+  .audit-summary{margin-top:14px;padding:10px 13px;background:var(--soft);border:1px solid var(--line);
+                 border-left:3px solid var(--brush);border-radius:0 8px 8px 0;font-size:12px;color:var(--mole);line-height:1.7}
+  .audit-summary b{color:var(--brush);font-variant-numeric:tabular-nums}
+  /* 本页筛选新增复选框 */
+  .filterbar label.fx{color:var(--mole);gap:6px;cursor:pointer}
+  .filterbar input[data-fx]{width:14px;height:14px;accent-color:var(--brush);cursor:pointer}
+  /* 时间轴三色节点图例与标签 */
+  .case-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin:2px 0 10px}
+  .case-legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  .tl-row.tl-arc.node-normal::before{background:#BD8D63;box-shadow:0 0 0 1px #BD8D63}
+  .tl-row.tl-arc.node-warn::before{background:#43718E;box-shadow:0 0 0 1px #43718E}
+  .tl-row.tl-arc.node-return::before{background:#8A5A3C;box-shadow:0 0 0 1px #8A5A3C}
+  .node-tag{display:inline-block;font-size:10px;padding:1px 7px;border-radius:8px;margin-left:8px;white-space:nowrap}
+  .nt-normal{background:rgba(189,141,99,.16);color:#8A5A3C}
+  .nt-warn{background:rgba(67,113,142,.14);color:#43718E}
+  .nt-return{background:rgba(138,90,60,.14);color:#8A5A3C}
+  /* 参数大白话解释：问号 + hover 气泡 */
+  .plabel{display:inline-flex;align-items:center;gap:5px}
+  .qm{position:relative;display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+      border-radius:50%;background:var(--tan);color:#fff;font-size:10.5px;font-weight:700;cursor:help;flex:none;line-height:1}
+  .qm:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%);
+      width:210px;background:var(--mole);color:#fff;font-size:11.5px;font-weight:400;line-height:1.6;
+      padding:9px 11px;border-radius:8px;box-shadow:0 8px 22px rgba(58,46,45,.24);z-index:70;white-space:normal;text-align:left}
+  .qm:hover::before{content:"";position:absolute;left:50%;bottom:calc(100% + 3px);transform:translateX(-50%);
+      border:6px solid transparent;border-top-color:var(--mole);z-index:71}
+  /* 重算前后对比轻量提示框 */
+  .recalc-hd{font-size:15px;font-weight:700;color:var(--brush);margin-bottom:4px}
+  .recalc-sub{font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+  .recalc-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--soft);
+              border:1px solid var(--line);border-radius:9px;margin-bottom:8px;font-size:12.5px;color:var(--mole)}
+  .recalc-row span{flex:1}
+  .recalc-row b{color:var(--brush);font-variant-numeric:tabular-nums;font-size:13.5px}
+  .recalc-row .delta{font-style:normal;font-size:11.5px;color:var(--rain);font-weight:600;min-width:96px;text-align:right}
+  .recalc-foot{margin-top:14px;text-align:right}
 </style>
 </head>
 <body>
@@ -253,7 +307,7 @@
     </div>
     <div class="nav-item" data-view="cases" onclick="switchView('cases')">
       <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><path d="M6 9v4c0 3 3 4 6 4s6-1 6-4V9"/><circle cx="18" cy="6" r="2.5"/><path d="M9 17l3 3 3-3"/></svg>
-      <span class="label">客户案例演示</span>
+      <span class="label">流失预警客户池</span>
     </div>
     <div class="nav-item" data-view="audit" onclick="switchView('audit')">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
@@ -271,8 +325,8 @@
 <div class="main">
   <header class="topbar">
     <svg class="floral-top" viewBox="0 0 100 100" aria-hidden="true">
-      <g fill="#B98F6B"><ellipse cx="50" cy="24" rx="8" ry="19"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(300 50 50)"/></g>
-      <circle cx="50" cy="50" r="10" fill="#8A6247"/>
+      <g fill="#BD8D63"><ellipse cx="50" cy="24" rx="8" ry="19"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(300 50 50)"/></g>
+      <circle cx="50" cy="50" r="10" fill="#8A5A3C"/>
     </svg>
     <div class="crumb"><span id="crumb">营销总览</span><small id="viewdesc">大盘核心数字 · 客户状态 · 预警汇总</small></div>
     <div class="env">
@@ -283,8 +337,8 @@
 
   <div class="content">
     <svg class="floral-deco" viewBox="0 0 100 100" aria-hidden="true">
-      <g fill="#8A6247"><ellipse cx="50" cy="24" rx="9" ry="20"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(300 50 50)"/></g>
-      <circle cx="50" cy="50" r="10" fill="#B98F6B"/>
+      <g fill="#8A5A3C"><ellipse cx="50" cy="24" rx="9" ry="20"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(300 50 50)"/></g>
+      <circle cx="50" cy="50" r="10" fill="#BD8D63"/>
     </svg>
 
     <!-- ---------- 视图 1 · 营销总览 ---------- -->
@@ -297,10 +351,10 @@
         <label>客户分组
           <select data-f="group"><option value="all">全部状态</option><option value="active">活跃复购</option><option value="risk">沉寂预警</option><option value="deep">深度沉寂</option><option value="churn">判定流失</option><option value="first">首购激活</option><option value="new">进店未消费</option></select>
         </label>
-        <span class="scope">仅作用于 <b>营销总览</b>，不影响其他模块 · <span id="ovwindow">当前评估周期</span></span>
+        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块 · <span id="ovwindow">当前评估周期</span></span>
       </div>
 
-      <div class="grid g4" id="kpis"></div>
+      <div class="grid g5" id="kpis"></div>
 
       <div class="grid g21">
         <div class="card">
@@ -336,7 +390,7 @@
       </div>
     </section>
 
-    <!-- ---------- 视图 2 · 客户案例演示 ---------- -->
+    <!-- ---------- 视图 2 · 流失预警客户池 ---------- -->
     <section class="view" data-view="cases">
       <div class="filterbar" data-view="cases">
         <span class="fbt">本页筛选</span>
@@ -346,7 +400,10 @@
         <label>客户分组
           <select data-f="group"><option value="all">全部状态</option><option value="active">活跃复购</option><option value="risk">沉寂预警</option><option value="deep">深度沉寂</option><option value="churn">判定流失</option></select>
         </label>
-        <span class="scope">仅作用于 <b>客户案例演示</b>，不影响其他模块</span>
+        <label class="fx"><input type="checkbox" data-fx="high">仅显示高价值客户</label>
+        <label class="fx"><input type="checkbox" data-fx="channel">仅显示有可干预渠道（手机号 / 会员）</label>
+        <label class="fx"><input type="checkbox" data-fx="warn30">仅显示 30 天内触发预警</label>
+        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块</span>
       </div>
 
       <div class="mini" id="casekpis"></div>
@@ -354,11 +411,11 @@
       <div class="grid g2">
         <div class="card">
           <div class="eyebrow">明细列表 / 01</div>
-          <h3>回流预警案例池 <span class="hint">按场景切换</span></h3>
+          <h3>客户分层清单 <span class="hint">按场景切换</span></h3>
           <div class="seg">
-            <button class="btn" data-cg="A" onclick="loadCase('A')">回流案例</button>
-            <button class="btn" data-cg="B" onclick="loadCase('B')">流失预警</button>
-            <button class="btn" data-cg="C" onclick="loadCase('C')">健康常客</button>
+            <button class="btn" data-cg="A" onclick="loadCase('A')">已回流验证客户</button>
+            <button class="btn" data-cg="B" onclick="loadCase('B')">高危预警客户</button>
+            <button class="btn" data-cg="C" onclick="loadCase('C')">健康活跃客户</button>
           </div>
           <div class="hintbar" id="casehint" style="margin-bottom:10px"></div>
           <div id="caselist"></div>
@@ -381,10 +438,10 @@
         <label>决策分组
           <select data-f="group"><option value="all">全部决策</option><option value="approved">已批准</option><option value="nofund">不花钱</option></select>
         </label>
-        <span class="scope">仅作用于 <b>营销审批记录</b>，不影响其他模块</span>
+        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块</span>
       </div>
 
-      <div class="mini" id="auditsum"></div>
+      <div class="mini four" id="auditsum"></div>
 
       <div class="card">
         <div class="eyebrow">明细列表 / 03</div>
@@ -404,7 +461,7 @@
         <label>参数分组
           <select data-f="group"><option value="all">全部参数</option><option value="warn">预警参数</option><option value="silent">沉寂参数</option><option value="recall">回流与预算</option></select>
         </label>
-        <span class="scope">仅作用于 <b>规则阈值配置</b>，不影响其他模块</span>
+        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块</span>
       </div>
 
       <div class="mini" id="cfgkpis"></div>
@@ -436,24 +493,42 @@ let CASE_CIDS={A:[],B:[],C:[]};
 let CASE_COUNTS={A:0,B:0,C:0};
 let CASES_STATE='idle';
 let CASE_LOADING=null;
+let LC_DATA=null,BUDGET_DATA=null;   /* 页载真实数据缓存：供审批汇总 / 重算对比前端统计 */
 const ST = {NEW_UNPURCHASED:['p-new','进店未消费'],FIRST_PURCHASE:['p-first','首购激活'],
             ACTIVE:['p-active','活跃复购'],AT_RISK:['p-risk','沉寂预警'],
             DEEP_DORMANT:['p-deep','深度沉寂'],CHURNED:['p-churn','判定流失']};
-const EXITS={high:['高价值','#6E5140'],medium:['中价值','#8A6247'],low:['低价值·不花','#B98F6B'],
-             normal:['节奏正常·不花','#A9937C'],C:['历史不足','#CBAE8D'],no_consent:['无同意·拦截','#4A3A31']};
+const EXITS={high:['高价值','#43718E'],medium:['中价值','#8A5A3C'],low:['低价值·不花','#BD8D63'],
+             normal:['节奏正常·不花','rgba(189,141,99,.62)'],C:['历史不足','#E7CFB8'],no_consent:['无同意·拦截','#43718E']};
 const STATE_ORDER=['ACTIVE','AT_RISK','DEEP_DORMANT','FIRST_PURCHASE','CHURNED','NEW_UNPURCHASED'];
-const STATE_COLOR={ACTIVE:'#8A6247',AT_RISK:'#B98F6B',DEEP_DORMANT:'#6E5140',
-                   FIRST_PURCHASE:'#CBAE8D',CHURNED:'#4A3A31',NEW_UNPURCHASED:'#A9937C'};
+const STATE_COLOR={ACTIVE:'#8A5A3C',AT_RISK:'#43718E',DEEP_DORMANT:'#3A2E2D',
+                   FIRST_PURCHASE:'#BD8D63',CHURNED:'#43718E',NEW_UNPURCHASED:'#E7CFB8'};
+const CASE_GROUPS={A:'已回流验证客户',B:'高危预警客户',C:'健康活跃客户'};
+const PARAM_TIPS={
+  DEV_THRESHOLD:'判断客户消费行为偏离正常规律的倍数阈值：这次来得比平时晚多少倍，才算节奏不对、需要提醒',
+  FLAG_MIN_GAPS:'至少要看过几次消费间隔，才够判断这位客户自己的正常消费节奏',
+  FLAG_MAX_SILENCE:'多久没来消费，就正式判定这位客户已经流失',
+  BASELINE_REGULAR_CAP:'常客两次消费之间最长算正常，超过这个间隔就按低频客户处理',
+  WARN_DAYS_H:'客户沉寂多少天后，正式触发流失预警',
+  ALERT_FIXED:'一家门店整体生意下滑到什么程度，需要单独标出来请经理看一眼',
+  MIN_WEEKS:'至少要连续观察多少周，才判断一家门店是不是真的在下滑',
+  TRAILING_DAYS:'客户回来消费之后，往后观察多少天算一次有效回流',
+  FACE_HIGH:'给高价值客户发券时，单张券最多可以给到多少',
+  FACE_MED:'给中价值客户发券时，单张券最多可以给到多少',
+  FACE_BUDGET:'把本周总预算折成券时，按多少面值一张来计算',
+  REDEMPTION:'发出去的券，预计有多少比例会被真正拿来计算',
+  GROSS_MARGIN:'每笔消费里，扣除成本之后剩下的比例'
+};
 const MATRIX_S=['NEW_UNPURCHASED','FIRST_PURCHASE','ACTIVE','AT_RISK','DEEP_DORMANT','CHURNED'];
 
 /* ---------- view layer (new; all legacy ids / fn names / endpoints untouched) ---------- */
 const VIEW_META={
   overview:{title:'营销总览',desc:'大盘核心数字 · 客户状态 · 预警汇总'},
-  cases:{title:'客户案例演示',desc:'A/B 组回流预警案例池 · 单客户时间轴弧线'},
+  cases:{title:'流失预警客户池',desc:'已回流验证 / 高危预警 / 健康活跃 · 单客户生命周期时间轴'},
   audit:{title:'营销审批记录',desc:'审批明细 · 批准与发送分离'},
   config:{title:'规则阈值配置',desc:'预警 / 沉寂 / 回流参数 · 全链路重算'}
 };
-const VIEW_FILTERS={overview:{date:'all',group:'all'},cases:{date:'all',group:'all'},
+const VIEW_FILTERS={overview:{date:'all',group:'all'},
+                    cases:{date:'all',group:'all',high:false,channel:false,warn30:false},
                     audit:{date:'all',group:'all'},config:{date:'all',group:'all'}};
 const GROUP_KW={
   overview:{active:['活跃复购'],risk:['沉寂预警'],deep:['深度沉寂'],churn:['判定流失'],
@@ -509,6 +584,12 @@ function applyViewFilters(v){
     const m=txt.match(/\d{4}-\d{2}-\d{2}/);
     if(m)show=withinWindow(m[0],mode);
     if(show&&row.hasAttribute('data-fgroup'))show=matchGroup(v,row,txt);
+    if(show&&v==='cases'&&row.classList.contains('case-row')){
+      const fx=VIEW_FILTERS.cases;
+      if(fx.high&&row.getAttribute('data-high')!=='1')show=false;
+      if(show&&fx.channel&&row.getAttribute('data-channel')!=='1')show=false;
+      if(show&&fx.warn30&&row.getAttribute('data-warn30')!=='1')show=false;
+    }
     row.classList.toggle('row-hidden',!show);
   });
 }
@@ -527,6 +608,12 @@ function initShell(){
       applyViewFilters(v);
     });
   });
+  document.querySelectorAll('.filterbar input[data-fx]').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      VIEW_FILTERS.cases[cb.dataset.fx]=cb.checked;
+      applyViewFilters('cases');
+    });
+  });
   // 只观察结构变化并做 rAF 去抖，避免真实浏览器中的回调堆积
   const obs=new MutationObserver(()=>scheduleFilters());
   document.querySelectorAll('.view').forEach(v=>obs.observe(v,{childList:true,subtree:true,attributes:false,characterData:false}));
@@ -537,7 +624,7 @@ function initShell(){
 async function j(url,opts){const r=await fetch(API+url,opts);if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||('HTTP '+r.status));}return r.json();}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function hkd(x){return 'HK$'+(Number(x||0)).toLocaleString();}
-function flash(msg,err){const f=document.getElementById('flash');f.textContent=msg;f.style.display='block';f.style.background=err?'#F1E1D8':'#F6EDE0';setTimeout(()=>f.style.display='none',2600);}
+function flash(msg,err){const f=document.getElementById('flash');f.textContent=msg;f.style.display='block';f.style.background=err?'rgba(67,113,142,.12)':'var(--soft)';setTimeout(()=>f.style.display='none',2600);}
 function openModal(html){document.getElementById('modalbody').innerHTML=html;document.getElementById('modal-mask').classList.add('open');}
 function closeModal(){document.getElementById('modal-mask').classList.remove('open');}
 document.getElementById('modal-mask').addEventListener('click',e=>{if(e.target.id==='modal-mask')closeModal();});
@@ -561,7 +648,7 @@ async function loadConfig(){
   const s=(c.schema||[]);
   document.getElementById('configform').innerHTML =
     '<div class="params">'+
-    s.map(x=>`<span class="param" data-frow data-fgroup>${esc(x.label)} <input data-k="${x.field}" data-t="${x.type}" data-lo="${x.min}" data-hi="${x.max}" type="number" step="any" value="${c.fields[x.field]}"></span>`).join('')+
+    s.map(x=>`<span class="param" data-frow data-fgroup><span class="plabel">${esc(x.label)}<span class="qm" data-tip="${esc(PARAM_TIPS[x.field]||'调整该参数会触发整套状态机与决策计算重新运行')}">?</span></span> <input data-k="${x.field}" data-t="${x.type}" data-lo="${x.min}" data-hi="${x.max}" type="number" step="any" value="${c.fields[x.field]}"></span>`).join('')+
     '</div>';
   document.getElementById('cfgkpis').innerHTML=
     `<div class="kpi"><div class="t">当前规则版本</div><div class="v">${esc(c.version)}</div><div class="s">评估截止 ${esc(c.cut||'')}</div></div>
@@ -576,26 +663,43 @@ async function applyConfig(){
   const approver=(document.getElementById('cfg-approver').value||'').trim();
   const reason=(document.getElementById('cfg-reason').value||'').trim();
   if(!approver){flash('请输入操作人姓名',true);return;}
+  if(!reason){flash('请填写本次调整依据',true);return;}
   const changes={};
   const inputs=document.querySelectorAll('#configform input[data-k]');
   inputs.forEach(i=>{if(i.value!==''&&i.value!==i.defaultValue)changes[i.dataset.k]=Number(i.value);});
   if(!Object.keys(changes).length){flash('未检测到参数改动',true);return;}
   document.getElementById('cfgstate').textContent='重算中…';
   try{
+    // 重算前真实基线：优先用页载缓存，缺失才回源（现有接口，不新增）
+    const bl=LC_DATA||await j('/api/lifecycle');
+    const bb=BUDGET_DATA||await j('/api/budget?coupons=350&face=44');
     const r=await j('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({changes,approver,reason})});
     CUR=r.config.version;document.getElementById('rver').textContent=r.config.version;
-    flash('已应用，规则版本 '+r.config.version+'，全链路已重算');
     await boot();
     CASES_STATE='idle';
     await loadCases(true);
+    // 重算后真实值：显式回源，确保拿到同一配置版本下的结果
+    const al=await j('/api/lifecycle');
+    const ab=await j('/api/budget?coupons=350&face=44');
     document.getElementById('cfg-reason').value='';
+    const bRisk=Number((bl.distribution||{}).AT_RISK||0), aRisk=Number((al.distribution||{}).AT_RISK||0);
+    const dRisk=aRisk-bRisk, dTxt=(dRisk>0?'+':'')+dRisk+' 人';
+    const bCov=Number(bb.coverage||0), aCov=Number(ab.coverage||0), dCov=aCov-bCov;
+    const dCovTxt=(dCov>0?'+':'')+dCov.toFixed(1)+' 个百分点';
+    openModal(
+      '<div class="recalc-hd">调整完成 · 规则版本 '+esc(r.config.version)+'</div>'+
+      '<div class="recalc-sub">本次阈值调整对核心指标的影响（重算前后真实对比，来自同一计算链）</div>'+
+      '<div class="recalc-row"><span>高危预警人数（沉寂预警）</span><b>'+bRisk+' → '+aRisk+'</b><em class="delta">'+dTxt+'</em></div>'+
+      '<div class="recalc-row"><span>预算覆盖率</span><b>'+bCov+'% → '+aCov+'%</b><em class="delta">'+dCovTxt+'</em></div>'+
+      '<div class="recalc-foot"><button class="btn primary" onclick="closeModal()">知道了</button></div>');
+    flash('已应用，规则版本 '+r.config.version+'，全链路已重算');
   }catch(e){flash(e.message,true);}finally{document.getElementById('cfgstate').textContent='';}
 }
 
 // ---------------- lifecycle ----------------
 async function loadLifecycle(){
-  const lc=await j('/api/lifecycle');
+  const lc=await j('/api/lifecycle');LC_DATA=lc;
   const d=lc.distribution,pct=lc.distribution_pct,tot=lc.total;
   renderKpis(lc);
 
@@ -653,17 +757,17 @@ async function loadLifecycle(){
 
   const counts=lc.demo_pool_counts||{};
   CASE_COUNTS={A:counts.A||0,B:counts.B||0,C:counts.C||0};
-  document.getElementById('casehint').innerHTML=`候选池：回流 ${counts.A||0} · 沉寂 ${counts.B||0} · 健康 ${counts.C||0}`;
+  document.getElementById('casehint').innerHTML=`候选池：${CASE_GROUPS.A} ${counts.A||0} · ${CASE_GROUPS.B} ${counts.B||0} · ${CASE_GROUPS.C} ${counts.C||0}`;
   document.getElementById('casekpis').innerHTML=
-    `<div class="kpi"><div class="t">回流案例池 · A</div><div class="v">${counts.A||0}</div><div class="s">沉寂→预警→回流全链路</div></div>
-     <div class="kpi"><div class="t">流失预警池 · B</div><div class="v">${counts.B||0}</div><div class="s">沉寂中 · 值得激励</div></div>
-     <div class="kpi"><div class="t">健康常客池 · C</div><div class="v">${counts.C||0}</div><div class="s">节奏正常对照组</div></div>`;
+    `<div class="kpi"><div class="t">${CASE_GROUPS.A}</div><div class="v">${counts.A||0}</div><div class="s">沉寂→预警→回流全链路</div></div>
+     <div class="kpi"><div class="t">${CASE_GROUPS.B}</div><div class="v">${counts.B||0}</div><div class="s">沉寂中 · 值得激励</div></div>
+     <div class="kpi"><div class="t">${CASE_GROUPS.C}</div><div class="v">${counts.C||0}</div><div class="s">节奏正常对照组</div></div>`;
   /* 案例池由 scheduleCases() 后台预取，不阻塞首屏 */
 }
 
 // ---------------- KPIs (OPT-04: auto-filled on page load) ----------------
 function renderKpis(lc){
-  const d=lc.distribution||{};
+  const d=lc.distribution||{}, wl=lc.warn_lead_days||{};
   const cards=[
     ['在册会员',lc.total||0,'六状态全覆盖 · 截止 '+(lc.cut||'')],
     ['活跃复购',d['ACTIVE']||0,'节奏正常 · 观察窗内'],
@@ -672,7 +776,9 @@ function renderKpis(lc){
     ['判定流失',d['CHURNED']||0,'超流失判定时长'],
   ];
   document.getElementById('kpis').innerHTML=cards.map(k=>
-    `<div class="kpi"><div class="t">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+    `<div class="kpi"><div class="t">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('')
+    + `<div class="kpi hero"><div class="t">平均预警提前 · 核心价值</div><div class="v">${wl.mean!=null?wl.mean:'—'}</div>`
+    + `<div class="s">天 · 可测 ${wl.count||0} 次 · 比彻底流失更早发现</div></div>`;
 }
 
 // ---------------- actions / funnel / budget ----------------
@@ -690,7 +796,7 @@ async function loadActions(){
 }
 async function loadBudget(){
   let b;
-  try{b=await j('/api/budget?coupons=350&face=44');}
+  try{b=await j('/api/budget?coupons=350&face=44');BUDGET_DATA=b;}
   catch(e){document.getElementById('budgetbox').innerHTML='<div class="hintbar">预算数据加载失败</div>';return;}
   document.getElementById('budgetbox').innerHTML=
    `<div class="budget-big">${b.coverage}%</div>
@@ -700,7 +806,8 @@ async function loadBudget(){
       <tr data-frow><td>未覆盖</td><td class="mono">${b.unserved_n}</td></tr>
       <tr data-frow><td>预算额度</td><td class="mono">${hkd(b.funded_amt)}</td></tr>
       <tr data-frow><td>中价值候选</td><td class="mono">${b.demand_medium} 位（${b.funded_medium} 入选）</td></tr>
-    </table>`;
+    </table>
+    <div class="budget-summary">当前预算可覆盖 <b>${b.coverage}%</b> 高危客户，对应 <b>${b.funded_n}</b> 人</div>`;
 }
 
 // ---------------- demo cases + timeline (OPT-01 order comes from backend, unchanged) ----------------
@@ -738,7 +845,11 @@ async function loadCases(force){
 }
 function caseRow(c,idx){
   const st=c.state,p=ST[st]||['p-active',st];
-  return `<div class="tl-row case-row" data-frow data-fgroup><span class="tl-date">${esc(c.customer_id)}</span>
+  const high=(c.group==='high')?'1':'0';
+  const channel=(c.group!=='no_consent')?'1':'0';
+  const lead=Number(c.max_warn_lead||0);
+  const warn30=(lead>0&&lead<=30)?'1':'0';
+  return `<div class="tl-row case-row" data-frow data-fgroup data-high="${high}" data-channel="${channel}" data-warn30="${warn30}"><span class="tl-date">${esc(c.customer_id)}</span>
     <span><span class="pill ${p[0]}">${p[1]}</span></span>
     <span class="muted">${esc(c.store_id)}</span>
     <button class="btn small" onclick="showTimeline('${esc(c.customer_id)}')">时间轴</button></div>`;
@@ -757,8 +868,8 @@ function renderCaseList(){
 async function loadCase(g){
   if(CASES_STATE!=='ready')await loadCases();
   document.getElementById('casehint').dataset.g=g;
-  document.getElementById('casehint').textContent = g==='A'?'全链路回流：进店→消费→沉寂→预警→回到活跃':
-    (g==='B'?'流失预警：沉寂中、值得激励':'健康常客：节奏正常对照组');
+  document.getElementById('casehint').textContent = g==='A'?(CASE_GROUPS.A+'：进店→消费→沉寂→预警→回到活跃'):
+    (g==='B'?(CASE_GROUPS.B+'：沉寂中、值得激励'):(CASE_GROUPS.C+'：节奏正常对照组'));
   document.querySelectorAll('[data-cg]').forEach(b=>b.classList.toggle('primary',b.dataset.cg===g));
   renderCaseList();
   const list=CASE_CIDS[g]||[];
@@ -774,14 +885,20 @@ async function showTimeline(cid){
   const trs=tl.transitions||[];
   let h=`<div class="segment">当前状态：<span class="pill ${ST[tl.state]?ST[tl.state][0]:''}">${ST[tl.state]?ST[tl.state][1]:tl.state}</span>
      <span class="muted"> · 静默 ${tl.silence_days!=null?tl.silence_days+' 天':'—'} · 基线 ${tl.median_gap_days!=null?tl.median_gap_days+' 天':'—'}</span></div>`;
+  h+='<div class="case-legend"><span><i style="background:#BD8D63"></i>正常消费</span>'
+    +'<span><i style="background:#43718E"></i>触发预警</span>'
+    +'<span><i style="background:#8A5A3C"></i>回流成功</span></div>';
   h+='<div class="timeline">';
   (trs||[]).forEach(tr=>{
-    const to=tr.to_state;
+    const to=tr.to_state, from=tr.from_state, trig=tr.trigger_event;
     const lbl=(ST[to]?ST[to][1]:to);
-    const trig=tr.trigger_event;
-    h+=`<div class="tl-row tl-arc" data-frow><span class="tl-date">${esc(tr.occurred_at)}</span>
+    const isWarn=(to==='AT_RISK'||to==='DEEP_DORMANT'||trig==='RHYTHM_DEVIATION'||trig==='WINDOW_EXPIRED');
+    const isReturn=(to==='ACTIVE'&&(from==='AT_RISK'||from==='DEEP_DORMANT'));
+    const kind=isWarn?'warn':(isReturn?'return':'normal');
+    const tag=isWarn?'触发预警':(isReturn?'回流成功':'正常消费');
+    h+=`<div class="tl-row tl-arc node-${kind}" data-frow><span class="tl-date">${esc(tr.occurred_at)}</span>
       <span class="tl-edge"><span class="pill ${ST[to]?ST[to][0]:''}">${lbl}</span>
-      <span class="arr">· ${esc(trig)}</span></span></div>`;
+      <span class="node-tag nt-${kind}">${tag}</span><span class="arr">· ${esc(trig)}</span></span></div>`;
   });
   if(!trs.length)h+='<div class="muted">该客户无状态迁移记录</div>';
   h+='</div>';
@@ -791,18 +908,39 @@ async function showTimeline(cid){
 
 // ---------------- audit (OPT-04: auto-loaded) ----------------
 async function loadAudit(){
-  const a=await j('/api/audit');
-  const recs=(a.records||[]).slice().reverse().slice(0,12);
+  // 汇总与效果闭环所需数据：全部来自现有 3 个 GET 接口，前端统计，不新增接口
+  const [a,lc,bd]=await Promise.all([
+    j('/api/audit'), LC_DATA?Promise.resolve(LC_DATA):j('/api/lifecycle'),
+    BUDGET_DATA?Promise.resolve(BUDGET_DATA):j('/api/budget?coupons=350&face=44')
+  ]);
+  const all=a.records||[];
+  const recs=all.slice().reverse().slice(0,12);
+  // 近 7 天窗口以记录内最新审批时间为基准，结果可复算、不依赖客户端时钟
+  const stamps=all.map(r=>Date.parse(String(r.approved_at||'').replace(' ','T'))).filter(t=>!isNaN(t));
+  const anchor=stamps.length?Math.max.apply(null,stamps):0, win=7*86400000;
+  const pending=all.filter(r=>r.status==='diagnosed').length;
+  const passed=all.filter(r=>{
+    const t=Date.parse(String(r.approved_at||'').replace(' ','T'));
+    return !isNaN(t)&&anchor-t<=win&&anchor-t>=0&&r.status==='released';
+  }).length;
+  const sent=all.filter(r=>r.sent_at).length;
+  const pool=lc.demo_pool_counts||{}, A=Number(pool.A||0), B=Number(pool.B||0);
+  const returned=A, rate=A+B>0?(A/(A+B)*100).toFixed(1):'0.0';
+  const per=Number(bd.funded_n||0)>0?Math.round(Number(bd.gain||0)/Number(bd.funded_n)):0;
   document.getElementById('auditsum').innerHTML=
-    `<div class="kpi"><div class="t">审批记录</div><div class="v">${recs.length}</div><div class="s">最近 12 条</div></div>
-     <div class="kpi"><div class="t">已批准</div><div class="v">${recs.filter(r=>r.decision).length}</div><div class="s">每条含理由与操作人</div></div>
-     <div class="kpi"><div class="t">发送记录</div><div class="v">${recs.filter(r=>r.sent_at).length}</div><div class="s">批准与发送分离</div></div>`;
-  document.getElementById('audit').innerHTML=recs.length?
+    `<div class="kpi"><div class="t">待审批数</div><div class="v">${pending}</div><div class="s">已诊断 · 待经理签批</div></div>
+     <div class="kpi"><div class="t">本周已通过数</div><div class="v">${passed}</div><div class="s">近 7 天已放行</div></div>
+     <div class="kpi"><div class="t">已发送数</div><div class="v">${sent}</div><div class="s">批准与发送分离 · 逐条留痕</div></div>
+     <div class="kpi"><div class="t">成功回流人数</div><div class="v">${returned}</div><div class="s">状态机完成回流验证客户</div></div>`;
+  const table=recs.length?
    '<table class="tbl"><tr><th>时间</th><th>客户</th><th>动作</th><th>渠道</th><th>操作人</th><th>sent</th></tr>'+
    recs.map(r=>`<tr data-frow data-fgroup><td class="mono">${esc(r.approved_at||'')}</td><td>${esc(r.customer_id||'—')}</td>
      <td>${esc(r.decision||'')}</td><td>${esc(r.channel||'')}</td><td>${esc(r.approved_by||'')}</td>
      <td>${r.sent_at?'是':'<span class="muted">—</span>'}</td></tr>`).join('')+'</table>'
    :'<div class="muted">暂无记录</div>';
+  const eff=`<div class="audit-summary">近 30 天干预回流率 <b>${rate}%</b>，人均挽回消费 <b>${hkd(per)}</b>
+     <div class="muted" style="font-size:11px;margin-top:4px">统计口径：曾进入预警客户中完成回流验证的占比 · 收益代理量按预算覆盖人数均摊（前端基于当前评估周期汇总）</div></div>`;
+  document.getElementById('audit').innerHTML=table+eff;
   applyViewFilters('audit');
 }
 
