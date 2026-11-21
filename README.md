@@ -210,3 +210,24 @@ python pulse_app.py 8100  # 或 Windows 双击 run.bat；macOS/Linux 执行 bash
 - **AI 智能问答助手**：右下角悬浮，基于当前接口数据作答（演示级前端预置，预留企业内部大模型接入能力）
 - **图表色系统一**：健康类棕系阶梯、风险类灰蓝深浅；客户列表新增沉寂天数与价值等级列；审批页口径纠偏为「累计验证回流客户」
 - 验证：Edge headless 65/65 PASS；全套回归 18/18 · 21/21 · 5/5 · 40/40 ALL GREEN；后端与基线零改动
+
+## R8 · 帮助页高度控制 + 基础响应式（当前版本）
+
+工作量评估：两条需求都不大、共用同一套 CSS 断点，**本轮一起做掉**（未暂缓响应式）。仅改 `static/demo_workspace.html`：
+
+- **帮助页四板块**：新增 `.hlp-scroll` 统一最大高度 + 内部独立滚动，标题固定在滚动层外；桌面 340px / 平板 290px / 手机 240px，实测 4/4 板块可独立滚动，帮助页不再撑出长页面。
+- **窄屏抽屉**：≤1000px 侧栏 `translateX(-100%)` 收起、主内容全宽、顶部新增汉堡；抽屉可展开，点菜单 / 点遮罩自动收起；宽屏折叠语义保留。
+- **单列与横滚**：≤700px 栅格统一单列；12 个宽表 / 图表容器加 `.scroll-x` 横向滚动；`#configform` 刻意不加，护住参数问号气泡；`.topbar` 裁剪装饰花越界的 11px，三视口无横向溢出。
+- **本轮 QA 顺带修好**：R6 后置 `.g5/.mini.four` 覆盖响应式降列（已把 R8 media 块移到样式表末尾）、手机帮助页堆叠过高、装饰 SVG 横向溢出。
+
+验收：真实浏览器 Edge headless 三视口 **101/101 PASS**（桌面 30 / 平板 34 / 手机 37）；全套回归 `18/18 · 21/21 · 5/5 · 40/40 ALL GREEN`；`00` 与 `selftest.py` 锁定零改动、主仓库 `v1.0 / log=0`。详见 `demo/docs/17_Round8_帮助页高度与响应式适配验收报告.md`。
+
+### 启动（不变）
+
+```bash
+set PYTHONUTF8=1          # Windows cmd；Git Bash / macOS / Linux 用 export PYTHONUTF8=1
+python pulse_app.py 8100  # 或 Windows 双击 run.bat；macOS/Linux 执行 bash run.sh
+```
+
+浏览器打开 `http://127.0.0.1:8100/`。
+在线活系统（无需本地启动）：`https://pcc-pulse-demo.app.workbuddy.host/?sharecode=KKXKERMBOR`

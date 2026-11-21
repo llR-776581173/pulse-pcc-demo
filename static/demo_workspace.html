@@ -228,19 +228,28 @@
   .modal textarea{height:64px;resize:vertical}
   .modal .actions{margin-top:16px;display:flex;gap:8px;justify-content:flex-end}
 
-  @media(max-width:1180px){.g4,.g5{grid-template-columns:repeat(2,minmax(0,1fr))}
-                           .g21{grid-template-columns:1fr}}
-  @media(max-width:1000px){body .side{width:70px}
-                            body .side-head .brand,body .nav-cap,body .nav-item .label,body .side-foot{display:none}
-                            body .side-head{justify-content:center;padding:0}
-                            body .nav-item{justify-content:center;padding:11px 0}
-                            body .main{margin-left:70px}
-                            .g3,.g5,.mini.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(max-width:700px){.g4,.g3,.g2,.g5,.mini,.mini.four{grid-template-columns:1fr}
-                           .topbar{padding:0 16px;flex-wrap:wrap;height:auto;min-height:76px}
-                           .topbar .env{margin-left:0}
-                           .content{padding:18px 14px 44px}
-                           .filterbar .scope{margin-left:0}}
+  /* ===================== R8 · 高度控制与基础响应式（纯 CSS / 前端布局，不引入新色） ===================== */
+  /* 帮助中心四板块：统一最大高度 + 内部独立滚动（参考 .tl-scroll：标题固定、只滚内容、不撑高整页） */
+  .hlp-scroll{max-height:340px;overflow-y:auto;overscroll-behavior:contain;padding-right:8px;
+              scrollbar-width:thin;scrollbar-color:var(--tan) var(--soft)}
+  .hlp-scroll::-webkit-scrollbar{width:8px}
+  .hlp-scroll::-webkit-scrollbar-track{background:var(--soft);border-radius:8px}
+  .hlp-scroll::-webkit-scrollbar-thumb{background:var(--tan);border-radius:8px}
+  .hlp-scroll::-webkit-scrollbar-thumb:hover{background:var(--brush)}
+  /* 宽表格 / 图表横向滚动：窄屏不撑破页面，内容可横滑查看 */
+  .scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+            scrollbar-width:thin;scrollbar-color:var(--tan) var(--soft)}
+  .scroll-x::-webkit-scrollbar{height:7px}
+  .scroll-x::-webkit-scrollbar-track{background:var(--soft);border-radius:8px}
+  .scroll-x::-webkit-scrollbar-thumb{background:var(--tan);border-radius:8px}
+  .scroll-x::-webkit-scrollbar-thumb:hover{background:var(--brush)}
+  /* 移动端顶部汉堡 + 抽屉遮罩（桌面隐藏；仅用五原色的透明度派生） */
+  .mtoggle{display:none;align-items:center;justify-content:center;width:34px;height:34px;flex:none;
+           border:1px solid rgba(58,46,45,.25);background:rgba(255,255,255,.85);color:var(--mole);
+           border-radius:8px;cursor:pointer;font-size:16px;line-height:1}
+  .mtoggle:hover{background:#FFFFFF}
+  .nav-backdrop{position:fixed;inset:0;z-index:19;background:rgba(58,46,45,.42);display:none}
+  body.nav-drawer-open .nav-backdrop{display:block}
 
   /* ===================== R6 新增组件（严格沿用五原色卡） ===================== */
   .g5{grid-template-columns:repeat(5,minmax(0,1fr))}
@@ -385,6 +394,43 @@
   .ai-in{display:flex;gap:8px;padding:11px 13px;border-top:1px solid var(--line);background:var(--soft)}
   .ai-in input{flex:1;border:1px solid var(--tan);border-radius:8px;padding:8px 11px;
     font-size:12.5px;background:#FFFFFF;min-width:0}
+  /* ===================== R8 响应式规则（置于样式表末尾：覆盖 R6/R7 同名选择器） ===================== */
+  @media(max-width:1180px){.g4,.g5{grid-template-columns:repeat(2,minmax(0,1fr))}
+                           .g21{grid-template-columns:1fr}}
+  /* 平板 / 手机：侧边栏完全收起为抽屉，顶部汉堡展开，主内容全宽，栅格降列 */
+  @media(max-width:1000px){
+    .mtoggle{display:inline-flex}
+    body .side,body.nav-collapsed .side{width:238px;transform:translateX(-100%);
+       transition:transform .24s ease;box-shadow:6px 0 24px rgba(58,46,45,.22)}
+    body.nav-drawer-open .side,body.nav-collapsed.nav-drawer-open .side{transform:translateX(0)}
+    body .main,body.nav-collapsed .main{margin-left:0}
+    body .side-head .brand,body.nav-collapsed .side-head .brand,
+    body .nav-cap,body.nav-collapsed .nav-cap,
+    body .nav-item .label,body.nav-collapsed .nav-item .label,
+    body .side-foot,body.nav-collapsed .side-foot{display:block}
+    body .side-head,body.nav-collapsed .side-head{justify-content:flex-start;padding:0 14px}
+    body .side-head img,body.nav-collapsed .side-head img{width:40px;height:40px}
+    body .nav-item,body.nav-collapsed .nav-item{justify-content:flex-start;padding:10px 12px}
+    body .side-head .navtoggle,body.nav-collapsed .side-head .navtoggle{display:none}
+    .g3,.g5,.mini,.mini.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .state-grid{min-width:0}
+    .hlp-scroll{max-height:290px}
+  }
+  @media(max-width:700px){.g4,.g3,.g2,.g5,.g21,.mini,.mini.four{grid-template-columns:1fr}
+                           .topbar{padding:0 16px;flex-wrap:wrap;height:auto;min-height:76px}
+                           .topbar .env{margin-left:0}
+                           .content{padding:18px 14px 44px}
+                           .filterbar .scope{margin-left:0}
+                           .hlp-scroll{max-height:240px}
+                           .scroll-x table.tbl{min-width:480px}
+                           .matrix table{min-width:420px}
+                           .revbar{min-width:440px}
+                           .funnel .fl{min-width:260px}
+                           .revbar .nm{width:120px}
+                           .revbar .n{width:96px}}
+
+  /* 顶部装饰花木越出视口 11px，统一裁剪，保证三视口都无横向溢出 */
+  .topbar{overflow:hidden}
 </style>
 </head>
 <body>
@@ -430,10 +476,13 @@
   </div>
   <div class="side-foot"><b>Pulse</b> · 内部营销工作台<br>模块视图彼此独立</div>
 </aside>
+<!-- 窄屏抽屉遮罩：点空白处自动收起侧边栏 -->
+<div class="nav-backdrop" onclick="document.body.classList.remove('nav-drawer-open')"></div>
 
 <!-- ============ 右侧主内容区 ============ -->
 <div class="main">
   <header class="topbar">
+    <button class="mtoggle" onclick="toggleNav()" title="展开 / 收起导航" aria-label="展开 / 收起导航">&#9776;</button>
     <svg class="floral-top" viewBox="0 0 100 100" aria-hidden="true">
       <g fill="#BD8D63"><ellipse cx="50" cy="24" rx="8" ry="19"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(300 50 50)"/></g>
       <circle cx="50" cy="50" r="10" fill="#8A5A3C"/>
@@ -479,7 +528,7 @@
         <div class="card">
           <div class="eyebrow">汇总图表 / 02</div>
           <h3>预警提前量 <span class="hint">观察窗内 · 状态迁移</span></h3>
-          <div id="leadcard"></div>
+          <div id="leadcard" class="scroll-x"></div>
         </div>
       </div>
 
@@ -487,14 +536,14 @@
         <div class="card">
           <div class="eyebrow">汇总图表 / 03</div>
           <h3>状态转移矩阵 <span class="hint">合法转移 · 计数</span></h3>
-          <div id="matrix" class="matrix"></div>
+          <div id="matrix" class="matrix scroll-x"></div>
         </div>
         <div class="card">
           <div class="eyebrow">汇总图表 / 04</div>
           <h3>六出口漏斗与预算 <span class="hint">决策分流口径</span></h3>
           <div class="grid g2" style="gap:14px;margin-bottom:0">
-            <div id="funnel"></div>
-            <div id="budgetbox"></div>
+            <div id="funnel" class="scroll-x"></div>
+            <div id="budgetbox" class="scroll-x"></div>
           </div>
         </div>
       </div>
@@ -528,7 +577,7 @@
             <button class="btn" data-cg="C" onclick="loadCase('C')">健康活跃客户</button>
           </div>
           <div class="hintbar" id="casehint" style="margin-bottom:10px"></div>
-          <div id="caselist"></div>
+          <div id="caselist" class="scroll-x"></div>
         </div>
         <div class="card">
           <div class="eyebrow">明细列表 / 02</div>
@@ -557,7 +606,7 @@
         <div class="eyebrow">明细列表 / 03</div>
         <h3>审批与操作记录 <span class="hint">页载自动加载</span></h3>
         <div style="margin-bottom:12px"><button class="btn small" onclick="loadAudit()">刷新</button></div>
-        <div id="audit"></div>
+        <div id="audit" class="scroll-x"></div>
       </div>
     </section>
 
@@ -609,12 +658,12 @@
         <div class="card">
           <div class="eyebrow">复盘分析 / 01</div>
           <h3>分门店效果排行 <span class="hint">干预候选 · 平均预估回流概率</span></h3>
-          <div id="revstore"></div>
+          <div id="revstore" class="scroll-x"></div>
         </div>
         <div class="card">
           <div class="eyebrow">复盘分析 / 02</div>
           <h3>客户价值维度 <span class="hint">候选分布 · 预估回流概率</span></h3>
-          <div id="revval"></div>
+          <div id="revval" class="scroll-x"></div>
         </div>
       </div>
 
@@ -622,19 +671,19 @@
         <div class="card">
           <div class="eyebrow">复盘分析 / 03</div>
           <h3>面额券效果对比 <span class="hint">同投放张数 · 三档面额</span></h3>
-          <div id="revface"></div>
+          <div id="revface" class="scroll-x"></div>
         </div>
         <div class="card">
           <div class="eyebrow">复盘分析 / 04</div>
           <h3>审批月度趋势 <span class="hint">按批准时间聚合</span></h3>
-          <div id="revtrend"></div>
+          <div id="revtrend" class="scroll-x"></div>
         </div>
       </div>
 
       <div class="card">
         <div class="eyebrow">复盘分析 / 05</div>
         <h3>投入产出与总结 <span class="hint">基于当前评估周期</span></h3>
-        <div id="revsum"></div>
+        <div id="revsum" class="scroll-x"></div>
         <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <button class="btn primary" onclick="aiMonthly()">AI 生成月报</button>
           <span class="muted" style="font-size:11.5px">基于当前工作台真实数据自动汇总，可一键复制用于汇报</span>
@@ -648,7 +697,7 @@
         <span class="fbt">画像入口</span>
         <span class="scope">在「流失预警客户池」点客户行的 <b>时间轴 / 画像</b> 按钮，本页自动生成该客户全景画像</span>
       </div>
-      <div id="profilebody"></div>
+      <div id="profilebody" class="scroll-x"></div>
     </section>
 
     <!-- ---------- 视图 7 · 数据口径与帮助中心（R7 N2，侧边栏最底部） ---------- -->
@@ -743,6 +792,7 @@ const GROUP_KW={
 let ACTIVE='overview';
 
 function switchView(v){
+  document.body.classList.remove('nav-drawer-open'); /* 窄屏点菜单后自动收起抽屉 */
   ACTIVE=v;
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.dataset.view===v));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===v));
@@ -754,7 +804,11 @@ function switchView(v){
   if(v==='profile')renderProfile();
   if(v==='help')renderHelp();
 }
-function toggleNav(){document.body.classList.toggle('nav-collapsed');}
+function toggleNav(){
+  /* 窄屏走抽屉展开 / 收起，宽屏保留原有折叠；函数名与调用点保持不变 */
+  if(window.matchMedia&&window.matchMedia('(max-width:1000px)').matches){document.body.classList.toggle('nav-drawer-open');}
+  else{document.body.classList.toggle('nav-collapsed');}
+}
 function withinWindow(ds,mode){
   if(mode==='all')return true;
   const cut=new Date('2026-09-30T00:00:00');
@@ -1437,31 +1491,35 @@ function renderHelp(){
       <div class="card">
         <div class="eyebrow">口径说明 / 01</div>
         <h3>指标解释与统计口径 <span class="hint">全部指标一屏可查</span></h3>
-        ${metricRows.map(r=>'<div class="hlp-item"><div class="hlp-q">'+r[0]+'</div>'+r[1]+'</div>').join('')}
+        <div class="hlp-scroll">${metricRows.map(r=>'<div class="hlp-item"><div class="hlp-q">'+r[0]+'</div>'+r[1]+'</div>').join('')}</div>
       </div>
       <div class="card">
         <div class="eyebrow">口径说明 / 02</div>
         <h3>数据来源与统计周期 <span class="hint">规则可追溯</span></h3>
+        <div class="hlp-scroll">
         <div class="hlp-item"><div class="hlp-q">数据来源</div>客户消费与状态数据来自工作台内置演示数据集，经状态机六状态与三窗口模型计算生成；所有页面数字与接口返回一致，可在「营销审批记录」逐条追溯。</div>
         <div class="hlp-item"><div class="hlp-q">评估周期</div>统一以规则配置中的评估截止日（cut，当前 <b>${esc(lc?lc.cut||'2026-09-30':'2026-09-30')}</b>）为观察锚点；窗口 T−W / T / T+H 用于预警提前量测量。</div>
         <div class="hlp-item"><div class="hlp-q">规则版本</div>任何参数调整都会递增规则版本并留痕（append-only 变更日志），历史版本可在「规则阈值配置」最近调整列表查看；当前版本 <b>${esc(CUR||'—')}</b>。</div>
         <div class="hlp-item"><div class="hlp-q">数据声明</div>页面数字均由后端接口实时返回、前端只做展示层汇总；演示数据仅用于内部演示与验证，正式接入门店真实数据后口径不变。</div>
+        </div>
       </div>
     </div>
     <div class="grid g2">
       <div class="card">
         <div class="eyebrow">口径说明 / 03</div>
         <h3>参数大白话说明 <span class="hint">13 个可调参数</span></h3>
-        ${paramRows}
+        <div class="hlp-scroll">${paramRows}</div>
       </div>
       <div class="card">
         <div class="eyebrow">口径说明 / 04</div>
         <h3>常见问题 FAQ <span class="hint">不用翻文档</span></h3>
+        <div class="hlp-scroll">
         <div class="hlp-item"><div class="hlp-q">为什么预警能「提前」？</div>系统用客户自身历史节奏建立基线，当沉寂时长超过个人正常间隔并逼近流失判定时长时提前提醒，平均可提前 <b>${lc&&lc.warn_lead_days&&lc.warn_lead_days.mean!=null?lc.warn_lead_days.mean:'—'}</b> 天。</div>
         <div class="hlp-item"><div class="hlp-q">「回流」是怎么算的？</div>客户在状态机中从沉寂预警或深度沉寂回到活跃复购，即记一次验证回流；这是全量状态口径，与审批发券的干预转化分开统计，避免夸大效果。</div>
         <div class="hlp-item"><div class="hlp-q">调整参数会发生什么？</div>提交后整套状态机与决策计算全链路重算，规则版本自动递增，页面会弹出高危预警人数与预算覆盖率的前后真实对比；需要填写操作人与调整依据。</div>
         <div class="hlp-item"><div class="hlp-q">预算不够覆盖所有人怎么办？</div>系统按客户价值与预估回流概率择优投放；可在「干预效果复盘」对比不同面额的覆盖能力，再回「规则阈值配置」微调面额。</div>
         <div class="hlp-item"><div class="hlp-q">AI 助手的回答可信吗？</div>右下角 AI 助手基于当前工作台接口数据按预置规则作答，数字与页面一致；系统已预留 AI 扩展能力，后续可接入企业内部大模型做深度赋能。</div>
+        </div>
       </div>
     </div>`;
   HELP_READY=true;
