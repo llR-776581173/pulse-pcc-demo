@@ -145,3 +145,12 @@ PYTHONUTF8=1 python demo/acceptance_check.py --http --base=http://127.0.0.1:8100
 - 前端为单文件 `static/demo_workspace.html`，`const API=''` 全部走相对路径，因此本地 8100 与云端部署共用同一份前端。
 - 状态机为 append-only 转移日志，`CHURNED` 不直接复活；六状态与价值分层分离；`decision_log` / `state_transition` 分表。
 - `00_演示版范围与架构.md` 为需求基准，`selftest.py` 18/18 为回归基线，二者在 R2/R3/R4 全程零改动。
+
+---
+
+## 八、R5 修复（在线卡死 + 配色）
+
+- 首屏不再等待案例池：`/api/lifecycle/cases?limit=8` 把 828KB 响应降为 4.2KB，案例改为后台预取 + 加载态提示，**首屏 160ms 就绪**，慢后端下也不会「一直不动」。
+- 配色统一为**低饱和奶棕**：去掉原五色系里的蓝色 DOWNPOUR 与多色语义色，六状态 / 六出口 / pills 全部改为同一棕系明度阶梯；侧栏仍为低饱和奶棕渐变。
+- `/api/lifecycle/cases` 的 `limit` 为可选参数，**不传仍返回全量**（A 3058 / B 1607 / C 188），不影响任何验收 CASE。
+- 复验：真实浏览器 24/24、selftest 18/18、lifecycle 21/21、probe 5/5、acceptance 40/40 ALL GREEN。详见 `demo/docs/13_Round5_在线卡死与配色修复说明.md`。

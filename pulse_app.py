@@ -688,7 +688,21 @@ class PulseHandler(BaseHTTPRequestHandler):
             # /api/lifecycle/cases            preset demo case customers (A/B/C)
             # /api/lifecycle/customers/<id>/timeline   one customer timeline (live)
             if u.path == "/api/lifecycle/cases":
-                return self._send(200, _case_payload())
+                payload = _case_payload()
+                # Display-only slice: the demo page renders 8 rows per group.
+                # With no limit the full pool is returned, so every existing
+                # consumer / acceptance case is unchanged.
+                raw = q.get("limit", [None])[0]
+                if raw:
+                    try:
+                        n = max(1, min(200, int(raw)))
+                    except (TypeError, ValueError):
+                        n = None
+                    if n:
+                        payload = dict(payload)
+                        for _g in ("A", "B", "C"):
+                            payload[_g] = payload[_g][:n]
+                return self._send(200, payload)
             store = (q.get("store", [""])[0] or "").strip()
             if u.path.startswith("/api/lifecycle/customers/"):
                 rest = u.path[len("/api/lifecycle/customers/"):]

@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pulse · 客户生命周期决策工作台</title>
 <style>
-  :root{--mole:#3A2E2D;--brush:#8A5A3C;--tan:#BD8D63;--bluff:#E7CFB8;--rain:#43718E;
-        --ink:#3A2E2D;--muted:#8B7B6E;--line:#E7D5C0;--bg:#F7F1E9;--card:#FFFFFF;
-        --soft:#FBF6EF;--side:#F1E4D3;--side2:#EADCC8;
-        --green:#3E7A52;--red:#A63D2F;--amber:#A86A16;--violet:#7A5C8F}
+  :root{--mole:#41352F;--brush:#8A6247;--tan:#B98F6B;--bluff:#E7D2BA;--rain:#7C5C45;
+        --ink:#41352F;--muted:#8E7B6A;--line:#E8D8C4;--bg:#F8F3EC;--card:#FFFFFF;
+        --soft:#FBF7F1;--side:#F1E5D6;--side2:#E9DBC7;
+        --green:#6E7A5E;--red:#9C5B4B;--amber:#A98056;--violet:#7A6A72}
   *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
   body{background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
 
@@ -165,18 +165,18 @@
   .tbl td{padding:10px 11px;border-bottom:1px solid #F1E7DA;vertical-align:middle}
   .tbl tbody tr:hover{background:#FDF9F3}
   .pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;white-space:nowrap}
-  .p-active{background:#E8F1E9;color:#3E7A52;border:1px solid #C4D8C6}
-  .p-risk{background:#FBF1E2;color:#A86A16;border:1px solid #E8D3AE}
-  .p-deep{background:#F9EAE6;color:#A63D2F;border:1px solid #E7BCB0}
-  .p-churn{background:#ECE7E2;color:#5C5049;border:1px solid #D6CCC2}
-  .p-first{background:#E7EEF3;color:#43718E;border:1px solid #BFD2DE}
-  .p-new{background:#EFEAF3;color:#7A5C8F;border:1px solid #D3C5DE}
+  .p-active{background:#EFE4D6;color:#6E5140;border:1px solid #D9C3A9}
+  .p-risk{background:#F5E9D8;color:#8A6247;border:1px solid #E3CBAE}
+  .p-deep{background:#EADBCB;color:#5C4636;border:1px solid #D5BCA3}
+  .p-churn{background:#E5DACE;color:#4A3A31;border:1px solid #CDBBA8}
+  .p-first{background:#F3E9DC;color:#7C5C45;border:1px solid #DEC7AC}
+  .p-new{background:#EFE8E0;color:#7A6A5E;border:1px solid #D8CABA}
   .btn{border:1px solid #D9BFA2;border-radius:7px;padding:7px 14px;font-size:12.5px;cursor:pointer;
        background:#F9F1E7;color:#6B4A33;transition:background .15s,transform .1s}
   .btn:hover{background:#F1E2D0}
   .btn:active{transform:translateY(1px)}
   .btn.primary{background:var(--brush);color:#fff;border-color:var(--brush)}
-  .btn.primary:hover{background:#70482F}
+  .btn.primary:hover{background:#6F4E38}
   .btn.small{padding:4px 10px;font-size:12px}
   .seg{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
   .muted{color:var(--muted)}
@@ -210,7 +210,7 @@
   .logrow b{color:var(--brush);font-weight:600}
 
   .flash{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:80;display:none;
-         background:#FBF3E2;border:1px solid #E8D5A0;border-radius:9px;padding:10px 18px;
+         background:#F6EDE0;border:1px solid #E4D2B6;border-radius:9px;padding:10px 18px;
          font-size:12.5px;box-shadow:0 8px 26px rgba(58,46,45,.16);max-width:80vw}
   .modal-mask{position:fixed;inset:0;background:rgba(58,46,45,.5);display:none;align-items:center;justify-content:center;z-index:60}
   .modal-mask.open{display:flex}
@@ -271,8 +271,8 @@
 <div class="main">
   <header class="topbar">
     <svg class="floral-top" viewBox="0 0 100 100" aria-hidden="true">
-      <g fill="#BD8D63"><ellipse cx="50" cy="24" rx="8" ry="19"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(300 50 50)"/></g>
-      <circle cx="50" cy="50" r="10" fill="#8A5A3C"/>
+      <g fill="#B98F6B"><ellipse cx="50" cy="24" rx="8" ry="19"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(300 50 50)"/></g>
+      <circle cx="50" cy="50" r="10" fill="#8A6247"/>
     </svg>
     <div class="crumb"><span id="crumb">营销总览</span><small id="viewdesc">大盘核心数字 · 客户状态 · 预警汇总</small></div>
     <div class="env">
@@ -283,8 +283,8 @@
 
   <div class="content">
     <svg class="floral-deco" viewBox="0 0 100 100" aria-hidden="true">
-      <g fill="#8A5A3C"><ellipse cx="50" cy="24" rx="9" ry="20"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(300 50 50)"/></g>
-      <circle cx="50" cy="50" r="10" fill="#BD8D63"/>
+      <g fill="#8A6247"><ellipse cx="50" cy="24" rx="9" ry="20"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="9" ry="20" transform="rotate(300 50 50)"/></g>
+      <circle cx="50" cy="50" r="10" fill="#B98F6B"/>
     </svg>
 
     <!-- ---------- 视图 1 · 营销总览 ---------- -->
@@ -433,14 +433,17 @@
 const API='';
 let CUR='';
 let CASE_CIDS={A:[],B:[],C:[]};
+let CASE_COUNTS={A:0,B:0,C:0};
+let CASES_STATE='idle';
+let CASE_LOADING=null;
 const ST = {NEW_UNPURCHASED:['p-new','进店未消费'],FIRST_PURCHASE:['p-first','首购激活'],
             ACTIVE:['p-active','活跃复购'],AT_RISK:['p-risk','沉寂预警'],
             DEEP_DORMANT:['p-deep','深度沉寂'],CHURNED:['p-churn','判定流失']};
-const EXITS={high:['高价值','#8A5A3C'],medium:['中价值','#BD8D63'],low:['低价值·不花','#B9A58E'],
-             normal:['节奏正常·不花','#43718E'],C:['历史不足','#6B5F55'],no_consent:['无同意·拦截','#3A2E2D']};
+const EXITS={high:['高价值','#6E5140'],medium:['中价值','#8A6247'],low:['低价值·不花','#B98F6B'],
+             normal:['节奏正常·不花','#A9937C'],C:['历史不足','#CBAE8D'],no_consent:['无同意·拦截','#4A3A31']};
 const STATE_ORDER=['ACTIVE','AT_RISK','DEEP_DORMANT','FIRST_PURCHASE','CHURNED','NEW_UNPURCHASED'];
-const STATE_COLOR={ACTIVE:'#43718E',AT_RISK:'#BD8D63',DEEP_DORMANT:'#8A5A3C',
-                   FIRST_PURCHASE:'#C9A87F',CHURNED:'#3A2E2D',NEW_UNPURCHASED:'#A6907B'};
+const STATE_COLOR={ACTIVE:'#8A6247',AT_RISK:'#B98F6B',DEEP_DORMANT:'#6E5140',
+                   FIRST_PURCHASE:'#CBAE8D',CHURNED:'#4A3A31',NEW_UNPURCHASED:'#A9937C'};
 const MATRIX_S=['NEW_UNPURCHASED','FIRST_PURCHASE','ACTIVE','AT_RISK','DEEP_DORMANT','CHURNED'];
 
 /* ---------- view layer (new; all legacy ids / fn names / endpoints untouched) ---------- */
@@ -468,6 +471,7 @@ function switchView(v){
   document.getElementById('crumb').textContent=VIEW_META[v].title;
   document.getElementById('viewdesc').textContent=VIEW_META[v].desc;
   applyViewFilters(v);
+  if(v==='cases')scheduleCases();
 }
 function toggleNav(){document.body.classList.toggle('nav-collapsed');}
 function withinWindow(ds,mode){
@@ -508,6 +512,13 @@ function applyViewFilters(v){
     row.classList.toggle('row-hidden',!show);
   });
 }
+let FILTER_QUEUED=false;
+function scheduleFilters(){
+  if(FILTER_QUEUED)return;
+  FILTER_QUEUED=true;
+  (window.requestAnimationFrame||function(f){setTimeout(f,16)})
+    (()=>{FILTER_QUEUED=false;applyViewFilters(ACTIVE);});
+}
 function initShell(){
   document.querySelectorAll('.filterbar select[data-f]').forEach(sel=>{
     sel.addEventListener('change',()=>{
@@ -516,8 +527,9 @@ function initShell(){
       applyViewFilters(v);
     });
   });
-  const obs=new MutationObserver(()=>applyViewFilters(ACTIVE));
-  document.querySelectorAll('.view').forEach(v=>obs.observe(v,{childList:true,subtree:true}));
+  // 只观察结构变化并做 rAF 去抖，避免真实浏览器中的回调堆积
+  const obs=new MutationObserver(()=>scheduleFilters());
+  document.querySelectorAll('.view').forEach(v=>obs.observe(v,{childList:true,subtree:true,attributes:false,characterData:false}));
   switchView('overview');
 }
 
@@ -525,7 +537,7 @@ function initShell(){
 async function j(url,opts){const r=await fetch(API+url,opts);if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||('HTTP '+r.status));}return r.json();}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function hkd(x){return 'HK$'+(Number(x||0)).toLocaleString();}
-function flash(msg,err){const f=document.getElementById('flash');f.textContent=msg;f.style.display='block';f.style.background=err?'#F9EAE6':'#FBF3E2';setTimeout(()=>f.style.display='none',2600);}
+function flash(msg,err){const f=document.getElementById('flash');f.textContent=msg;f.style.display='block';f.style.background=err?'#F1E1D8':'#F6EDE0';setTimeout(()=>f.style.display='none',2600);}
 function openModal(html){document.getElementById('modalbody').innerHTML=html;document.getElementById('modal-mask').classList.add('open');}
 function closeModal(){document.getElementById('modal-mask').classList.remove('open');}
 document.getElementById('modal-mask').addEventListener('click',e=>{if(e.target.id==='modal-mask')closeModal();});
@@ -533,9 +545,11 @@ document.getElementById('modal-mask').addEventListener('click',e=>{if(e.target.i
 // ---------------- load everything (OPT-04: auto on page load) ----------------
 async function boot(){
   try{
+    // 首屏只等总览必需的小接口；慢的案例池放到后台，绝不阻塞页面
     await Promise.all([loadConfig(),loadLifecycle(),loadActions(),loadAudit()]);
-    loadBudget();
   }catch(e){flash('加载失败：'+e.message,true);}
+  loadBudget();
+  scheduleCases();
 }
 
 // ---------------- config ----------------
@@ -573,6 +587,8 @@ async function applyConfig(){
     CUR=r.config.version;document.getElementById('rver').textContent=r.config.version;
     flash('已应用，规则版本 '+r.config.version+'，全链路已重算');
     await boot();
+    CASES_STATE='idle';
+    await loadCases(true);
     document.getElementById('cfg-reason').value='';
   }catch(e){flash(e.message,true);}finally{document.getElementById('cfgstate').textContent='';}
 }
@@ -636,12 +652,13 @@ async function loadLifecycle(){
       <span>沉寂中 · 值得激励 <b>${(d['AT_RISK']||0)+(d['DEEP_DORMANT']||0)}</b></span></div>`;
 
   const counts=lc.demo_pool_counts||{};
+  CASE_COUNTS={A:counts.A||0,B:counts.B||0,C:counts.C||0};
   document.getElementById('casehint').innerHTML=`候选池：回流 ${counts.A||0} · 沉寂 ${counts.B||0} · 健康 ${counts.C||0}`;
   document.getElementById('casekpis').innerHTML=
     `<div class="kpi"><div class="t">回流案例池 · A</div><div class="v">${counts.A||0}</div><div class="s">沉寂→预警→回流全链路</div></div>
      <div class="kpi"><div class="t">流失预警池 · B</div><div class="v">${counts.B||0}</div><div class="s">沉寂中 · 值得激励</div></div>
      <div class="kpi"><div class="t">健康常客池 · C</div><div class="v">${counts.C||0}</div><div class="s">节奏正常对照组</div></div>`;
-  await loadCases();
+  /* 案例池由 scheduleCases() 后台预取，不阻塞首屏 */
 }
 
 // ---------------- KPIs (OPT-04: auto-filled on page load) ----------------
@@ -660,7 +677,9 @@ function renderKpis(lc){
 
 // ---------------- actions / funnel / budget ----------------
 async function loadActions(){
-  const [a,sum]=await Promise.all([j('/api/actions?limit=500'),j('/api/summary')]);
+  // 漏斗只依赖 summary；actions 明细本页不渲染，保留接口但改为非阻塞后台调用
+  j('/api/actions?limit=1').catch(()=>{});
+  const sum=await j('/api/summary');
   const c=sum.review.counts||{};
   const max=Math.max(1,...Object.values(c).map(v=>v||0));
   document.getElementById('funnel').innerHTML='<div class="funnel">'+
@@ -670,7 +689,9 @@ async function loadActions(){
     }).join('')+'</div>';
 }
 async function loadBudget(){
-  const b=await j('/api/budget?coupons=350&face=44');
+  let b;
+  try{b=await j('/api/budget?coupons=350&face=44');}
+  catch(e){document.getElementById('budgetbox').innerHTML='<div class="hintbar">预算数据加载失败</div>';return;}
   document.getElementById('budgetbox').innerHTML=
    `<div class="budget-big">${b.coverage}%</div>
     <div class="hintbar" style="margin-top:6px">本周预算覆盖</div>
@@ -683,15 +704,37 @@ async function loadBudget(){
 }
 
 // ---------------- demo cases + timeline (OPT-01 order comes from backend, unchanged) ----------------
-async function loadCases(){
-  const all=await j('/api/lifecycle/cases');
-  CASE_CIDS={A:all.A||[],B:all.B||[],C:all.C||[]};
-  const hint=document.getElementById('casehint');
-  if(!hint.dataset.g)hint.dataset.g='A';
-  document.querySelectorAll('[data-cg]').forEach(b=>b.classList.toggle('primary',b.dataset.cg==='A'));
-  renderCaseList();
-  const first=(CASE_CIDS.A||[])[0];
-  if(first&&!document.getElementById('timeline').innerHTML.trim())showTimeline(first.customer_id);
+function caseLoading(msg){
+  const el=document.getElementById('caselist');
+  if(el)el.innerHTML='<div class="hintbar">'+msg+'</div>';
+}
+function scheduleCases(){
+  if(CASES_STATE==='ready'||CASE_LOADING)return;
+  loadCases().catch(()=>{});
+}
+async function loadCases(force){
+  if(CASE_LOADING)return CASE_LOADING;
+  if(CASES_STATE==='ready'&&!force)return;
+  CASES_STATE='loading';
+  caseLoading('正在加载案例（首次可能需要几秒）…');
+  CASE_LOADING=(async()=>{
+    // 只取每组前 8 位：页面只渲染 8 行，避免拉取 800KB 全量池
+    const all=await j('/api/lifecycle/cases?limit=8');
+    CASE_CIDS={A:all.A||[],B:all.B||[],C:all.C||[]};
+    CASES_STATE='ready';
+    const hint=document.getElementById('casehint');
+    if(!hint.dataset.g)hint.dataset.g='A';
+    document.querySelectorAll('[data-cg]').forEach(b=>b.classList.toggle('primary',b.dataset.cg==='A'));
+    renderCaseList();
+    const first=(CASE_CIDS.A||[])[0];
+    if(first&&!document.getElementById('timeline').innerHTML.trim())showTimeline(first.customer_id);
+  })();
+  try{
+    await CASE_LOADING;
+  }catch(e){
+    CASES_STATE='error';
+    caseLoading('案例加载失败：'+esc(e.message)+' <button class="btn small" onclick="scheduleCases()">重试</button>');
+  }finally{CASE_LOADING=null;}
 }
 function caseRow(c,idx){
   const st=c.state,p=ST[st]||['p-active',st];
@@ -704,14 +747,15 @@ function renderCaseList(){
   const cont=document.getElementById('caselist');
   const g=document.getElementById('casehint').dataset.g||'A';
   const list=CASE_CIDS[g]||[];
+  const total=CASE_COUNTS[g]||list.length;
   cont.innerHTML=list.length?
-    '<div class="muted" style="margin-bottom:6px">共 '+list.length+' 位 · 显示前 8</div>'+
+    '<div class="muted" style="margin-bottom:6px">共 '+total+' 位 · 显示前 8</div>'+
     '<div class="timeline">'+list.slice(0,8).map(caseRow).join('')+'</div>'
     :'<div class="hintbar">正在加载案例…</div>';
   applyViewFilters('cases');
 }
 async function loadCase(g){
-  if(!(CASE_CIDS[g]||[]).length)await loadCases();
+  if(CASES_STATE!=='ready')await loadCases();
   document.getElementById('casehint').dataset.g=g;
   document.getElementById('casehint').textContent = g==='A'?'全链路回流：进店→消费→沉寂→预警→回到活跃':
     (g==='B'?'流失预警：沉寂中、值得激励':'健康常客：节奏正常对照组');
@@ -722,7 +766,11 @@ async function loadCase(g){
 }
 async function showTimeline(cid){
   document.getElementById('tlsub').textContent=cid;
-  const tl=await j('/api/lifecycle/customers/'+encodeURIComponent(cid)+'/timeline');
+  const box=document.getElementById('timeline');
+  box.innerHTML='<div class="hintbar">正在加载该客户状态时间轴…</div>';
+  let tl;
+  try{tl=await j('/api/lifecycle/customers/'+encodeURIComponent(cid)+'/timeline');}
+  catch(e){box.innerHTML='<div class="hintbar">时间轴加载失败：'+esc(e.message)+'</div>';return;}
   const trs=tl.transitions||[];
   let h=`<div class="segment">当前状态：<span class="pill ${ST[tl.state]?ST[tl.state][0]:''}">${ST[tl.state]?ST[tl.state][1]:tl.state}</span>
      <span class="muted"> · 静默 ${tl.silence_days!=null?tl.silence_days+' 天':'—'} · 基线 ${tl.median_gap_days!=null?tl.median_gap_days+' 天':'—'}</span></div>`;
