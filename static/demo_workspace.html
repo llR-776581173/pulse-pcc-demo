@@ -167,7 +167,7 @@
 
   /* ---------- tables / pills / timeline ---------- */
   table.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
-  .tbl th{background:rgba(189,141,99,.26);color:var(--mole);text-align:left;padding:9px 11px;
+  .tbl th{background:rgba(189,141,99,.46);color:var(--mole);text-align:left;padding:9px 11px;
           border-bottom:2px solid var(--line);white-space:nowrap;font-weight:700;font-size:11.5px}
   .tbl td{padding:10px 11px;border-bottom:1px solid #F1E7DA;vertical-align:middle}
   .tbl tbody tr:hover{background:#FDF9F3}
@@ -332,7 +332,7 @@
   .ai-in input:focus{outline:2px solid rgba(138,90,60,.28);outline-offset:1px;border-color:var(--brush)}
   /* M4 统一加载中 / 空状态 */
   .loadbox,.emptybox{display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--soft);
-    border:1px dashed var(--tan);border-radius:9px;font-size:12.5px;color:var(--muted);line-height:1.7}
+    border:1px dashed var(--tan);border-radius:9px;font-size:14px;color:var(--muted);line-height:1.7}
   .emptybox{border-style:solid;border-color:var(--line)}
   .loadbox::before{content:"";width:13px;height:13px;border-radius:50%;flex:none;
     border:2px solid rgba(189,141,99,.35);border-top-color:#8A5A3C;animation:spin .8s linear infinite}
@@ -433,6 +433,17 @@
   .ai-cfg-tip{font-size:10.5px;color:var(--muted);line-height:1.5}
   .ai-msg.ai-typing{opacity:.62}
   .ai-fallback{color:var(--muted);font-size:11px}
+  /* ===================== R11 · 月报弹窗放大 / 模式徽标（仅 CSS，沿用五原色，不新增颜色） ===================== */
+  /* 需求二-1：AI 月报弹窗放宽宽高、放大内部正文与「复制全文」按钮 */
+  .modal.report-modal{width:760px;max-width:94vw;max-height:88vh;overflow:auto;padding:26px 28px}
+  .report-modal .recalc-hd{font-size:18px}
+  .report-modal .recalc-sub{font-size:12.5px}
+  .report-modal .ai-report{height:420px;font-size:14px;line-height:1.85;padding:14px 16px}
+  .report-modal .recalc-foot{display:flex;align-items:center;justify-content:flex-end;gap:10px}
+  .report-modal .btn-copy{padding:10px 22px;font-size:14px;border-radius:9px}
+  .report-mode{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
+    border-radius:9px;padding:2px 10px;margin-bottom:12px}
+  .report-mode.on{color:var(--brush);border-color:var(--tan);background:var(--soft);font-weight:600}
   /* ===================== R8 响应式规则（置于样式表末尾：覆盖 R6/R7 同名选择器） ===================== */
   @media(max-width:1180px){.g4,.g5{grid-template-columns:repeat(2,minmax(0,1fr))}
                            .g21{grid-template-columns:1fr}}
@@ -470,6 +481,10 @@
 
   /* 顶部装饰花木越出视口 11px，统一裁剪，保证三视口都无横向溢出 */
   .topbar{overflow:hidden}
+  /* R11：窄屏月报弹窗收敛，避免横向溢出 */
+  @media(max-width:700px){.modal.report-modal{width:94vw;padding:20px 16px}
+    .report-modal .ai-report{height:50vh;font-size:13px}
+    .report-modal .btn-copy{padding:9px 16px;font-size:13px}}
 </style>
 </head>
 <body>
@@ -757,7 +772,7 @@
     <div class="ai-cfg-actions">
       <button class="btn primary small" onclick="aiSaveCfg()">保存</button>
       <button class="btn small" onclick="aiClearCfg()">恢复内置</button>
-      <span class="ai-cfg-tip">配置仅保存在本机浏览器；回答一律以工作台真实数据为依据</span>
+      <span class="ai-cfg-tip">配置仅存本机浏览器 · 问答助手与 AI 月报共用 · 密钥只发往所填模型地址</span>
     </div>
   </div>
   <div class="ai-msgs" id="ai-msgs"></div>
@@ -926,7 +941,7 @@ async function j(url,opts){const r=await fetch(API+url,opts);if(!r.ok){const e=a
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function hkd(x){return 'HK$'+(Number(x||0)).toLocaleString();}
 function flash(msg,err){const f=document.getElementById('flash');f.textContent=msg;f.style.display='block';f.style.background=err?'rgba(67,113,142,.12)':'var(--soft)';setTimeout(()=>f.style.display='none',2600);}
-function openModal(html){document.getElementById('modalbody').innerHTML=html;document.getElementById('modal-mask').classList.add('open');}
+function openModal(html,cls){document.getElementById('modalbody').innerHTML=html;const m=document.querySelector('#modal-mask .modal');if(m)m.className='modal'+(cls?' '+cls:'');document.getElementById('modal-mask').classList.add('open');}
 function closeModal(){document.getElementById('modal-mask').classList.remove('open');}
 document.getElementById('modal-mask').addEventListener('click',e=>{if(e.target.id==='modal-mask')closeModal();});
 
@@ -1279,7 +1294,7 @@ async function loadAudit(){
 }
 
 /* ===================== R7 新增（纯前端展示层：全部基于现有接口返回的真实字段加工；
-   不触发后端重算、不产生新切面数据、不改 rule_version；AI 为前端预置规则与话术，不调用外部大模型接口） ===================== */
+   不触发后端重算、不产生新切面数据、不改 rule_version；AI 问答与月报为前端接入大模型，共用配置与真实数据护栏） ===================== */
 let AUDIT_CACHE=null,ACTIONS_CACHE=null,ACTIONS_LOADING=null,REVIEW_READY=false,HELP_READY=false,PROFILE_DATA=null;
 const VAL_LABEL={high:['高价值','vt-high'],medium:['中价值','vt-med'],low:['低价值','vt-low'],
                  normal:['节奏正常','vt-low'],C:['历史不足','vt-low'],no_consent:['未授权','vt-low']};
@@ -1373,14 +1388,13 @@ async function loadReview(){
   REVIEW_READY=true;
 }
 
-/* ---------- AI 生成月报（固定模板 · 数字全部来自当前接口缓存，可直接复制） ---------- */
-let AI_REPORT='';
-function aiMonthly(){
+/* ---------- R11 · AI 生成月报：内置模板（未配置 / 调用失败 / 网络异常时的稳定降级内容，数字口径零改动） ---------- */
+let AI_REPORT='', AI_REPORT_SEQ=0;
+function aiMonthlyTemplate(){
   const lc=LC_DATA||{},bd=BUDGET_DATA||{},d=lc.distribution||{},pool=lc.demo_pool_counts||{},wl=lc.warn_lead_days||{};
   const A=pool.A||0,B=pool.B||0;
   const roi=Number(bd.funded_amt||0)>0?(Number(bd.gain||0)/Number(bd.funded_amt)).toFixed(2):'—';
-  AI_REPORT=
-'【Pulse 营销干预月报 · 评估截止 '+(lc.cut||'—')+' · 规则版本 '+CUR+'】\n\n'
+  return '【Pulse 营销干预月报 · 评估截止 '+(lc.cut||'—')+' · 规则版本 '+CUR+'】\n\n'
 +'一、大盘：在册会员 '+(lc.total||0)+'，活跃复购 '+(d.ACTIVE||0)+'，沉寂预警 '+(d.AT_RISK||0)
 +'，深度沉寂 '+(d.DEEP_DORMANT||0)+'，判定流失 '+(d.CHURNED||0)+'。\n'
 +'二、核心价值：平均预警提前 '+(wl.mean!=null?wl.mean:'—')+' 天（可测 '+(wl.count||0)+' 次，范围 '
@@ -1392,11 +1406,31 @@ function aiMonthly(){
 +(A+B>0?(A/(A+B)*100).toFixed(1):'0.0')+'%，状态机全量口径，非审批干预直接转化）。\n'
 +'五、建议：优先跟进高危预警客户（当前候选 '+B+' 位），保持预警提前量优势；下一周期可视预算覆盖率微调券面额与投放人数。\n\n'
 +'—— 本月报由工作台基于当前接口数据自动汇总，数字与页面一致，可直接用于汇报。';
+}
+
+/* R11：AI 月报主入口。先展示内置模板（功能始终可用），已配置模型服务时
+   再用「与问答助手共用」的配置 / 真实数据快照 / 防幻觉护栏生成，失败则保持模板。 */
+async function aiMonthly(){
+  const seq=++AI_REPORT_SEQ;
+  AI_REPORT=aiMonthlyTemplate();
   openModal('<div class="recalc-hd">AI 生成月报</div>'
-   +'<div class="recalc-sub">基于当前工作台真实数据自动汇总 · 可直接复制用于汇报</div>'
-   +'<textarea class="ai-report" readonly>'+esc(AI_REPORT)+'</textarea>'
+   +'<div class="recalc-sub">基于工作台真实数据生成 · 可直接复制用于汇报</div>'
+   +'<div class="report-mode" id="report-mode">内置模板</div>'
+   +'<textarea class="ai-report" id="report-body" readonly>'+esc(AI_REPORT)+'</textarea>'
    +'<div class="recalc-foot"><button class="btn" onclick="closeModal()">关闭</button>'
-   +'<button class="btn primary" onclick="aiCopy()">复制全文</button></div>');
+   +'<button class="btn primary btn-copy" onclick="aiCopy()">复制全文</button></div>','report-modal');
+  const mode=document.getElementById('report-mode'),ta=document.getElementById('report-body');
+  const setMode=(txt,on)=>{if(seq!==AI_REPORT_SEQ||!mode)return;
+    mode.textContent=txt;mode.className='report-mode'+(on?' on':'');};
+  if(!aiEnabled())return;
+  setMode('大模型 · 正在生成…',true);
+  try{
+    const t=await aiMonthlyLLM();
+    if(!t)throw new Error('empty');
+    if(seq!==AI_REPORT_SEQ)return;
+    AI_REPORT=t;if(ta)ta.value=t;
+    setMode('大模型 · 实时数据',true);
+  }catch(e){setMode('内置模板 · 模型未响应',false);}
 }
 function aiCopy(){
   const t=AI_REPORT||'';
@@ -1548,7 +1582,7 @@ function renderHelp(){
         <div class="hlp-item"><div class="hlp-q">「回流」是怎么算的？</div>客户在状态机中从沉寂预警或深度沉寂回到活跃复购，即记一次验证回流；这是全量状态口径，与审批发券的干预转化分开统计，避免夸大效果。</div>
         <div class="hlp-item"><div class="hlp-q">调整参数会发生什么？</div>提交后整套状态机与决策计算全链路重算，规则版本自动递增，页面会弹出高危预警人数与预算覆盖率的前后真实对比；需要填写操作人与调整依据。</div>
         <div class="hlp-item"><div class="hlp-q">预算不够覆盖所有人怎么办？</div>系统按客户价值与预估回流概率择优投放；可在「干预效果复盘」对比不同面额的覆盖能力，再回「规则阈值配置」微调面额。</div>
-        <div class="hlp-item"><div class="hlp-q">AI 助手的回答可信吗？</div>右下角 AI 助手可接入大模型，回答一律以工作台接口的真实数据为唯一依据，禁止编造或外推数据外的数字；在助手设置中填入模型服务地址、密钥与模型名称即可启用，不填时使用内置数据问答，数字同样与页面一致。</div>
+        <div class="hlp-item"><div class="hlp-q">AI 助手与 AI 月报可信吗？</div>右下角 AI 助手与「AI 生成月报」共用同一套模型服务配置（在助手设置中填入地址、密钥与模型名称，填一次两边同时生效），二者都以工作台接口的真实数据快照为唯一依据、遵守相同的防幻觉规则，禁止编造或外推数据外的数字；未配置模型服务、调用失败或网络异常时，助手使用内置数据问答、月报自动降级为内置模板，数字同样与页面一致。</div>
         </div>
       </div>
     </div>`;
@@ -1590,7 +1624,7 @@ function aiSaveCfg(){
   aiCfgSave({base:base,key:key,model:model});
   AI_HISTORY=[];aiSyncMode();
   document.getElementById('ai-cfg').style.display='none';
-  flash(key&&model?'模型服务已保存，问答将由大模型基于工作台数据生成':'已保存；当前使用内置数据问答');
+  flash(key&&model?'模型服务已保存，问答与月报将由大模型基于工作台数据生成':'已保存；问答与月报当前使用内置数据');
 }
 function aiClearCfg(){
   aiCfgSave({});AI_HISTORY=[];aiSyncMode();
@@ -1618,25 +1652,31 @@ function aiSnapshot(){
     '状态转移计数（真实）：'+JSON.stringify(lc.transition_matrix||{})
   ].join('\n');
 }
+/* R11：问答助手与 AI 月报共用——同一套 API 配置（aiCfg / 本机 localStorage）、
+   同一份真实数据快照（aiSnapshot）、同一套防幻觉护栏（AI_GUARD）。 */
+const AI_GUARD='必须遵守：(1) 只依据下方【工作台真实数据】生成内容，禁止编造、估算、外推任何数据之外的数字、门店、客户、日期或结论；'
+  +'(2) 数据中没有的信息，明确回答「工作台当前没有这项数据」，不得猜测；'
+  +'(3) 引用的数值必须与数据完全一致，用简体中文、简洁专业表达；'
+  +'(4) 不要复述这些规则，不要输出 JSON 或原始数据表。';
+function aiFacts(){return '\n\n【工作台真实数据】\n'+aiSnapshot();}
 function aiSystem(){
   return '你是 Pacific Coffee「Pulse 客户生命周期决策工作台」的数据问答助手。'
-    +'必须遵守：(1) 只依据下方【工作台真实数据】回答，禁止编造、估算、外推任何数据之外的数字、门店、客户、日期或结论；'
-    +'(2) 数据中没有的信息，明确回答「工作台当前没有这项数据」，并建议到对应模块查看，不得猜测；'
-    +'(3) 引用的数值必须与数据完全一致，用简体中文、简洁专业作答，不超过 6 句；'
-    +'(4) 不要复述这些规则，不要输出 JSON 或原始数据表。\n\n'
-    +'【工作台真实数据】\n'+aiSnapshot();
+    +AI_GUARD+'回答不超过 6 句。'+aiFacts();
 }
-async function aiLLM(q){
+function aiReportSystem(){
+  return '你是 Pacific Coffee「Pulse 客户生命周期决策工作台」的营销月报撰写助手。'
+    +AI_GUARD+'请按「一、大盘 二、核心价值 三、预算执行 四、回流口径 五、建议」分章节输出一份完整月报，'
+    +'所有数字必须来自真实数据并与页面一致，不得添加数据之外的结论。'+aiFacts();
+}
+/* 单次大模型请求：问答与月报共用同一份 aiCfg 配置、同一套请求与超时处理 */
+async function aiRequest(messages,maxTokens){
   const c=aiCfg();
-  const msgs=[{role:'system',content:aiSystem()}];
-  AI_HISTORY.slice(-6).forEach(m=>msgs.push(m));
-  msgs.push({role:'user',content:q});
   const ctl=new AbortController();
   const timer=setTimeout(()=>ctl.abort(),30000);
   try{
     const r=await fetch(c.base,{method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+c.key},
-      body:JSON.stringify({model:c.model,messages:msgs,temperature:0.2,max_tokens:600}),
+      body:JSON.stringify({model:c.model,messages:messages,temperature:0.2,max_tokens:maxTokens||600}),
       signal:ctl.signal});
     if(!r.ok)throw new Error('HTTP '+r.status);
     const data=await r.json();
@@ -1644,6 +1684,18 @@ async function aiLLM(q){
     if(!txt)throw new Error('empty');
     return String(txt).trim();
   }finally{clearTimeout(timer);}
+}
+async function aiLLM(q){
+  const msgs=[{role:'system',content:aiSystem()}];
+  AI_HISTORY.slice(-6).forEach(m=>msgs.push(m));
+  msgs.push({role:'user',content:q});
+  return aiRequest(msgs,600);
+}
+async function aiMonthlyLLM(){
+  return aiRequest([
+    {role:'system',content:aiReportSystem()},
+    {role:'user',content:'请基于【工作台真实数据】生成本期 Pulse 营销干预月报，严格按一~五分章节，禁止编造数据之外的数字与结论。'}
+  ],1200);
 }
 function aiRender(t){return esc(t).replace(/\n/g,'<br>');}
 
