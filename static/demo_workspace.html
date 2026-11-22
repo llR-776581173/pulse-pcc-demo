@@ -508,7 +508,7 @@
           <select data-f="date"><option value="all">当前评估周期</option><option value="d30">近 30 天窗口</option><option value="d90">近 90 天窗口</option></select>
         </label>
         <label>客户分组
-          <select data-f="group"><option value="all">全部状态</option><option value="active">活跃复购</option><option value="risk">沉寂预警</option><option value="deep">深度沉寂</option><option value="churn">判定流失</option><option value="first">首购激活</option><option value="new">进店未消费</option></select>
+          <select data-f="group"><option value="all">全部状态</option><option value="new">进店未消费</option><option value="first">首购激活</option><option value="active">活跃复购</option><option value="risk">沉寂预警</option><option value="deep">深度沉寂</option><option value="churn">判定流失</option></select>
         </label>
         <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块 · <span id="ovwindow">当前评估周期</span></span>
       </div>
@@ -744,7 +744,8 @@ const ST = {NEW_UNPURCHASED:['p-new','进店未消费'],FIRST_PURCHASE:['p-first
             DEEP_DORMANT:['p-deep','深度沉寂'],CHURNED:['p-churn','判定流失']};
 const EXITS={high:['高价值','#43718E'],medium:['中价值','#8A5A3C'],low:['低价值·不花','#BD8D63'],
              normal:['节奏正常·不花','rgba(189,141,99,.62)'],C:['历史不足','#E7CFB8'],no_consent:['无同意·拦截','#43718E']};
-const STATE_ORDER=['ACTIVE','AT_RISK','DEEP_DORMANT','FIRST_PURCHASE','CHURNED','NEW_UNPURCHASED'];
+/* 完整客户生命周期顺序：从健康到流失递进；环形图色块 / 右侧列表 / 底部图例共用此序 */
+const STATE_ORDER=['NEW_UNPURCHASED','FIRST_PURCHASE','ACTIVE','AT_RISK','DEEP_DORMANT','CHURNED'];
 /* H1 色系统一：健康/正常类 = 棕系明度阶梯(#8A5A3C→#BD8D63→#E7CFB8)；
    风险类(预警/深度沉寂/判定流失) = 灰蓝系明度阶梯(#43718E→#38536B→#2C4356)，无纯黑色块 */
 const STATE_COLOR={ACTIVE:'#8A5A3C',AT_RISK:'#43718E',DEEP_DORMANT:'#38536B',

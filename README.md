@@ -222,6 +222,17 @@ python pulse_app.py 8100  # 或 Windows 双击 run.bat；macOS/Linux 执行 bash
 
 验收：真实浏览器 Edge headless 三视口 **101/101 PASS**（桌面 30 / 平板 34 / 手机 37）；全套回归 `18/18 · 21/21 · 5/5 · 40/40 ALL GREEN`；`00` 与 `selftest.py` 锁定零改动、主仓库 `v1.0 / log=0`。详见 `demo/docs/17_Round8_帮助页高度与响应式适配验收报告.md`。
 
+## R9 · 六状态大盘按完整生命周期排序（当前版本）
+
+只改 `static/demo_workspace.html` 的 2 处前端展示，后端 / 接口 / 数据 / 数据口径 / `00` 基准 / selftest 基线零改动：
+
+- `STATE_ORDER` 统一为 `NEW_UNPURCHASED → FIRST_PURCHASE → ACTIVE → AT_RISK → DEEP_DORMANT → CHURNED`（进店未消费 → 首购激活 → 活跃复购 → 沉寂预警 → 深度沉寂 → 判定流失），**一处常量同时驱动**环形图 `conic-gradient` 色块、右侧列表、底部图例三处渲染。
+- 「客户分组」下拉选项显示顺序同步统一，value 集合 `all,new,first,active,risk,deep,churn` 完全不变，筛选联动零影响。
+- **`STATE_COLOR` 配色零改动**：顺序调整后自然形成「浅奶杏 → 榻榻米棕 → 深木棕（健康递进）→ 灰蓝 → 深灰蓝 → 更深灰蓝（风险递进）」，未新增任何颜色。状态转移矩阵表头本就是同一顺序。
+- 数值不错位：284 / 733 / 3284 / 1320 / 295 / 84，合计 6000 = 在册会员。
+
+验收：真实浏览器 Edge headless 三视口 **78/78 PASS**（桌面 26 / 平板 26 / 手机 26）；全套回归 `18/18 · 21/21 · 5/5 · 40/40 ALL GREEN`；`00` 与 `selftest.py` 锁定零改动、主仓库 `v1.0 / log=0`。详见 `demo/docs/18_Round9_六状态生命周期排序验收报告.md`。
+
 ### 启动（不变）
 
 ```bash
