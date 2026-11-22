@@ -394,6 +394,45 @@
   .ai-in{display:flex;gap:8px;padding:11px 13px;border-top:1px solid var(--line);background:var(--soft)}
   .ai-in input{flex:1;border:1px solid var(--tan);border-radius:8px;padding:8px 11px;
     font-size:12.5px;background:#FFFFFF;min-width:0}
+  /* ===================== R10 · UI 质感打磨 / 状态条两列 / AI 面板扩展（仅 CSS，沿用五原色；@media 仍置于其后） ===================== */
+  /* 需求三：客户状态大盘右侧状态条 = 两列纵向排列（列优先填充，前 3 项左列 / 后 3 项右列）。
+     仅改排版：色值、数据、环形图顺序、STATE_ORDER 全部不变。 */
+  .state-grid{grid-auto-flow:column;grid-template-rows:repeat(3,minmax(0,1fr))}
+  /* 需求四：卡片间距 / 圆角 / 分层阴影 / 文字层级 / 交互反馈（不新增颜色） */
+  .card,.kpi,.filterbar{border-radius:16px}
+  .card{box-shadow:0 3px 14px rgba(58,46,45,.07)}
+  .card:hover{box-shadow:0 8px 24px rgba(58,46,45,.12)}
+  .kpi{box-shadow:0 3px 14px rgba(58,46,45,.06)}
+  .kpi:hover{box-shadow:0 8px 24px rgba(58,46,45,.11)}
+  .card > h3{font-size:14px;font-weight:700;letter-spacing:.2px}
+  .kpi .t{font-weight:600;letter-spacing:.2px}
+  .kpi .v{letter-spacing:-.8px}
+  .grid{gap:14px}
+  .btn,.filterbar select,.nav-item,.ai-chips button,.srow,.ai-gear{
+    transition:background .18s,border-color .18s,box-shadow .18s,color .18s,transform .18s}
+  .btn:hover{box-shadow:0 3px 10px rgba(58,46,45,.10)}
+  .filterbar select:hover{border-color:var(--brush)}
+  .btn:focus-visible,.filterbar select:focus-visible,.nav-item:focus-visible,
+  .ai-in input:focus-visible,.ai-chips button:focus-visible,.ai-gear:focus-visible{
+    outline:2px solid var(--tan);outline-offset:2px}
+  .legend{row-gap:7px}
+  /* AI 面板：模式徽标 / 设置按钮 / 配置区 / 思考态 / 降级提示 */
+  .ai-hd .ai-mode{font-size:10.5px;color:var(--muted);border:1px solid var(--line);
+    border-radius:9px;padding:1px 8px;white-space:nowrap}
+  .ai-hd .ai-mode.on{color:var(--brush);border-color:var(--tan);background:var(--soft);font-weight:600}
+  .ai-gear{margin-left:auto;border:1px solid var(--line);background:#FFFDF9;color:var(--mole);
+    border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer;flex:none;line-height:1.4}
+  .ai-gear:hover{border-color:var(--tan);background:var(--soft)}
+  .ai-hd .ai-x{margin-left:0}
+  .ai-cfg{padding:11px 13px;border-bottom:1px solid var(--line);background:var(--soft)}
+  .ai-cfg label{display:block;font-size:11px;color:var(--muted);margin:0 0 8px}
+  .ai-cfg label input{display:block;width:100%;margin-top:4px;border:1px solid var(--tan);
+    border-radius:7px;padding:7px 9px;font-size:12px;background:#FFFFFF;color:var(--ink);min-width:0}
+  .ai-cfg label input:focus{outline:2px solid rgba(138,90,60,.28);border-color:var(--brush)}
+  .ai-cfg-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ai-cfg-tip{font-size:10.5px;color:var(--muted);line-height:1.5}
+  .ai-msg.ai-typing{opacity:.62}
+  .ai-fallback{color:var(--muted);font-size:11px}
   /* ===================== R8 响应式规则（置于样式表末尾：覆盖 R6/R7 同名选择器） ===================== */
   @media(max-width:1180px){.g4,.g5{grid-template-columns:repeat(2,minmax(0,1fr))}
                            .g21{grid-template-columns:1fr}}
@@ -487,10 +526,10 @@
       <g fill="#BD8D63"><ellipse cx="50" cy="24" rx="8" ry="19"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(60 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(120 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(180 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(240 50 50)"/><ellipse cx="50" cy="24" rx="8" ry="19" transform="rotate(300 50 50)"/></g>
       <circle cx="50" cy="50" r="10" fill="#8A5A3C"/>
     </svg>
-    <div class="crumb"><span id="crumb">营销总览</span><small id="viewdesc">大盘核心数字 · 客户状态 · 预警汇总</small></div>
+    <div class="crumb"><span id="crumb">营销总览</span></div>
     <div class="env">
       <span class="chip">评估截止 <b id="cut">…</b></span>
-      <span class="chip">规则版本 <b id="rver">…</b></span>
+      <b id="rver" hidden>…</b>
     </div>
   </header>
 
@@ -510,15 +549,14 @@
         <label>客户分组
           <select data-f="group"><option value="all">全部状态</option><option value="new">进店未消费</option><option value="first">首购激活</option><option value="active">活跃复购</option><option value="risk">沉寂预警</option><option value="deep">深度沉寂</option><option value="churn">判定流失</option></select>
         </label>
-        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块 · <span id="ovwindow">当前评估周期</span></span>
+        <b id="ovwindow" hidden>当前评估周期</b>
       </div>
 
       <div class="grid g5" id="kpis"></div>
 
       <div class="grid g21">
         <div class="card">
-          <div class="eyebrow">汇总图表 / 01</div>
-          <h3>客户状态大盘 <span class="hint">六状态 · 每客一行</span></h3>
+          <h3>客户状态大盘</h3>
           <div class="ring-wrap">
             <div id="distbar"></div>
             <div id="distlist" class="state-grid"></div>
@@ -526,21 +564,18 @@
           <div class="legend" id="distlegend"></div>
         </div>
         <div class="card">
-          <div class="eyebrow">汇总图表 / 02</div>
-          <h3>预警提前量 <span class="hint">观察窗内 · 状态迁移</span></h3>
+          <h3>预警提前量</h3>
           <div id="leadcard" class="scroll-x"></div>
         </div>
       </div>
 
       <div class="grid g2">
         <div class="card">
-          <div class="eyebrow">汇总图表 / 03</div>
-          <h3>状态转移矩阵 <span class="hint">合法转移 · 计数</span></h3>
+          <h3>状态转移矩阵</h3>
           <div id="matrix" class="matrix scroll-x"></div>
         </div>
         <div class="card">
-          <div class="eyebrow">汇总图表 / 04</div>
-          <h3>六出口漏斗与预算 <span class="hint">决策分流口径</span></h3>
+          <h3>六出口漏斗与预算</h3>
           <div class="grid g2" style="gap:14px;margin-bottom:0">
             <div id="funnel" class="scroll-x"></div>
             <div id="budgetbox" class="scroll-x"></div>
@@ -562,15 +597,14 @@
         <label class="fx"><input type="checkbox" data-fx="high">仅显示高价值客户</label>
         <label class="fx"><input type="checkbox" data-fx="channel">仅显示有可干预渠道（手机号 / 会员）</label>
         <label class="fx"><input type="checkbox" data-fx="warn30">仅显示 30 天内触发预警</label>
-        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块</span>
+        
       </div>
 
       <div class="mini" id="casekpis"></div>
 
       <div class="grid g2">
         <div class="card">
-          <div class="eyebrow">明细列表 / 01</div>
-          <h3>客户分层清单 <span class="hint">按场景切换</span></h3>
+          <h3>客户分层清单</h3>
           <div class="seg">
             <button class="btn" data-cg="A" onclick="loadCase('A')">已回流验证客户</button>
             <button class="btn" data-cg="B" onclick="loadCase('B')">高危预警客户</button>
@@ -580,8 +614,7 @@
           <div id="caselist" class="scroll-x"></div>
         </div>
         <div class="card">
-          <div class="eyebrow">明细列表 / 02</div>
-          <h3>单客户状态时间轴 <span class="hint" id="tlsub">选择客户</span></h3>
+          <h3>单客户状态时间轴 <span class="hint" id="tlsub"></span></h3>
           <div id="timeline"></div>
         </div>
       </div>
@@ -597,14 +630,13 @@
         <label>决策分组
           <select data-f="group"><option value="all">全部决策</option><option value="approved">已批准</option><option value="nofund">不花钱</option></select>
         </label>
-        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块</span>
+        
       </div>
 
       <div class="mini four" id="auditsum"></div>
 
       <div class="card">
-        <div class="eyebrow">明细列表 / 03</div>
-        <h3>审批与操作记录 <span class="hint">页载自动加载</span></h3>
+        <h3>审批与操作记录</h3>
         <div style="margin-bottom:12px"><button class="btn small" onclick="loadAudit()">刷新</button></div>
         <div id="audit" class="scroll-x"></div>
       </div>
@@ -620,14 +652,13 @@
         <label>参数分组
           <select data-f="group"><option value="all">全部参数</option><option value="warn">预警参数</option><option value="silent">沉寂参数</option><option value="recall">回流与预算</option></select>
         </label>
-        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块</span>
+        
       </div>
 
       <div class="mini" id="cfgkpis"></div>
 
       <div class="card">
-        <div class="eyebrow">参数明细 / 04</div>
-        <h3>规则与预算控制面板 <span class="hint">任一改动 → 全链路重新计算</span></h3>
+        <h3>规则与预算控制面板</h3>
         <div id="configform"></div>
         <div class="cfg-actions">
           <span class="param" style="background:transparent;border:none;padding:0">操作人 <input id="cfg-approver" placeholder="姓名" style="width:132px"></span>
@@ -649,44 +680,38 @@
         <label>客户价值维度
           <select data-f="group"><option value="all">全部维度</option><option value="high">高价值</option><option value="medium">中价值</option><option value="low">低价值</option></select>
         </label>
-        <span class="scope">筛选仅作用于 <b>当前视图</b>，不影响其他模块</span>
+        
       </div>
 
       <div class="mini four" id="revkpis"></div>
 
       <div class="grid g21">
         <div class="card">
-          <div class="eyebrow">复盘分析 / 01</div>
-          <h3>分门店效果排行 <span class="hint">干预候选 · 平均预估回流概率</span></h3>
+          <h3>分门店效果排行</h3>
           <div id="revstore" class="scroll-x"></div>
         </div>
         <div class="card">
-          <div class="eyebrow">复盘分析 / 02</div>
-          <h3>客户价值维度 <span class="hint">候选分布 · 预估回流概率</span></h3>
+          <h3>客户价值维度</h3>
           <div id="revval" class="scroll-x"></div>
         </div>
       </div>
 
       <div class="grid g2">
         <div class="card">
-          <div class="eyebrow">复盘分析 / 03</div>
-          <h3>面额券效果对比 <span class="hint">同投放张数 · 三档面额</span></h3>
+          <h3>面额券效果对比</h3>
           <div id="revface" class="scroll-x"></div>
         </div>
         <div class="card">
-          <div class="eyebrow">复盘分析 / 04</div>
-          <h3>审批月度趋势 <span class="hint">按批准时间聚合</span></h3>
+          <h3>审批月度趋势</h3>
           <div id="revtrend" class="scroll-x"></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="eyebrow">复盘分析 / 05</div>
-        <h3>投入产出与总结 <span class="hint">基于当前评估周期</span></h3>
+        <h3>投入产出与总结</h3>
         <div id="revsum" class="scroll-x"></div>
         <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <button class="btn primary" onclick="aiMonthly()">AI 生成月报</button>
-          <span class="muted" style="font-size:11.5px">基于当前工作台真实数据自动汇总，可一键复制用于汇报</span>
         </div>
       </div>
     </section>
@@ -695,7 +720,7 @@
     <section class="view" data-view="profile">
       <div class="filterbar" data-view="profile">
         <span class="fbt">画像入口</span>
-        <span class="scope">在「流失预警客户池」点客户行的 <b>时间轴 / 画像</b> 按钮，本页自动生成该客户全景画像</span>
+        
       </div>
       <div id="profilebody" class="scroll-x"></div>
     </section>
@@ -704,7 +729,7 @@
     <section class="view" data-view="help">
       <div class="filterbar" data-view="help">
         <span class="fbt">帮助中心</span>
-        <span class="scope">全部指标口径 · 参数说明 · 数据规则集中在此页，核对口径不必再翻全站</span>
+        
       </div>
       <div id="helpbody"></div>
     </section>
@@ -712,14 +737,29 @@
   </div>
 </div>
 
-<!-- ---------- R7 · AI 智能问答助手（演示级：前端预置问答与规则，不调用外部大模型接口） ---------- -->
+<!-- ---------- R10 · AI 智能问答助手（可接入大模型；回答严格基于工作台真实数据，无配置时用内置数据问答） ---------- -->
 <button class="ai-fab" id="ai-fab" onclick="toggleAI()" title="AI 智能问答助手">
   <svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="11" rx="3"/><circle cx="9" cy="12.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="12.5" r="1.1" fill="currentColor" stroke="none"/><path d="M12 7V4.5M9.5 4.5h5"/></svg>
   <span>AI 助手</span>
 </button>
 <div class="ai-panel" id="ai-panel" role="dialog" aria-label="AI 智能问答助手">
-  <div class="ai-hd"><b>AI 智能问答助手</b><span class="muted">基于当前工作台数据作答</span>
+  <div class="ai-hd"><b>AI 智能问答助手</b>
+    <span class="ai-mode" id="ai-mode">内置数据问答</span>
+    <button class="ai-gear" onclick="aiToggleCfg()" title="模型服务设置" aria-label="模型服务设置">设置</button>
     <button class="ai-x" onclick="toggleAI(false)" title="关闭">×</button></div>
+  <div class="ai-cfg" id="ai-cfg" style="display:none">
+    <label>接口地址（OpenAI 兼容 /chat/completions）
+      <input id="ai-c-base" type="text" spellcheck="false" autocomplete="off"></label>
+    <label>API Key
+      <input id="ai-c-key" type="password" autocomplete="off"></label>
+    <label>模型名称
+      <input id="ai-c-model" type="text" spellcheck="false" autocomplete="off"></label>
+    <div class="ai-cfg-actions">
+      <button class="btn primary small" onclick="aiSaveCfg()">保存</button>
+      <button class="btn small" onclick="aiClearCfg()">恢复内置</button>
+      <span class="ai-cfg-tip">配置仅保存在本机浏览器；回答一律以工作台真实数据为依据</span>
+    </div>
+  </div>
   <div class="ai-msgs" id="ai-msgs"></div>
   <div class="ai-chips" id="ai-chips"></div>
   <div class="ai-in">
@@ -770,13 +810,13 @@ const MATRIX_S=['NEW_UNPURCHASED','FIRST_PURCHASE','ACTIVE','AT_RISK','DEEP_DORM
 
 /* ---------- view layer (new; all legacy ids / fn names / endpoints untouched) ---------- */
 const VIEW_META={
-  overview:{title:'营销总览',desc:'大盘核心数字 · 客户状态 · 预警汇总'},
-  cases:{title:'流失预警客户池',desc:'已回流验证 / 高危预警 / 健康活跃 · 单客户生命周期时间轴'},
-  audit:{title:'营销审批记录',desc:'审批明细 · 批准与发送分离'},
-  config:{title:'规则阈值配置',desc:'预警 / 沉寂 / 回流参数 · 全链路重算'},
-  review:{title:'干预效果复盘',desc:'投入产出 · 分门店排行 · 面额对比 · 月度趋势'},
-  profile:{title:'单客户全景画像',desc:'基础信息 · 消费分层 · 预警原因 · 干预方案 · 回流追踪'},
-  help:{title:'数据口径与帮助',desc:'指标口径 · 参数大白话 · 数据来源 · 常见问题'}
+  overview:{title:'营销总览',desc:''},
+  cases:{title:'流失预警客户池',desc:''},
+  audit:{title:'营销审批记录',desc:''},
+  config:{title:'规则阈值配置',desc:''},
+  review:{title:'干预效果复盘',desc:''},
+  profile:{title:'单客户全景画像',desc:''},
+  help:{title:'数据口径与帮助',desc:''}
 };
 const VIEW_FILTERS={overview:{date:'all',group:'all'},
                     cases:{date:'all',group:'all',high:false,channel:false,warn30:false},
@@ -798,7 +838,7 @@ function switchView(v){
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.dataset.view===v));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===v));
   document.getElementById('crumb').textContent=VIEW_META[v].title;
-  document.getElementById('viewdesc').textContent=VIEW_META[v].desc;
+  const vd=document.getElementById('viewdesc');if(vd)vd.textContent=VIEW_META[v].desc;
   applyViewFilters(v);
   if(v==='cases')scheduleCases();
   if(v==='review')loadReview().catch(function(){});
@@ -917,7 +957,6 @@ async function loadConfig(){
      <div class="kpi"><div class="t">累计调整</div><div class="v">${(c.log||[]).length}</div><div class="s">每次调整留痕并递增版本</div></div>`;
   const log=(c.log||[]).slice().reverse().slice(0,6);
   document.getElementById('cfglog').innerHTML = log.length?
-    '<div class="eyebrow" style="margin-bottom:8px">最近调整</div>'+
     log.map(e=>`<div class="logrow" data-frow>${esc(e.at||'')} · <b>${esc(e.to_version)}</b> · ${esc((e.changed?Object.keys(e.changed).join('/'):''))} · ${esc(e.approver||'')}</div>`).join(''):'';
 }
 async function applyConfig(){
@@ -992,7 +1031,7 @@ async function loadLifecycle(){
       return `<td class="${cls}" title="${okv?'合法转移':''}">${v||'·'}</td>`;
     }).join('')+'</tr>';
   });
-  h+='</table><div class="note">颜色深浅表示转移发生量；回流是一次状态转移，不新建客户 ID。</div>';
+  h+='</table>';
   document.getElementById('matrix').innerHTML=h;
 
   // lead card (OPT-02: computed warn-lead metrics rendered on page)
@@ -1234,7 +1273,7 @@ async function loadAudit(){
      <td>${r.sent_at?'是':'<span class="muted">—</span>'}</td></tr>`).join('')+'</table>'
    :'<div class="emptybox">暂无审批记录 · 经理批准后将在此留痕</div>';
   const eff=`<div class="audit-summary">累计验证回流客户 <b>${returned}</b> · 曾进入预警客户中完成回流验证占比 <b>${rate}%</b>（状态机全量口径，非审批干预直接转化）· 人均挽回消费代理 <b>${hkd(per)}</b>
-     <div class="muted" style="font-size:11px;margin-top:4px">口径说明：回流为客户在状态机中完成「预警→活跃」验证的全量统计；收益代理量按预算覆盖人数均摊（前端基于当前评估周期汇总，不夸大干预效果）</div></div>`;
+    </div>`;
   document.getElementById('audit').innerHTML=table+eff;
   applyViewFilters('audit');
 }
@@ -1290,7 +1329,6 @@ async function loadReview(){
   const mx=Math.max(1,...rows.map(r=>r.n));
   document.getElementById('revstore').innerHTML=rows.length?
     rows.map(r=>`<div class="revbar" data-frow><span class="nm">${esc(r.s)}</span><div class="track"><div class="fill" style="width:${Math.round(100*r.n/mx)}%;background:var(--tan)"></div></div><span class="n">${r.n} 位 · 回流预估 ${r.p.toFixed(1)}%</span></div>`).join('')
-    +'<div class="muted" style="font-size:11px;margin-top:6px">口径：当前评估周期干预候选决策按门店聚合 · 回流概率为决策引擎预估</div>'
     :'<div class="emptybox">暂无门店维度候选数据</div>';
   // 客户价值维度
   const byVal={};
@@ -1313,7 +1351,7 @@ async function loadReview(){
     const covMx=Math.max(1,...bs.map(x=>Number(x.b.coverage||0)));
     faceBox.innerHTML=
       bs.map(x=>`<div class="revbar" data-frow><span class="nm">${x.lab}</span><div class="track"><div class="fill" style="width:${Math.max(3,Math.round(100*Number(x.b.coverage||0)/covMx))}%;background:var(--rain)"></div></div><span class="n">覆盖 ${x.b.coverage}% · ${x.b.funded_n} 人</span></div>`).join('')
-      +'<div class="muted" style="font-size:11px;margin-top:6px">同投放张数（350 张）· 不同面额的预算覆盖能力对比 · 灰蓝条为预算口径指标</div>';
+      ;
   }catch(e){faceBox.innerHTML='<div class="emptybox">面额对比加载失败，可稍后重试</div>';}
   // 月度趋势：审批记录按批准月份聚合
   const recs=(AUDIT_CACHE||[]).filter(r=>r.approved_at);
@@ -1325,7 +1363,7 @@ async function loadReview(){
     document.getElementById('revtrend').innerHTML=
       '<div style="display:flex;align-items:flex-end;gap:14px;height:150px;padding:6px 4px 0">'
       +mons.map(m=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end" title="${m} · ${byMon[m]} 条审批"><b style="font-size:12px;color:var(--brush)">${byMon[m]}</b><div style="width:60%;max-width:52px;height:${Math.max(6,Math.round(110*byMon[m]/mv))}px;background:linear-gradient(180deg,var(--tan),rgba(189,141,99,.45));border-radius:6px 6px 0 0"></div><span class="muted" style="font-size:10.5px">${m}</span></div>`).join('')
-      +'</div><div class="muted" style="font-size:11px;margin-top:6px">审批通过量按月聚合（近 '+mons.length+' 个月）</div>';
+      +'</div>';
   }else document.getElementById('revtrend').innerHTML='<div class="emptybox">暂无审批记录可聚合</div>';
   // 投入产出总结
   const per=fundedN>0?Math.round(gain/fundedN):0;
@@ -1422,21 +1460,18 @@ async function renderProfile(){
     </div>
     <div class="grid g21">
       <div class="card">
-        <div class="eyebrow">客户画像 / 01</div>
-        <h3>AI 推荐 <span class="hint">演示级 · 基于客户字段与决策引擎输出的固定规则</span></h3>
+        <h3>AI 推荐</h3>
         <div class="ai-advice">
           <b>客户价值：</b>${esc(vl[0])}${adv.erv!=='—'?' · 预估客户生命周期价值 <em>'+adv.erv+'</em>':''}<br>
           <b>流失风险：</b>${silence!=null?('已沉寂 <em>'+silence+'</em> 天'+(base!=null?('，个人基线 '+base+' 天'):'')+(nWarn>0?('，历史触发预警 <em>'+nWarn+'</em> 次'):'')):'暂无风险信号'}<br>
           <b>推荐方案：</b>${esc(adv.plan)} · 首选渠道 <em>${esc(adv.ch)}</em><br>
           <b>预估回流概率：</b><em>${adv.prob}</em>（决策引擎输出）
-          <div class="muted" style="font-size:11px;margin-top:6px">推荐结论由前端固定规则生成，数字来自决策接口真实字段；正式环境可接入企业内部大模型做深度赋能。</div>
         </div>
         <div class="hlp-item" style="margin-top:10px"><div class="hlp-q">流失预警原因</div>${esc(reason)}${act&&act.deviation!=null?' · 偏离自身基线 <b>'+act.deviation+' 倍</b>':''}${lead>0?' · 该次预警提前 <b>'+lead+' 天</b>':''}</div>
         <div class="hlp-item"><div class="hlp-q">推荐干预方案</div>${esc(adv.plan)} · 渠道：${esc(adv.ch)}${act&&act.cap!=null?' · 券上限 <b>HK$'+act.cap+'</b>':''}${c.group==='high'||c.group==='medium'?'（按当前规则面额）':''}</div>
       </div>
       <div class="card">
-        <div class="eyebrow">客户画像 / 02</div>
-        <h3>基础信息与消费能力 <span class="hint">来自案例与时间轴接口</span></h3>
+        <h3>基础信息与消费能力</h3>
         <table class="tbl">
           <tr data-frow><td>客户编号</td><td class="mono">${esc(cid)}</td></tr>
           <tr data-frow><td>所属门店</td><td class="mono">${esc(c.store_id||'—')}</td></tr>
@@ -1451,15 +1486,13 @@ async function renderProfile(){
     </div>
     <div class="grid g2">
       <div class="card">
-        <div class="eyebrow">客户画像 / 03</div>
-        <h3>历史发券与审批记录 <span class="hint">来自审批留痕接口</span></h3>
+        <h3>历史发券与审批记录</h3>
         ${recs.length?'<table class="tbl"><tr><th>时间</th><th>决策</th><th>渠道</th><th>操作人</th></tr>'
           +recs.slice().reverse().slice(0,6).map(r=>`<tr data-frow><td class="mono">${esc(r.approved_at||'')}</td><td>${esc(r.decision||'')}</td><td>${esc(r.channel||'')}</td><td>${esc(r.approved_by||'')}</td></tr>`).join('')+'</table>'
          :'<div class="emptybox">该客户暂无审批发券记录 · 经理批准后将在此留痕</div>'}
       </div>
       <div class="card">
-        <div class="eyebrow">客户画像 / 04</div>
-        <h3>回流效果追踪 <span class="hint">状态机验证口径</span></h3>
+        <h3>回流效果追踪</h3>
         <div class="mini" style="margin-bottom:10px">
           <div class="kpi"><div class="t">历史触发预警</div><div class="v">${nWarn}</div><div class="s">状态迁移累计</div></div>
           <div class="kpi"><div class="t">完成回流</div><div class="v">${nReturn}</div><div class="s">预警→活跃 验证次数</div></div>
@@ -1490,13 +1523,11 @@ function renderHelp(){
   document.getElementById('helpbody').innerHTML=
    `<div class="grid g21">
       <div class="card">
-        <div class="eyebrow">口径说明 / 01</div>
-        <h3>指标解释与统计口径 <span class="hint">全部指标一屏可查</span></h3>
+        <h3>指标解释与统计口径</h3>
         <div class="hlp-scroll">${metricRows.map(r=>'<div class="hlp-item"><div class="hlp-q">'+r[0]+'</div>'+r[1]+'</div>').join('')}</div>
       </div>
       <div class="card">
-        <div class="eyebrow">口径说明 / 02</div>
-        <h3>数据来源与统计周期 <span class="hint">规则可追溯</span></h3>
+        <h3>数据来源与统计周期</h3>
         <div class="hlp-scroll">
         <div class="hlp-item"><div class="hlp-q">数据来源</div>客户消费与状态数据来自工作台内置演示数据集，经状态机六状态与三窗口模型计算生成；所有页面数字与接口返回一致，可在「营销审批记录」逐条追溯。</div>
         <div class="hlp-item"><div class="hlp-q">评估周期</div>统一以规则配置中的评估截止日（cut，当前 <b>${esc(lc?lc.cut||'2026-09-30':'2026-09-30')}</b>）为观察锚点；窗口 T−W / T / T+H 用于预警提前量测量。</div>
@@ -1507,46 +1538,135 @@ function renderHelp(){
     </div>
     <div class="grid g2">
       <div class="card">
-        <div class="eyebrow">口径说明 / 03</div>
-        <h3>参数大白话说明 <span class="hint">13 个可调参数</span></h3>
+        <h3>参数大白话说明</h3>
         <div class="hlp-scroll">${paramRows}</div>
       </div>
       <div class="card">
-        <div class="eyebrow">口径说明 / 04</div>
-        <h3>常见问题 FAQ <span class="hint">不用翻文档</span></h3>
+        <h3>常见问题 FAQ</h3>
         <div class="hlp-scroll">
         <div class="hlp-item"><div class="hlp-q">为什么预警能「提前」？</div>系统用客户自身历史节奏建立基线，当沉寂时长超过个人正常间隔并逼近流失判定时长时提前提醒，平均可提前 <b>${lc&&lc.warn_lead_days&&lc.warn_lead_days.mean!=null?lc.warn_lead_days.mean:'—'}</b> 天。</div>
         <div class="hlp-item"><div class="hlp-q">「回流」是怎么算的？</div>客户在状态机中从沉寂预警或深度沉寂回到活跃复购，即记一次验证回流；这是全量状态口径，与审批发券的干预转化分开统计，避免夸大效果。</div>
         <div class="hlp-item"><div class="hlp-q">调整参数会发生什么？</div>提交后整套状态机与决策计算全链路重算，规则版本自动递增，页面会弹出高危预警人数与预算覆盖率的前后真实对比；需要填写操作人与调整依据。</div>
         <div class="hlp-item"><div class="hlp-q">预算不够覆盖所有人怎么办？</div>系统按客户价值与预估回流概率择优投放；可在「干预效果复盘」对比不同面额的覆盖能力，再回「规则阈值配置」微调面额。</div>
-        <div class="hlp-item"><div class="hlp-q">AI 助手的回答可信吗？</div>右下角 AI 助手基于当前工作台接口数据按预置规则作答，数字与页面一致；系统已预留 AI 扩展能力，后续可接入企业内部大模型做深度赋能。</div>
+        <div class="hlp-item"><div class="hlp-q">AI 助手的回答可信吗？</div>右下角 AI 助手可接入大模型，回答一律以工作台接口的真实数据为唯一依据，禁止编造或外推数据外的数字；在助手设置中填入模型服务地址、密钥与模型名称即可启用，不填时使用内置数据问答，数字同样与页面一致。</div>
         </div>
       </div>
     </div>`;
   HELP_READY=true;
 }
 
-/* ---------- AI 智能问答助手（右下角 · 演示级：预置问答规则，不调用外部大模型） ---------- */
-let AI_OPEN=false;
+/* ---------- R10 · AI 智能问答助手：大模型问答（真实数据护栏）+ 内置数据问答降级 ----------
+   仅新增前端调用逻辑：不触碰后端状态机 / 决策 / 数据口径 / 验收基线。
+   模型服务地址、密钥、模型名称由使用者在助手「设置」中填写，仅存本机 localStorage。 */
+const AI_CFG_KEY='pulse.ai.cfg';
+const AI_DEFAULT_BASE='https://api.openai.com/v1/chat/completions';
+let AI_OPEN=false, AI_BUSY=false, AI_HISTORY=[];
+
+function aiCfg(){
+  try{return JSON.parse(localStorage.getItem(AI_CFG_KEY)||'{}')||{};}catch(e){return {};}
+}
+function aiCfgSave(c){try{localStorage.setItem(AI_CFG_KEY,JSON.stringify(c||{}));}catch(e){}}
+function aiEnabled(){const c=aiCfg();return !!(c.base&&c.key&&c.model);}
+function aiSyncMode(){
+  const el=document.getElementById('ai-mode');if(!el)return;
+  const on=aiEnabled();
+  el.textContent=on?'大模型 · 实时数据':'内置数据问答';
+  el.className='ai-mode'+(on?' on':'');
+}
+function aiToggleCfg(){
+  const box=document.getElementById('ai-cfg');if(!box)return;
+  const open=box.style.display!=='block';
+  box.style.display=open?'block':'none';
+  if(open){
+    const c=aiCfg();
+    document.getElementById('ai-c-base').value=c.base||AI_DEFAULT_BASE;
+    document.getElementById('ai-c-key').value=c.key||'';
+    document.getElementById('ai-c-model').value=c.model||'';
+  }
+}
+function aiSaveCfg(){
+  const g=id=>(document.getElementById(id).value||'').trim();
+  const base=g('ai-c-base')||AI_DEFAULT_BASE, key=g('ai-c-key'), model=g('ai-c-model');
+  aiCfgSave({base:base,key:key,model:model});
+  AI_HISTORY=[];aiSyncMode();
+  document.getElementById('ai-cfg').style.display='none';
+  flash(key&&model?'模型服务已保存，问答将由大模型基于工作台数据生成':'已保存；当前使用内置数据问答');
+}
+function aiClearCfg(){
+  aiCfgSave({});AI_HISTORY=[];aiSyncMode();
+  ['ai-c-base','ai-c-key','ai-c-model'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('ai-cfg').style.display='none';
+  flash('已恢复内置数据问答');
+}
+
+/* 只汇总系统接口返回的真实值，作为大模型回答的唯一事实来源（防止数据幻觉） */
+function aiSnapshot(){
+  const lc=LC_DATA||{},d=lc.distribution||{},pct=lc.distribution_pct||{},
+        pool=lc.demo_pool_counts||{},wl=lc.warn_lead_days||{},win=lc.window||{},bd=BUDGET_DATA||{};
+  const six=STATE_ORDER.map(s=>'· '+(ST[s]?ST[s][1]:s)+'：'+(d[s]||0)+' 人，占比 '+(pct[s]||0)+'%');
+  return [
+    '评估截止：'+(lc.cut||CUR||'—'),
+    '在册会员合计：'+(lc.total||0)+' 人',
+    '六状态分布（完整生命周期顺序）：',
+    six.join('\n'),
+    '沉寂·值得激励（沉寂预警+深度沉寂）：'+((d.AT_RISK||0)+(d.DEEP_DORMANT||0))+' 人',
+    '平均预警提前量：'+(wl.mean!=null?wl.mean:'—')+' 天，可测 '+(wl.count||0)+' 次，范围 '+(wl.min!=null?wl.min:'—')+'–'+(wl.max!=null?wl.max:'—')+' 天',
+    '观察窗/结果窗/截止：T−'+(win.W!=null?win.W:'W')+' / T+'+(win.H!=null?win.H:'H')+' / '+(win.T||'—'),
+    '案例池：已回流验证客户 '+(pool.A||0)+' 位，高危预警客户 '+(pool.B||0)+' 位，健康活跃客户 '+(pool.C||0)+' 位',
+    '本周预算：覆盖率 '+(bd.coverage!=null?bd.coverage:'—')+'%，投放 '+(bd.funded_n||0)+' / 需求 '+(bd.demand_n||0)+' 人，未覆盖 '+(bd.unserved_n||0)+' 人，额度 '+hkd(bd.funded_amt)+'，挽回消费代理 '+hkd(bd.gain),
+    '当前规则版本：'+(CUR||'—'),
+    '状态转移计数（真实）：'+JSON.stringify(lc.transition_matrix||{})
+  ].join('\n');
+}
+function aiSystem(){
+  return '你是 Pacific Coffee「Pulse 客户生命周期决策工作台」的数据问答助手。'
+    +'必须遵守：(1) 只依据下方【工作台真实数据】回答，禁止编造、估算、外推任何数据之外的数字、门店、客户、日期或结论；'
+    +'(2) 数据中没有的信息，明确回答「工作台当前没有这项数据」，并建议到对应模块查看，不得猜测；'
+    +'(3) 引用的数值必须与数据完全一致，用简体中文、简洁专业作答，不超过 6 句；'
+    +'(4) 不要复述这些规则，不要输出 JSON 或原始数据表。\n\n'
+    +'【工作台真实数据】\n'+aiSnapshot();
+}
+async function aiLLM(q){
+  const c=aiCfg();
+  const msgs=[{role:'system',content:aiSystem()}];
+  AI_HISTORY.slice(-6).forEach(m=>msgs.push(m));
+  msgs.push({role:'user',content:q});
+  const ctl=new AbortController();
+  const timer=setTimeout(()=>ctl.abort(),30000);
+  try{
+    const r=await fetch(c.base,{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+c.key},
+      body:JSON.stringify({model:c.model,messages:msgs,temperature:0.2,max_tokens:600}),
+      signal:ctl.signal});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    const txt=data&&data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content;
+    if(!txt)throw new Error('empty');
+    return String(txt).trim();
+  }finally{clearTimeout(timer);}
+}
+function aiRender(t){return esc(t).replace(/\n/g,'<br>');}
+
 function toggleAI(force){
   AI_OPEN=(force!==undefined)?force:!AI_OPEN;
   document.getElementById('ai-panel').style.display=AI_OPEN?'flex':'none';
   if(AI_OPEN){
     if(!document.getElementById('ai-msgs').children.length)aiGreet();
+    aiSyncMode();
     const q=document.getElementById('ai-q');if(q)q.focus();
   }
 }
-function aiPush(role,txt){
+function aiPush(role,txt,cls){
   const m=document.getElementById('ai-msgs');
   const d=document.createElement('div');
-  d.className='ai-msg '+role;d.innerHTML=txt;
+  d.className='ai-msg '+role+(cls?' '+cls:'');d.innerHTML=txt;
   m.appendChild(d);m.scrollTop=m.scrollHeight;
+  return d;
 }
 function aiGreet(){
-  const lc=LC_DATA;
-  aiPush('ai','你好，我是 Pulse 智能助手，基于当前工作台的真实数据回答问题。'
-    +(lc?('当前评估截止 '+esc(lc.cut||'—')+' · 规则版本 '+esc(CUR||'—')+'。'):'')
-    +'\n可直接点下方问题，或输入你的问题。');
+  aiPush('ai','你好，我是 Pulse 智能助手。'
+    +(aiEnabled()?'当前已连接大模型，回答严格基于工作台真实数据生成。':'当前使用内置数据问答，回答均来自工作台真实数据。')
+    +'\n可点下方快捷问题，或直接输入你的问题。');
   const chips=['本月高危客户有多少人','预算还能覆盖多少人','平均预警提前多少天','累计回流了多少客户','哪个门店候选最多','怎么调整预警参数'];
   document.getElementById('ai-chips').innerHTML=chips.map(t=>'<button onclick="aiChip(this.textContent)">'+t+'</button>').join('');
 }
@@ -1557,10 +1677,28 @@ function aiSend(){
   if(!q)return;
   el.value='';aiAsk(q);
 }
-function aiAsk(q){
+async function aiAsk(q){
+  if(AI_BUSY)return;
+  AI_BUSY=true;
   aiPush('user',esc(q));
-  setTimeout(()=>aiPush('ai',aiAnswer(q)),240);
+  const typing=aiPush('ai','正在依据工作台数据整理回答…','ai-typing');
+  let answer='',ok=false;
+  if(aiEnabled()){
+    try{answer=await aiLLM(q);ok=true;}catch(e){answer='';}
+  }
+  typing.className='ai-msg ai';
+  if(ok){
+    AI_HISTORY.push({role:'user',content:q},{role:'assistant',content:answer});
+    if(AI_HISTORY.length>12)AI_HISTORY=AI_HISTORY.slice(-12);
+    typing.innerHTML=aiRender(answer);
+  }else{
+    typing.innerHTML=aiAnswer(q)+(aiEnabled()?'\n<span class="ai-fallback">模型服务本次没有响应，已切换为内置数据问答。</span>':'');
+  }
+  AI_BUSY=false;
+  const m=document.getElementById('ai-msgs');m.scrollTop=m.scrollHeight;
 }
+
+/* 内置数据问答（原预置规则，作为无配置 / 模型不可用时的降级引擎，逻辑保持原样） */
 function aiAnswer(q){
   const lc=LC_DATA,d=lc?lc.distribution||{}:{},pool=lc?lc.demo_pool_counts||{}:{};
   const bd=BUDGET_DATA||{};
